@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System;
 
 namespace RimCheats
 {
@@ -22,15 +23,19 @@ namespace RimCheats
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
             listingStandard.CheckboxLabeled("Enable pathing", ref settings.enablePathing, "Paths and moves in one tick");
+            listingStandard.CheckboxLabeled("Enable ignore terrain cost", ref settings.disableTerrainCost, "Colonists ignore terrain movement penalties");
             listingStandard.CheckboxLabeled("Enable working", ref settings.enableWorking, "Global work speed multiplied by amount");
             listingStandard.CheckboxLabeled("Enable learning", ref settings.enableLearning, "Global learning speed multiplied by amount");
             listingStandard.CheckboxLabeled("Enable carrying capacity", ref settings.enableCarryingCapacity, "Carrying capacity multiplied by amount");
+            listingStandard.CheckboxLabeled("Enable faster progress bar toils", ref settings.enableFasterProgressBars, "Multiply the speed that toils with progress bars are completed");
             listingStandard.Label($"Work multplier: {settings.workMultiplier}");
             settings.workMultiplier = listingStandard.Slider(settings.workMultiplier, 0f, 100f);
             listingStandard.Label($"Learning multplier: {settings.learnMultiplier}");
-            settings.learnMultiplier = listingStandard.Slider(settings.learnMultiplier, 0f, 100f);
+            settings.learnMultiplier = listingStandard.Slider(settings.learnMultiplier, 0f, 10000f);
             listingStandard.Label($"Carrying capacity multplier: {settings.carryingCapacityMultiplier}");
             settings.carryingCapacityMultiplier = listingStandard.Slider(settings.carryingCapacityMultiplier, 0f, 100f);
+            listingStandard.Label($"Progress bar speed multplier: {settings.progressBarSpeedMultiplier}");
+            settings.progressBarSpeedMultiplier = listingStandard.Slider(settings.progressBarSpeedMultiplier, 0f, 100f);
             listingStandard.End();
             base.DoSettingsWindowContents(inRect);
         }
@@ -46,20 +51,26 @@ namespace RimCheats
         public bool enablePathing;
         public bool enableWorking;
         public bool enableLearning;
+        public bool disableTerrainCost;
         public bool enableCarryingCapacity;
+        public bool enableFasterProgressBars;
         public float workMultiplier;
         public float learnMultiplier;
         public float carryingCapacityMultiplier;
+        public float progressBarSpeedMultiplier;
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref enablePathing, "enablePathing");
             Scribe_Values.Look(ref enableWorking, "enableWorking");
             Scribe_Values.Look(ref enableLearning, "enableLearning");
+            Scribe_Values.Look(ref disableTerrainCost, "disableTerrainCost");
             Scribe_Values.Look(ref enableCarryingCapacity, "enableCarryingCapacity");
+            Scribe_Values.Look(ref enableFasterProgressBars, "enableFasterProgressBars");
             Scribe_Values.Look(ref workMultiplier, "workMultiplier", 1f);
             Scribe_Values.Look(ref learnMultiplier, "learnMultiplier", 1f);
             Scribe_Values.Look(ref carryingCapacityMultiplier, "carryingCapacityMultiplier", 1f);
+            Scribe_Values.Look(ref progressBarSpeedMultiplier, "progressBarSpeedMultiplier", 1f);
             base.ExposeData();
         }
     }
@@ -84,8 +95,13 @@ namespace RimCheats
         static void Postfix(Pawn_PathFollower __instance, Pawn ___pawn)
         {
             bool enablePathing = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().enablePathing;
-            if (enablePathing && ___pawn.IsColonistPlayerControlled && __instance.Moving)
+            if (___pawn.IsColonistPlayerControlled && __instance.Moving && enablePathing)
             {
+                if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander))
+                {
+                    return;
+                }
+
                 if (__instance.nextCellCostLeft > 0f)
                 {
                     __instance.nextCellCostLeft = 0;
@@ -99,6 +115,60 @@ namespace RimCheats
                 else
                 {
                     lastPos = ___pawn.Position;
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(Pawn_PathFollower), "CostToMoveIntoCell", new Type[] { typeof(Pawn), typeof(IntVec3) })]
+    class PatchPawn_CostToMoveIntoCell
+    {
+        private static IntVec3 lastPos;
+
+        static void Postfix(Pawn_PathFollower __instance, Pawn pawn, IntVec3 c, ref int __result)
+        {
+            bool disableTerrainCost = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().disableTerrainCost;
+            if (pawn.IsColonistPlayerControlled && disableTerrainCost)
+            {
+                // based off floating pawn code from Alpha Animals
+                int cost = __result;
+                if (cost < 10000)
+                {
+                    if (c.x == pawn.Position.x || c.z == pawn.Position.z)
+                    {
+                        cost = pawn.TicksPerMoveCardinal;
+                    }
+                    else
+                    {
+                        cost = pawn.TicksPerMoveDiagonal;
+                    }
+                    TerrainDef terrainDef = pawn.Map.terrainGrid.TerrainAt(c);
+                    if (terrainDef == null)
+                    {
+                        cost = 10000;
+                    }
+                    else if (terrainDef.passability == Traversability.Impassable && !terrainDef.IsWater)
+                    {
+                        cost = 10000;
+                    }
+                    else if (terrainDef.IsWater)
+                    {
+                        cost = 10000;
+                    }
+                    List<Thing> list = pawn.Map.thingGrid.ThingsListAt(c);
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        Thing thing = list[i];
+                        if (thing.def.passability == Traversability.Impassable)
+                        {
+                            cost = 10000;
+                        }
+                        if (thing is Building_Door)
+                        {
+                            cost += 45;
+                        }
+                    }
+                    __result = cost;
                 }
             }
         }
@@ -131,6 +201,21 @@ namespace RimCheats
                     float carryingCapacityMultiplier = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().carryingCapacityMultiplier;
                     __result *= carryingCapacityMultiplier;
                 }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(ToilEffects), "WithProgressBarToilDelay", new Type[] { typeof(Toil), typeof(TargetIndex), typeof(bool), typeof(float) })]
+    class PatchToilEffects_WithProgressBarToilDelay
+    {
+        static void Postfix(Toil toil, TargetIndex ind, ref Toil __result, bool interpolateBetweenActorAndTarget = false, float offsetZ = -0.5f)
+        {
+            bool enableFasterProgressBar = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().enableFasterProgressBars;
+            if (toil.actor != null && toil.actor.IsColonistPlayerControlled && enableFasterProgressBar)
+            {
+                float progressBarSpeedMultiplier = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().progressBarSpeedMultiplier;
+                __result = toil.WithProgressBar(ind, () => 1f - (float)toil.actor.jobs.curDriver.ticksLeftThisToil / (float)(toil.defaultDuration / progressBarSpeedMultiplier),
+                    interpolateBetweenActorAndTarget, offsetZ);
             }
         }
     }
