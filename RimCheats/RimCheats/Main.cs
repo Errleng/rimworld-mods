@@ -151,10 +151,10 @@ namespace RimCheats
                     {
                         cost = 10000;
                     }
-                    else if (terrainDef.IsWater)
-                    {
-                        cost = 10000;
-                    }
+                    //else if (terrainDef.IsWater)
+                    //{
+                    //    cost = 10000;
+                    //}
                     List<Thing> list = pawn.Map.thingGrid.ThingsListAt(c);
                     for (int i = 0; i < list.Count; i++)
                     {
@@ -163,10 +163,10 @@ namespace RimCheats
                         {
                             cost = 10000;
                         }
-                        if (thing is Building_Door)
-                        {
-                            cost += 45;
-                        }
+                        //if (thing is Building_Door)
+                        //{
+                        //    cost += 45;
+                        //}
                     }
                     __result = cost;
                 }
@@ -205,20 +205,59 @@ namespace RimCheats
         }
     }
 
-    [HarmonyPatch(typeof(ToilEffects), "WithProgressBarToilDelay", new Type[] { typeof(Toil), typeof(TargetIndex), typeof(bool), typeof(float) })]
-    class PatchToilEffects_WithProgressBarToilDelay
+    [HarmonyPatch(typeof(Toils_General), "Wait")]
+    class Patch_Toils_General_Wait
     {
-        static void Postfix(Toil toil, TargetIndex ind, ref Toil __result, bool interpolateBetweenActorAndTarget = false, float offsetZ = -0.5f)
+        static void Postfix(ref Toil __result)
         {
-            bool enableFasterProgressBar = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().enableFasterProgressBars;
-            if (toil.actor != null && toil.actor.IsColonistPlayerControlled && enableFasterProgressBar)
+            bool enableFasterProgressBars = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().enableFasterProgressBars;
+            if (enableFasterProgressBars)
             {
-                float progressBarSpeedMultiplier = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().progressBarSpeedMultiplier;
-                __result = toil.WithProgressBar(ind, () => 1f - (float)toil.actor.jobs.curDriver.ticksLeftThisToil / (float)(toil.defaultDuration / progressBarSpeedMultiplier),
-                    interpolateBetweenActorAndTarget, offsetZ);
+                Toil toil = __result;
+                __result.initAction = delegate ()
+                {
+                    if (toil.actor.IsColonistPlayerControlled)
+                    {
+                        float progressBarSpeedMultiplier = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().progressBarSpeedMultiplier;
+
+                        float oldDefaultDuration = toil.defaultDuration;
+                        float oldTicksLeftThisToil = toil.actor.jobs.curDriver.ticksLeftThisToil;
+                        toil.defaultDuration = (int)(toil.defaultDuration / progressBarSpeedMultiplier);
+                        //Log.Message($"Toil defaultDuration: {oldDefaultDuration} -> {toil.defaultDuration}");
+                        toil.actor.jobs.curDriver.ticksLeftThisToil = (int)(toil.actor.jobs.curDriver.ticksLeftThisToil / progressBarSpeedMultiplier);
+                        //Log.Message($"CurDriver ticksLeftThisToil: {oldTicksLeftThisToil} -> {toil.actor.jobs.curDriver.ticksLeftThisToil}");
+                    }
+                    toil.actor.pather.StopDead();
+                };
             }
         }
     }
+
+    // carrying capacity is different from "mass capacity"/"inventory space"
+    //[HarmonyPatch(typeof(MassUtility), "Capacity")]
+    //public static class MassUtility_Capacity_Patch
+    //{
+    //    [HarmonyPrefix]
+    //    public static bool Capacity(ref float __result, Pawn p, StringBuilder explanation)
+    //    {
+    //        if (!MassUtility.CanEverCarryAnything(p))
+    //        {
+    //            __result = 0f;
+    //            return false;
+    //        }
+
+    //        __result = p.BodySize * p.GetStatValue(StatDefOf.CarryingCapacity);
+    //        if (explanation != null)
+    //        {
+    //            if (explanation.Length > 0)
+    //            {
+    //                explanation.AppendLine();
+    //            }
+    //            explanation.Append("  - " + p.LabelShortCap + ": " + __result.ToStringMassOffset());
+    //        }
+    //        return false;
+    //    }
+    //}
 
     // faster job speed
     //[HarmonyPatch(typeof(JobDriver), "DriverTick")]
