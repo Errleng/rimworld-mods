@@ -80,10 +80,10 @@ namespace RimCheats
     {
         static Patcher()
         {
-            var harmony = new Harmony("com.pathing.rimworld.mod");
+            var harmony = new Harmony("com.rimcheats.rimworld.mod");
             var assembly = Assembly.GetExecutingAssembly();
             harmony.PatchAll(assembly);
-            Log.Message("Pathing mod loaded");
+            Log.Message("RimCheats loaded");
         }
     }
 
