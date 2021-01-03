@@ -57,7 +57,6 @@ namespace Rimternet
 
         public MainTabWindow_ModHelp()
         {
-            Log.Message("MainTabWindow constructor");
             layer = WindowLayer.GameUI;
             soundAppear = null;
             soundClose = null;

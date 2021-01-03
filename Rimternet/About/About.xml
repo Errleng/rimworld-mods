@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+   <name>Rimternet</name>
+   <author>Daze</author>
+   <supportedVersions>
+      <li>1.2</li>
+   </supportedVersions>
+   <packageId>com.rimternet.rimworld.mod</packageId>
+   <description>A search engine and knowledge base for RimWorld.</description>
+</ModMetaData>
