@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+      <!-- Elite Scout Spawner -->
+  <ThingDef ParentName="SpawnerBaseElite">
+      <defName>EScoutAssembler</defName>
+      <label>elite scout assembler</label>
+      <description>This particular drone assembler seems to have been modified somehow.</description>
+      <graphicData>
+        <texPath>Things/Building/Spawner/Spawner_scoutelite</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(1.75, 1.75)</drawSize>
+        <shadowData>
+          <volume>(1.5, 1.0, 0.2)</volume>
+          <offset>(0.0, 0.0, 0.0)</offset>
+        </shadowData>
+      </graphicData>
+      <costList>
+        <Plasteel>25</Plasteel>
+        <Steel>200</Steel>
+        <ComponentSpacer>6</ComponentSpacer>
+      </costList>
+      <comps>
+        <li Class="CompProperties_SpawnerPawn">
+          <spawnablePawnKinds>
+            <li>Drone_EliteScout</li>
+          </spawnablePawnKinds>
+          <chooseSingleTypeToSpawn>True</chooseSingleTypeToSpawn>
+          <nextSpawnInspectStringKey>MechAssemblyCompleteIn</nextSpawnInspectStringKey>
+          <maxSpawnedPawnsPoints>500</maxSpawnedPawnsPoints>
+          <spawnSound>Drone_Spawn</spawnSound>
+          <lordJob>LordJob_AssaultColony</lordJob>
+          <pawnSpawnIntervalDays>1.5</pawnSpawnIntervalDays>
+          <showNextSpawnInInspect>true</showNextSpawnInInspect>
+        </li>
+        <li Class="CompProperties_Glower">
+          <glowRadius>3</glowRadius>
+          <glowColor>(137,0,255,0)</glowColor>
+        </li>
+      </comps>
+    </ThingDef>
+
+    <!-- Elite Specialist Spawner -->
+  <ThingDef ParentName="SpawnerBaseElite">
+      <defName>ESpecialistAssembler</defName>
+      <label>elite specialist assembler</label>
+      <description>This particular drone assembler seems to have been modified somehow.</description>
+      <graphicData>
+        <texPath>Things/Building/Spawner/Spawner_specialistelite</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(1.75, 1.75)</drawSize>
+        <shadowData>
+          <volume>(1.5, 1.0, 0.2)</volume>
+          <offset>(0.0, 0.0, 0.0)</offset>
+        </shadowData>
+      </graphicData>
+      <costList>
+        <Plasteel>25</Plasteel>
+        <Steel>200</Steel>
+        <ComponentSpacer>6</ComponentSpacer>
+      </costList>
+      <comps>
+        <li Class="CompProperties_SpawnerPawn">
+          <spawnablePawnKinds>
+            <li>Drone_EliteSpecialist</li>
+          </spawnablePawnKinds>
+          <chooseSingleTypeToSpawn>True</chooseSingleTypeToSpawn>
+          <nextSpawnInspectStringKey>MechAssemblyCompleteIn</nextSpawnInspectStringKey>
+          <maxSpawnedPawnsPoints>500</maxSpawnedPawnsPoints>
+          <spawnSound>Drone_Spawn</spawnSound>
+          <lordJob>LordJob_AssaultColony</lordJob>
+          <pawnSpawnIntervalDays>1.75</pawnSpawnIntervalDays>
+          <showNextSpawnInInspect>true</showNextSpawnInInspect>
+        </li>
+        <li Class="CompProperties_Glower">
+          <glowRadius>3</glowRadius>
+          <glowColor>(137,0,255,0)</glowColor>
+        </li>
+      </comps>
+    </ThingDef>
+</Defs>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  
+  <!-- Homer mine base -->
+  <ThingDef ParentName="BaseDrone" Name="BaseDroneHomer" Abstract="True">
+    <statBases>
+      <MoveSpeed>15.0</MoveSpeed>
+      <ArmorRating_Blunt>0.30</ArmorRating_Blunt>
+      <ArmorRating_Sharp>0.10</ArmorRating_Sharp>
+    </statBases>
+    <race>
+      <intelligence>ToolUser</intelligence>
+      <thinkTreeMain>Mechanoid</thinkTreeMain>
+      <baseBodySize>0.1</baseBodySize>
+      <body>MechanicalCentipede</body>
+      <baseHealthScale>0.15</baseHealthScale>
+        <soundMeleeHitPawn>Pawn_Melee_MechanoidBash_HitPawn</soundMeleeHitPawn>
+        <soundMeleeHitBuilding>Pawn_Melee_MechanoidBash_HitBuilding</soundMeleeHitBuilding>
+        <soundMeleeMiss>Pawn_Melee_MechanoidBash_Miss</soundMeleeMiss>
+      <lifeStageAges>
+        <li>
+          <def>MechanoidFullyFormed</def>
+          <minAge>0</minAge>
+          <soundWounded>Pawn_Drone_Homer_Wounded</soundWounded>
+          <soundDeath>Pawn_Drone_Homer_Death</soundDeath>
+          <soundCall>Pawn_Drone_Homer_Call</soundCall>
+        </li>
+      </lifeStageAges>
+      <soundCallIntervalRange>10000~50000</soundCallIntervalRange>
+    </race>
+    <tools>
+      <li>
+        <label>shell</label>
+        <labelUsedInLogging>true</labelUsedInLogging>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>5</power>
+        <cooldownTime>3</cooldownTime>
+      </li>
+    </tools>
+    <butcherProducts>
+      <Steel>5</Steel>
+    </butcherProducts>
+  </ThingDef>
+
+<ThingDef ParentName="BaseDroneHomer">
+    <defName>Drone_Chaperone</defName>
+    <label>chaperone mine</label>
+    <description>An explosive payload attached to a rudimentary tracking and locomotion system. Designed by urbworld corporations to reduce collateral damage it will not explode unless it activates. The homer will follow its targets with extreme speeds making it hard to hit, at least from a distance. \n\nEasy to intercept, use with distractions.</description>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BaseDroneKind">
+    <defName>Drone_Chaperone</defName>
+    <label>chaperone mine</label>
+    <race>Drone_Chaperone</race>
+    <combatPower>75</combatPower>
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Pawn/Drone/Homer</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>0.65</drawSize>
+          <shadowData>
+            <volume>(0.3, 0.4, 0.3)</volume>
+            <offset>(0,0,0)</offset>
+          </shadowData>
+        </bodyGraphicData>
+      </li>
+    </lifeStages>
+    <weaponMoney>9999~9999</weaponMoney>
+    <defendPointRadius>0</defendPointRadius>
+    <weaponTags>
+      <li>DronePayload</li>
+    </weaponTags>
+  </PawnKindDef>
+
+</Defs>

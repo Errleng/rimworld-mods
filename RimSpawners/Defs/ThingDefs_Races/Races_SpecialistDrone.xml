@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	
+	<!-- Specialist base -->
+  <ThingDef ParentName="BaseDrone" Name="BaseDroneSpecialist" Abstract="True">
+    <statBases>
+      <MoveSpeed>4.5</MoveSpeed>
+      <ArmorRating_Blunt>0.30</ArmorRating_Blunt>
+      <ArmorRating_Sharp>0.50</ArmorRating_Sharp>
+    </statBases>
+    <race>
+      <intelligence>ToolUser</intelligence>
+      <thinkTreeMain>Mechanoid</thinkTreeMain>
+      <baseBodySize>0.9</baseBodySize>
+      <body>SpecialistDrone</body>
+      <baseHealthScale>0.90</baseHealthScale>
+      <soundMeleeHitPawn>Pawn_Melee_MechanoidBash_HitPawn</soundMeleeHitPawn>
+      <soundMeleeHitBuilding>Pawn_Melee_MechanoidBash_HitBuilding</soundMeleeHitBuilding>
+      <soundMeleeMiss>Pawn_Melee_MechanoidBash_Miss</soundMeleeMiss>
+      <lifeStageAges>
+        <li>
+          <def>MechanoidFullyFormed</def>
+          <minAge>0</minAge>
+          <soundWounded>Pawn_Drone_Specialist_Wounded</soundWounded>
+          <soundDeath>Pawn_Drone_Specialist_Death</soundDeath>
+          <soundCall>Pawn_Drone_Specialist_Call</soundCall>
+        </li>
+      </lifeStageAges>
+      <soundCallIntervalRange>10000~50000</soundCallIntervalRange>
+    </race>
+    <tools>
+      <li>
+        <label>head</label>
+        <capacities>
+          <li>Blunt</li>
+        </capacities>
+        <power>6.5</power>
+        <cooldownTime>2</cooldownTime>
+        <linkedBodyPartsGroup>HeadAttackTool</linkedBodyPartsGroup>
+        <ensureLinkedBodyPartsGroupAlwaysUsable>true</ensureLinkedBodyPartsGroupAlwaysUsable>
+        <chanceFactor>0.2</chanceFactor>
+      </li>
+    </tools>
+    <butcherProducts>
+      <Steel>10</Steel>
+    </butcherProducts>
+  </ThingDef>
+
+<!-- Cinder -->
+  <ThingDef ParentName="BaseDroneSpecialist">
+    <defName>Drone_Cinder</defName>
+    <label>cinder drone</label>
+    <description>A combat drone designed with an adaptive chassis suitable for unique weaponry, carries a weapon hardpoint, specialist class drones are decently armored and pose a threat when not dealt with.</description>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BaseDroneKind">
+    <defName>Drone_Cinder</defName>
+    <label>cinder drone</label>
+    <race>Drone_Cinder</race>
+    <combatPower>150</combatPower>
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Pawn/Drone/Specialist</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>2.00</drawSize>
+          <shadowData>
+            <volume>(0.8, 0.3, 0.4)</volume>
+            <offset>(0,0,-0.6)</offset>
+          </shadowData>
+        </bodyGraphicData>
+      </li>
+    </lifeStages>
+    <weaponMoney>9999~9999</weaponMoney>
+    <defendPointRadius>0</defendPointRadius>
+    <weaponTags>
+      <li>DroneWeaponIgniter</li>
+    </weaponTags>
+  </PawnKindDef>
+
+  <!-- Cutram -->
+  <ThingDef ParentName="BaseDroneSpecialist">
+    <defName>Drone_Cutram</defName>
+    <label>cutram drone</label>
+    <description>A combat drone designed with an adaptive chassis suitable for unique weaponry, carries a weapon hardpoint, specialist class drones are decently armored and pose a threat when not dealt with.</description>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BaseDroneKind">
+    <defName>Drone_Cutram</defName>
+    <label>cutram drone</label>
+    <race>Drone_Cutram</race>
+    <combatPower>150</combatPower>
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Pawn/Drone/Specialist</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>2.00</drawSize>
+          <shadowData>
+            <volume>(0.8, 0.3, 0.4)</volume>
+            <offset>(0,0,-0.6)</offset>
+          </shadowData>
+        </bodyGraphicData>
+      </li>
+    </lifeStages>
+    <weaponMoney>9999~9999</weaponMoney>
+    <defendPointRadius>0</defendPointRadius>
+    <weaponTags>
+      <li>DroneWeaponAurum</li>
+    </weaponTags>
+  </PawnKindDef>
+
+</Defs>

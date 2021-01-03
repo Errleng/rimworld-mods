@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+      <!-- Cinder Spawner -->
+  <ThingDef ParentName="SpawnerBase">
+      <defName>CinderAssembler</defName>
+      <label>cinder drone assembler</label>
+      <description>Passively fabricates cinder drones with rudimentary vanometric tech and particles extracted from the atmosphere. \n\nCinders are adept at setting living targets alight.</description>
+      <graphicData>
+        <texPath>Things/Building/Spawner/Spawner_specialist</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(1.75, 1.75)</drawSize>
+        <shadowData>
+          <volume>(1.5, 1.0, 0.2)</volume>
+          <offset>(0.0, 0.0, 0.0)</offset>
+        </shadowData>
+      </graphicData>
+      <costList>
+        <Plasteel>25</Plasteel>
+        <Steel>200</Steel>
+        <ComponentSpacer>6</ComponentSpacer>
+      </costList>
+      <comps>
+        <li Class="CompProperties_SpawnerPawn">
+          <spawnablePawnKinds>
+            <li>Drone_Cinder</li>
+          </spawnablePawnKinds>
+          <chooseSingleTypeToSpawn>True</chooseSingleTypeToSpawn>
+          <nextSpawnInspectStringKey>MechAssemblyCompleteIn</nextSpawnInspectStringKey>
+          <maxSpawnedPawnsPoints>500</maxSpawnedPawnsPoints>
+          <spawnSound>Drone_Spawn</spawnSound>
+          <lordJob>LordJob_AssaultColony</lordJob>
+          <pawnSpawnIntervalDays>1.75</pawnSpawnIntervalDays>
+          <showNextSpawnInInspect>true</showNextSpawnInInspect>
+        </li>
+        <li Class="CompProperties_Glower">
+          <glowRadius>3</glowRadius>
+          <glowColor>(187,44,0,0)</glowColor>
+        </li>
+      </comps>
+    </ThingDef>
+
+    <!-- Cutram Spawner -->
+  <ThingDef ParentName="SpawnerBase">
+      <defName>CutramAssembler</defName>
+      <label>cutram drone assembler</label>
+      <description>Passively fabricates cutram drones with rudimentary vanometric tech and particles extracted from the atmosphere. \n\nCutrams deal constant low guaranteed damage.</description>
+      <graphicData>
+        <texPath>Things/Building/Spawner/Spawner_specialist</texPath>
+        <graphicClass>Graphic_Single</graphicClass>
+        <drawSize>(1.75, 1.75)</drawSize>
+        <shadowData>
+          <volume>(1.5, 1.0, 0.2)</volume>
+          <offset>(0.0, 0.0, 0.0)</offset>
+        </shadowData>
+      </graphicData>
+      <costList>
+        <Plasteel>25</Plasteel>
+        <Steel>200</Steel>
+        <ComponentSpacer>6</ComponentSpacer>
+      </costList>
+      <comps>
+        <li Class="CompProperties_SpawnerPawn">
+          <spawnablePawnKinds>
+            <li>Drone_Cutram</li>
+          </spawnablePawnKinds>
+          <chooseSingleTypeToSpawn>True</chooseSingleTypeToSpawn>
+          <nextSpawnInspectStringKey>MechAssemblyCompleteIn</nextSpawnInspectStringKey>
+          <maxSpawnedPawnsPoints>500</maxSpawnedPawnsPoints>
+          <spawnSound>Drone_Spawn</spawnSound>
+          <lordJob>LordJob_AssaultColony</lordJob>
+          <pawnSpawnIntervalDays>1.75</pawnSpawnIntervalDays>
+          <showNextSpawnInInspect>true</showNextSpawnInInspect>
+        </li>
+        <li Class="CompProperties_Glower">
+          <glowRadius>3</glowRadius>
+          <glowColor>(187,44,0,0)</glowColor>
+        </li>
+      </comps>
+    </ThingDef>
+</Defs>
