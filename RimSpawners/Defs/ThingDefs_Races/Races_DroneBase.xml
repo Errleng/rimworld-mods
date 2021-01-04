@@ -22,8 +22,8 @@
       <bloodDef>Filth_MachineBits</bloodDef>
     </race>
     <comps>
-      <li Class="SpawnersandDrones.CompProperties_DeathOnDownedChance">
-        <DeathChance>1.0</DeathChance>
+      <li Class="RimSpawners.CompProperties_DeathOnDownedChance">
+        <deathChance>1.0</deathChance>
       </li>
       <li Class="CompProperties_CanBeDormant" />
       <li Class="CompProperties_WakeUpDormant">

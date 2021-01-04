@@ -47,8 +47,8 @@
       <soundMeleeMiss>Pawn_Melee_MechanoidBash_Miss</soundMeleeMiss>
     </race>
     <comps>
-      <li Class="SpawnersandDrones.CompProperties_DeathOnDownedChance">
-        <DeathChance>1.0</DeathChance>
+      <li Class="RimSpawners.CompProperties_DeathOnDownedChance">
+        <deathChance>1.0</deathChance>
       </li>
     </comps>
     <butcherProducts>
@@ -103,8 +103,8 @@
       <soundCallIntervalRange>1000~2000</soundCallIntervalRange>
     </race>
     <comps>
-      <li Class="SpawnersandDrones.CompProperties_DeathOnDownedChance">
-        <DeathChance>1.0</DeathChance>
+      <li Class="RimSpawners.CompProperties_DeathOnDownedChance">
+        <deathChance>1.0</deathChance>
       </li>
     </comps>
     <butcherProducts>
@@ -316,8 +316,8 @@
       </lifeStageAges>
     </race>
     <comps>
-      <li Class="SpawnersandDrones.CompProperties_DeathOnDownedChance">
-        <DeathChance>1.0</DeathChance>
+      <li Class="RimSpawners.CompProperties_DeathOnDownedChance">
+        <deathChance>1.0</deathChance>
       </li>
     </comps>
   </ThingDef>
