@@ -10,12 +10,12 @@ namespace RimSpawners
 {
     class RimSpawnersSettings : ModSettings
     {
-        public float maxSpawnerPoints = 500f;
+        public float maxSpawnerPoints;
         public float daysToSpawn;
 
         public override void ExposeData()
         {
-            Scribe_Values.Look(ref maxSpawnerPoints, "maxSpawnerPoints", 0f);
+            Scribe_Values.Look(ref maxSpawnerPoints, "maxSpawnerPoints", 500f);
             Scribe_Values.Look(ref daysToSpawn, "daysToSpawn", 1f);
             base.ExposeData();
         }
@@ -42,6 +42,7 @@ namespace RimSpawners
             foreach (string spawnerName in spawnerNames)
             {
                 CompProperties_SpawnerPawn comp = DefDatabase<ThingDef>.GetNamed(spawnerName, true).GetCompProperties<CompProperties_SpawnerPawn>();
+                comp.maxSpawnedPawnsPoints = maxSpawnerPoints;
                 comp.pawnSpawnIntervalDays.min = daysToSpawn;
                 comp.pawnSpawnIntervalDays.max = daysToSpawn;
             }

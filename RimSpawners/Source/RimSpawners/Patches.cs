@@ -39,7 +39,7 @@ namespace RimSpawners
         {
             get
             {
-                return Props;
+                return (CompProperties_DeathOnDownedChance)props;
             }
         }
     }
@@ -58,9 +58,8 @@ namespace RimSpawners
                 if (Rand.Chance(comp.Props.deathChance))
                 {
                     ___pawn.Kill(dinfo, null);
+                    return false;
                 }
-                ___pawn.Kill(dinfo, null);
-                return false;
             }
             return true;
         }
@@ -68,22 +67,22 @@ namespace RimSpawners
 
 
     // handles death message of pawns
-    //[HarmonyPatch(typeof(Pawn_HealthTracker), "NotifyPlayerOfKilled")]
-    //class Pawn_HealthTracker_NotifyPlayerOfKilled_Patch
-    //{
-    //    public static bool Prefix(Pawn ___pawn)
-    //    {
-    //        DeathOnDownedChance comp = ___pawn.GetComp<DeathOnDownedChance>();
-    //        if (comp != null)
-    //        {
-    //            // need relations to be non-null for SetFaction to notify
-    //            if (___pawn.relations == null)
-    //            {
-    //                ___pawn.relations = new RimWorld.Pawn_RelationsTracker(___pawn);
-    //            }
-    //            ___pawn.SetFaction(null, null);
-    //        }
-    //        return true;
-    //    }
-    //}
+    [HarmonyPatch(typeof(Pawn_HealthTracker), "NotifyPlayerOfKilled")]
+    class Pawn_HealthTracker_NotifyPlayerOfKilled_Patch
+    {
+        public static bool Prefix(Pawn ___pawn)
+        {
+            DeathOnDownedChance comp = ___pawn.GetComp<DeathOnDownedChance>();
+            if (comp != null)
+            {
+                // need relations to be non-null for SetFaction to notify
+                if (___pawn.relations == null)
+                {
+                    ___pawn.relations = new RimWorld.Pawn_RelationsTracker(___pawn);
+                }
+                ___pawn.SetFaction(null, null);
+            }
+            return true;
+        }
+    }
 }
