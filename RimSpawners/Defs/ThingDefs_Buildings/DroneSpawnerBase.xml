@@ -31,7 +31,6 @@
     <tradeTags>
       <li>Spawners</li>
     </tradeTags>
-    <researchPrerequisites></researchPrerequisites>
     <designationCategory>Security</designationCategory>
   </ThingDef>
 
@@ -66,5 +65,6 @@
     <rotatable>false</rotatable>
     <canOverlapZones>false</canOverlapZones>
     <minifiedDef>MinifiedThing</minifiedDef>
+    <designationCategory>Security</designationCategory>
   </ThingDef>
 </Defs>
