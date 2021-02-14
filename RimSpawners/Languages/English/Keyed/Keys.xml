@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <RimSpawners_PawnSelection>Select pawn to spawn</RimSpawners_PawnSelection>
+  <RimSpawners_PawnSelectionDesc>Select the type of pawn to spawn</RimSpawners_PawnSelectionDesc>
+  <RimSpawners_PawnSelectionTabName>Pawns</RimSpawners_PawnSelectionTabName>
+  <RimSpawners_PawnSelectionButtonUnselected>Select</RimSpawners_PawnSelectionButtonUnselected>
+  <RimSpawners_PawnSelectionButtonSelected>Current</RimSpawners_PawnSelectionButtonSelected>
+</LanguageData>

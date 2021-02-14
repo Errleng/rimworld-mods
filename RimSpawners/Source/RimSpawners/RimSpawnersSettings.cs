@@ -36,15 +36,18 @@ namespace RimSpawners
                 "CentipedeAssembler",
                 "ScytherAssembler",
                 "LancerAssembler",
-                "PikemanAssembler"
+                "PikemanAssembler",
+                "UniversalSpawner"
             };
 
             foreach (string spawnerName in spawnerNames)
             {
-                CompProperties_SpawnerPawn comp = DefDatabase<ThingDef>.GetNamed(spawnerName, true).GetCompProperties<CompProperties_SpawnerPawn>();
+                ThingDef spawner = DefDatabase<ThingDef>.GetNamed(spawnerName, true);
+                CompProperties_SpawnerPawn comp = spawner.GetCompProperties<CompProperties_SpawnerPawn>();
                 comp.maxSpawnedPawnsPoints = maxSpawnerPoints;
                 comp.pawnSpawnIntervalDays.min = daysToSpawn;
                 comp.pawnSpawnIntervalDays.max = daysToSpawn;
+                comp.chooseSingleTypeToSpawn = true;
             }
         }
     }

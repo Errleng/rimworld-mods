@@ -22,29 +22,6 @@ namespace RimSpawners
     }
 
 
-    public class CompProperties_DeathOnDownedChance : CompProperties
-    {
-        public float deathChance; // value between 0 and 1 inclusive
-
-        public CompProperties_DeathOnDownedChance()
-        {
-            compClass = typeof(DeathOnDownedChance);
-        }
-    }
-
-
-    public class DeathOnDownedChance : ThingComp
-    {
-        public CompProperties_DeathOnDownedChance Props
-        {
-            get
-            {
-                return (CompProperties_DeathOnDownedChance)props;
-            }
-        }
-    }
-
-
     // if a pawn is downed and has the DeathOnDownedChance comp, kill it according to DeathChance
     [HarmonyPatch(typeof(Pawn_HealthTracker), "MakeDowned")]
     class Pawn_HealthTracker_MakeDowned_Patch
