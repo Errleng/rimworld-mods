@@ -40,11 +40,29 @@ namespace RimSpawners
 
         public void SetChosenKind(PawnKindDef newChosenKind)
         {
+            KillDownedPawns();
+
             CompSpawnerPawn cps = GetComp<CompSpawnerPawn>();
             Type cpsType = typeof(CompSpawnerPawn);
             FieldInfo chosenKindField = cpsType.GetField("chosenKind", BindingFlags.NonPublic | BindingFlags.Instance);
             chosenKindField.SetValue(cps, newChosenKind);
-            Log.Message($"Set universal spawner chosen pawn kind to {GetChosenKind().defName}");
+            ((CompProperties_SpawnerPawn)cps.props).spawnMessageKey = $"{newChosenKind.label} assembly complete";
+            Log.Message($"Set universal spawner chosen pawn kind to {GetChosenKind().defName} with point cost {newChosenKind.combatPower}");
+        }
+
+        public void KillDownedPawns()
+        {
+            int killCount = 0;
+            CompSpawnerPawn cps = GetComp<CompSpawnerPawn>();
+            foreach (Pawn pawn in cps.spawnedPawns)
+            {
+                if (pawn.health.Downed)
+                {
+                    ++killCount;
+                    pawn.Kill(null, null);
+                }
+            }
+            Log.Message($"RimSpawners killed {killCount} downed pawns out of {cps.spawnedPawns.Count}");
         }
     }
 }

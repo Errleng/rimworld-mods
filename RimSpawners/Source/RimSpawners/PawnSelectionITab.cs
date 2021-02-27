@@ -103,7 +103,7 @@ namespace RimSpawners
 
             // pawn kind name
             Rect labelRect = new Rect(60, currentY, width, PAWN_ROW_HEIGHT);
-            Widgets.Label(labelRect, pawnKind.label);
+            Widgets.Label(labelRect, $"{pawnKind.label} ({pawnKind.combatPower} points)");
 
             // button for selecting a new pawn kind
             Rect selectButtonRect = new Rect(350, currentY, 100, PAWN_ROW_HEIGHT);
