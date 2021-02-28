@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using Verse;
 using RimWorld;
+using Verse.AI.Group;
 
 namespace RimSpawners
 {
@@ -39,43 +40,66 @@ namespace RimSpawners
                     return false;
                 }
             }
+
+            // kill pawns from spawners
+            // the spawner Lord has LordJob.RemoveDownedPawns = true
+            //   cannot loop over spawnedPawns later to kill downed, must kill before MakeDowned runs
+            if ((___pawn.Faction != null) && ___pawn.Faction.IsPlayer)
+            {
+                if (___pawn.Map.IsPlayerHome)
+                {
+                    Log.Message($"Checking to see if {___pawn.Label} is from a spawner");
+                    IEnumerable<UniversalSpawner> spawners = ___pawn.Map.listerBuildings.AllBuildingsColonistOfClass<UniversalSpawner>();
+                    foreach (UniversalSpawner spawner in spawners)
+                    {
+                        CompSpawnerPawn cps = spawner.GetComp<CompSpawnerPawn>();
+                        if (cps.spawnedPawns.Contains(___pawn))
+                        {
+                            Log.Message($"{___pawn.Label} is from a spawner and is being killed on downed");
+                            ___pawn.Kill(dinfo, null);
+                            return false;
+                        }
+                    }
+                }
+            }
+
             return true;
         }
     }
 
 
     // handles death message of pawns
-    [HarmonyPatch(typeof(Pawn_HealthTracker), "NotifyPlayerOfKilled")]
-    class Pawn_HealthTracker_NotifyPlayerOfKilled_Patch
-    {
-        public static bool Prefix(Pawn ___pawn)
-        {
-            DeathOnDownedChance comp = ___pawn.GetComp<DeathOnDownedChance>();
-            if (comp != null)
-            {
-                // need relations to be non-null for SetFaction to notify
-                if (___pawn.relations == null)
-                {
-                    ___pawn.relations = new RimWorld.Pawn_RelationsTracker(___pawn);
-                }
-                ___pawn.SetFaction(null, null);
-            }
-            return true;
-        }
-    }
+    //[HarmonyPatch(typeof(Pawn_HealthTracker), "NotifyPlayerOfKilled")]
+    //class Pawn_HealthTracker_NotifyPlayerOfKilled_Patch
+    //{
+    //    public static bool Prefix(Pawn ___pawn)
+    //    {
+    //        DeathOnDownedChance comp = ___pawn.GetComp<DeathOnDownedChance>();
+    //        if (comp != null)
+    //        {
+    //            // need relations to be non-null for SetFaction to notify
+    //            if (___pawn.relations == null)
+    //            {
+    //                ___pawn.relations = new RimWorld.Pawn_RelationsTracker(___pawn);
+    //            }
+    //            ___pawn.SetFaction(null, null);
+    //        }
+    //        return true;
+    //    }
+    //}
 
     [HarmonyPatch(typeof(CompSpawnerPawn), "TrySpawnPawn")]
     class CompSpawnerPawn_TrySpawnPawn_Patch
     {
-        public static void Postfix(CompSpawnerPawn __instance)
+        public static void Postfix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind)
         {
-            Log.Message($"Spawner {__instance.parent.Label} of faction {__instance.parent.Faction.Name}, which is player: {__instance.parent.Faction.IsPlayer}");
             if (__instance.parent.Faction.IsPlayer)
             {
                 UniversalSpawner us = __instance.parent as UniversalSpawner;
                 if (us != null)
                 {
-                    us.KillDownedPawns();
+                    // pawn spawned notification
+                    Messages.Message($"{___chosenKind.label} assembly complete".Translate(), __instance.parent, MessageTypeDefOf.PositiveEvent, true);
                 }
             }
         }

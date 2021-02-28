@@ -72,7 +72,8 @@ namespace RimSpawners
                         DrawPawnRow(pawnKind, currY, viewRect.width);
                         currY += PAWN_ROW_HEIGHT;
                     }
-                } else
+                }
+                else
                 {
                     currY += PAWN_ROW_HEIGHT;
                 }
