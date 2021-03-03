@@ -20,6 +20,7 @@ namespace RimSpawners
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
+            listingStandard.CheckboxLabeled($"Disable spawned pawn needs: {settings.disableNeeds}", ref settings.disableNeeds);
             listingStandard.Label($"Maximum points: {settings.maxSpawnerPoints}");
             // A year is four quadrums and a quadrum is fifteen days
             settings.maxSpawnerPoints = listingStandard.Slider(settings.maxSpawnerPoints, 200f, 2000f);

@@ -12,11 +12,13 @@ namespace RimSpawners
     {
         public float maxSpawnerPoints;
         public float daysToSpawn;
+        public bool disableNeeds;
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref maxSpawnerPoints, "maxSpawnerPoints", 500f);
             Scribe_Values.Look(ref daysToSpawn, "daysToSpawn", 1f);
+            Scribe_Values.Look(ref disableNeeds, "disableNeeds", true);
             base.ExposeData();
         }
 

@@ -91,7 +91,29 @@ namespace RimSpawners
     [HarmonyPatch(typeof(CompSpawnerPawn), "TrySpawnPawn")]
     class CompSpawnerPawn_TrySpawnPawn_Patch
     {
-        public static void Postfix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind)
+        public static bool Prefix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind)
+        {
+            if (__instance.parent.Faction.IsPlayer)
+            {
+                UniversalSpawner us = __instance.parent as UniversalSpawner;
+                if (us != null)
+                {
+                    if (___chosenKind != null)
+                    {
+                        // handle special pawns
+                        if (___chosenKind.lifeStages.Count == 0)
+                        {
+                            Log.Message($"{___chosenKind.label} has no lifestages, trying to create a placeholder");
+                            ___chosenKind.lifeStages = new List<PawnKindLifeStage>();
+                            ___chosenKind.lifeStages.Add(new PawnKindLifeStage());
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        public static void Postfix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind, ref Pawn pawn)
         {
             if (__instance.parent.Faction.IsPlayer)
             {
@@ -100,6 +122,12 @@ namespace RimSpawners
                 {
                     // pawn spawned notification
                     Messages.Message($"{___chosenKind.label} assembly complete".Translate(), __instance.parent, MessageTypeDefOf.PositiveEvent, true);
+
+                    if (LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>().disableNeeds)
+                    {
+                        // remove pawns needs
+                        pawn.needs.AllNeeds.Clear();
+                    }
                 }
             }
         }

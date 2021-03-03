@@ -24,6 +24,17 @@ namespace RimSpawners
             }
         }
 
+        public override string GetInspectString()
+        {
+            CompProperties_SpawnerPawn comp = def.GetCompProperties<CompProperties_SpawnerPawn>();
+
+            CompSpawnerPawn cps = GetComp<CompSpawnerPawn>();
+            Type cpsType = typeof(CompSpawnerPawn);
+            PropertyInfo spawnedPawnsPointsProperty = cpsType.GetProperty("SpawnedPawnsPoints", BindingFlags.Instance | BindingFlags.NonPublic);
+            float currentPoints = (float)spawnedPawnsPointsProperty.GetValue(cps);
+            return base.GetInspectString() + $"\n{currentPoints}/{comp.maxSpawnedPawnsPoints} points";
+        }
+
         public void SetPawnKindsToSpawn(List<PawnKindDef> newPawnKindsToSpawn)
         {
             CompProperties_SpawnerPawn comp = def.GetCompProperties<CompProperties_SpawnerPawn>();
