@@ -63,6 +63,7 @@
     <Compile Include="CompPawnSelectionGizmo.cs" />
     <Compile Include="PawnSelectionWindow.cs" />
     <Compile Include="RimSpawners.cs" />
+    <Compile Include="RimSpawnersPawnComp.cs" />
     <Compile Include="RimSpawnersSettings.cs" />
     <Compile Include="Patches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -21,8 +21,23 @@ namespace RimSpawners
                 defaultLabel = "RimSpawners_PawnSelection".Translate(),
                 defaultDesc = "RimSpawners_PawnSelectionDesc".Translate(),
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/Draft"),
-                action = () => {
+                action = () =>
+                {
                     Find.WindowStack.Add(new PawnSelectionWindow());
+                }
+            };
+            yield return new Command_Action()
+            {
+                defaultLabel = "RimSpawners_Reset".Translate(),
+                defaultDesc = "RimSpawners_ResetDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/Commands/TryReconnect"),
+                action = () =>
+                {
+                    UniversalSpawner us = parent as UniversalSpawner;
+                    if (us != null)
+                    {
+                        us.ResetCompSpawnerPawn();
+                    }
                 }
             };
         }

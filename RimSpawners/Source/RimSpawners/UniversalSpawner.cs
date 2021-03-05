@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using Verse;
+using Verse.AI.Group;
 
 namespace RimSpawners
 {
@@ -39,7 +40,7 @@ namespace RimSpawners
         {
             CompProperties_SpawnerPawn comp = def.GetCompProperties<CompProperties_SpawnerPawn>();
             comp.spawnablePawnKinds = newPawnKindsToSpawn;
-            Log.Message($"Set universal spawner pawn kinds to {string.Join(", ", comp.spawnablePawnKinds)}");
+            Log.Message($"Set spawner pawn kinds to {string.Join(", ", comp.spawnablePawnKinds)}");
         }
 
         public PawnKindDef GetChosenKind()
@@ -57,7 +58,18 @@ namespace RimSpawners
             FieldInfo chosenKindField = cpsType.GetField("chosenKind", BindingFlags.NonPublic | BindingFlags.Instance);
             chosenKindField.SetValue(cps, newChosenKind);
 
-            Log.Message($"Set universal spawner chosen pawn kind to {GetChosenKind().defName} with point cost {newChosenKind.combatPower}");
+            Log.Message($"Set spawner chosen pawn kind to {GetChosenKind().defName} with point cost {newChosenKind.combatPower}");
+        }
+
+        public void ResetCompSpawnerPawn()
+        {
+            Log.Message($"Resetting spawner: destroying all its spawned pawns");
+
+            CompSpawnerPawn cps = GetComp<CompSpawnerPawn>();
+            foreach (Pawn pawn in cps.spawnedPawns)
+            {
+                pawn.Destroy();
+            }
         }
     }
 }

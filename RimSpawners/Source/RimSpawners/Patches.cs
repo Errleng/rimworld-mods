@@ -48,6 +48,12 @@ namespace RimSpawners
             {
                 if (___pawn.Map.IsPlayerHome)
                 {
+                    RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
+                    if (customThingComp != null)
+                    {
+                        Log.Message($"Downed pawn has RimSpawners ThingComp");
+                    }
+
                     Log.Message($"Checking to see if {___pawn.Label} is from a spawner");
                     IEnumerable<UniversalSpawner> spawners = ___pawn.Map.listerBuildings.AllBuildingsColonistOfClass<UniversalSpawner>();
                     foreach (UniversalSpawner spawner in spawners)
@@ -123,11 +129,11 @@ namespace RimSpawners
                     // pawn spawned notification
                     Messages.Message($"{___chosenKind.label} assembly complete".Translate(), __instance.parent, MessageTypeDefOf.PositiveEvent, true);
 
-                    if (LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>().disableNeeds)
-                    {
-                        // remove pawns needs
-                        pawn.needs.AllNeeds.Clear();
-                    }
+                    RimSpawnersPawnComp customThingComp = new RimSpawnersPawnComp();
+                    RimSpawnersPawnCompProperties customThingCompProps = new RimSpawnersPawnCompProperties();
+                    customThingComp.parent = pawn;
+                    pawn.AllComps.Add(customThingComp);
+                    customThingComp.Initialize(customThingCompProps);
                 }
             }
         }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <ThoughtDef>
+        <defName>RimSpawnersPawnThought</defName>
+        <workerClass>ThoughtWorker_Hediff</workerClass>
+        <hediff>RimSpawnersPawnHediff</hediff>
+        <validWhileDespawned>true</validWhileDespawned>
+        <stages>
+            <li>
+                <label>vanometrically fabricated</label>
+                <description>This being was created primarily for combat and work.</description>
+                <baseMoodEffect>100</baseMoodEffect>
+            </li>
+        </stages>
+    </ThoughtDef>
+</Defs>
