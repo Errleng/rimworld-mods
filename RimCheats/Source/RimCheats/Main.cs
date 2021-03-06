@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System;
+using System.Text;
 
 namespace RimCheats
 {
@@ -27,6 +28,7 @@ namespace RimCheats
             listingStandard.CheckboxLabeled("Enable working", ref settings.enableWorking, "Global work speed multiplied by amount");
             listingStandard.CheckboxLabeled("Enable learning", ref settings.enableLearning, "Global learning speed multiplied by amount");
             listingStandard.CheckboxLabeled("Enable carrying capacity", ref settings.enableCarryingCapacity, "Carrying capacity multiplied by amount");
+            listingStandard.CheckboxLabeled("Carrying capacity affects mass capacity?", ref settings.enableCarryingCapacityMass, "Mass capacity is multiplied by carrying capacity");
             listingStandard.CheckboxLabeled("Enable faster progress bar toils", ref settings.enableFasterProgressBars, "Multiply the speed that toils with progress bars are completed");
             listingStandard.Label($"Work multplier: {settings.workMultiplier}");
             settings.workMultiplier = listingStandard.Slider(settings.workMultiplier, 0f, 100f);
@@ -53,6 +55,7 @@ namespace RimCheats
         public bool enableLearning;
         public bool disableTerrainCost;
         public bool enableCarryingCapacity;
+        public bool enableCarryingCapacityMass;
         public bool enableFasterProgressBars;
         public float workMultiplier;
         public float learnMultiplier;
@@ -66,6 +69,7 @@ namespace RimCheats
             Scribe_Values.Look(ref enableLearning, "enableLearning");
             Scribe_Values.Look(ref disableTerrainCost, "disableTerrainCost");
             Scribe_Values.Look(ref enableCarryingCapacity, "enableCarryingCapacity");
+            Scribe_Values.Look(ref enableCarryingCapacityMass, "enableCarryingCapacityMass");
             Scribe_Values.Look(ref enableFasterProgressBars, "enableFasterProgressBars");
             Scribe_Values.Look(ref workMultiplier, "workMultiplier", 1f);
             Scribe_Values.Look(ref learnMultiplier, "learnMultiplier", 1f);
@@ -234,30 +238,36 @@ namespace RimCheats
     }
 
     // carrying capacity is different from "mass capacity"/"inventory space"
-    //[HarmonyPatch(typeof(MassUtility), "Capacity")]
-    //public static class MassUtility_Capacity_Patch
-    //{
-    //    [HarmonyPrefix]
-    //    public static bool Capacity(ref float __result, Pawn p, StringBuilder explanation)
-    //    {
-    //        if (!MassUtility.CanEverCarryAnything(p))
-    //        {
-    //            __result = 0f;
-    //            return false;
-    //        }
+    [HarmonyPatch(typeof(MassUtility), "Capacity")]
+    public static class MassUtility_Capacity_Patch
+    {
+        [HarmonyPrefix]
+        public static bool Capacity(ref float __result, Pawn p, StringBuilder explanation = null)
+        {
+            bool enableCarryingCapacityMass = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().enableCarryingCapacityMass;
+            if (enableCarryingCapacityMass)
+            {
+                if (!MassUtility.CanEverCarryAnything(p))
+                {
+                    __result = 0f;
+                    return false;
+                }
 
-    //        __result = p.BodySize * p.GetStatValue(StatDefOf.CarryingCapacity);
-    //        if (explanation != null)
-    //        {
-    //            if (explanation.Length > 0)
-    //            {
-    //                explanation.AppendLine();
-    //            }
-    //            explanation.Append("  - " + p.LabelShortCap + ": " + __result.ToStringMassOffset());
-    //        }
-    //        return false;
-    //    }
-    //}
+                float capacity = p.BodySize * 35f * p.GetStatValue(StatDefOf.CarryingCapacity);
+
+                if (explanation != null)
+                {
+                    if (explanation.Length > 0)
+                    {
+                        explanation.AppendLine();
+                    }
+                    explanation.Append("  - " + p.LabelShortCap + ": " + capacity.ToStringMassOffset());
+                }
+                __result = capacity;
+            }
+            return false;
+        }
+    }
 
     // faster job speed
     //[HarmonyPatch(typeof(JobDriver), "DriverTick")]

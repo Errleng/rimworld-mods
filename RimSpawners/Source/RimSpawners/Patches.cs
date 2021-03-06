@@ -121,7 +121,7 @@ namespace RimSpawners
             if (__instance.parent.Faction.IsPlayer)
             {
                 UniversalSpawner us = __instance.parent as UniversalSpawner;
-                if ((us != null) && (us.getChosenKind() != null))
+                if ((us != null) && (us.GetChosenKind() != null))
                 {
                     // pawn spawned notification
                     Messages.Message($"{___chosenKind.label} assembly complete".Translate(), __instance.parent, MessageTypeDefOf.PositiveEvent, true);
