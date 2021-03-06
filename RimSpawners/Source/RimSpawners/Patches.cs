@@ -102,17 +102,14 @@ namespace RimSpawners
             if (__instance.parent.Faction.IsPlayer)
             {
                 UniversalSpawner us = __instance.parent as UniversalSpawner;
-                if (us != null)
+                if ((us != null) && (___chosenKind != null))
                 {
-                    if (___chosenKind != null)
+                    // handle special pawns
+                    if (___chosenKind.lifeStages.Count == 0)
                     {
-                        // handle special pawns
-                        if (___chosenKind.lifeStages.Count == 0)
-                        {
-                            Log.Message($"{___chosenKind.label} has no lifestages, trying to create a placeholder");
-                            ___chosenKind.lifeStages = new List<PawnKindLifeStage>();
-                            ___chosenKind.lifeStages.Add(new PawnKindLifeStage());
-                        }
+                        Log.Message($"{___chosenKind.label} has no lifestages, trying to create a placeholder");
+                        ___chosenKind.lifeStages = new List<PawnKindLifeStage>();
+                        ___chosenKind.lifeStages.Add(new PawnKindLifeStage());
                     }
                 }
             }
@@ -124,7 +121,7 @@ namespace RimSpawners
             if (__instance.parent.Faction.IsPlayer)
             {
                 UniversalSpawner us = __instance.parent as UniversalSpawner;
-                if (us != null)
+                if ((us != null) && (us.getChosenKind() != null))
                 {
                     // pawn spawned notification
                     Messages.Message($"{___chosenKind.label} assembly complete".Translate(), __instance.parent, MessageTypeDefOf.PositiveEvent, true);

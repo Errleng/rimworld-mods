@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <!-- Base Spawner -->
   <ThingDef ParentName="BuildingBase" Name="SpawnerBase" Abstract="True">
@@ -66,5 +65,44 @@
     <canOverlapZones>false</canOverlapZones>
     <minifiedDef>MinifiedThing</minifiedDef>
     <designationCategory>Security</designationCategory>
+  </ThingDef>
+
+  <!-- Universal Spawner -->
+  <ThingDef ParentName="SpawnerBase">
+    <defName>UniversalSpawner</defName>
+    <label>universal assembler</label>
+    <description>Passively fabricates mechanoids with rudimentary vanometric tech and particles extracted from the atmosphere. \n\nMechanoids are loyal to the faction that owns the assembler.</description>
+    <thingClass>RimSpawners.UniversalSpawner</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Spawner/Spawner_mech</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1.75, 1.75)</drawSize>
+      <shadowData>
+        <volume>(1.5, 1.0, 0.2)</volume>
+        <offset>(0.0, 0.0, 0.0)</offset>
+      </shadowData>
+    </graphicData>
+    <inspectorTabs>
+      <li>RimSpawners.PawnSelectionITab</li>
+    </inspectorTabs>
+    <comps>
+      <li Class="CompProperties_SpawnerPawn">
+        <spawnablePawnKinds></spawnablePawnKinds>
+        <chooseSingleTypeToSpawn>True</chooseSingleTypeToSpawn>
+        <nextSpawnInspectStringKey>MechAssemblyCompleteIn</nextSpawnInspectStringKey>
+        <maxSpawnedPawnsPoints>500</maxSpawnedPawnsPoints>
+        <spawnSound>Drone_Spawn</spawnSound>
+        <lordJob>LordJob_AssaultColony</lordJob>
+        <pawnSpawnIntervalDays>0.1</pawnSpawnIntervalDays>
+        <showNextSpawnInInspect>true</showNextSpawnInInspect>
+      </li>
+      <li Class="CompProperties_Glower">
+        <glowRadius>3</glowRadius>
+        <glowColor>(102,0,0,0)</glowColor>
+      </li>
+      <li>
+        <compClass>RimSpawners.CompPawnSelectionGizmo</compClass>
+      </li>
+    </comps>
   </ThingDef>
 </Defs>
