@@ -12,13 +12,15 @@ namespace RimSpawners
     {
         public float maxSpawnerPoints;
         public float daysToSpawn;
+        public bool disableCorpses;
         public bool disableNeeds;
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref maxSpawnerPoints, "maxSpawnerPoints", 500f);
             Scribe_Values.Look(ref daysToSpawn, "daysToSpawn", 1f);
-            Scribe_Values.Look(ref disableNeeds, "disableNeeds", true);
+            Scribe_Values.Look(ref disableCorpses, "disableCorpses", false);
+            Scribe_Values.Look(ref disableNeeds, "disableNeeds", false);
             base.ExposeData();
         }
 
@@ -26,19 +28,6 @@ namespace RimSpawners
         {
             string[] spawnerNames = new string[]
             {
-                "ScrappieAssembler",
-                "PepperAssembler",
-                "LoggerAssembler",
-                "TokamacAssembler",
-                "HomerAssembler",
-                "CinderAssembler",
-                "CutramAssembler",
-                "EScoutAssembler",
-                "ESpecialistAssembler",
-                "CentipedeAssembler",
-                "ScytherAssembler",
-                "LancerAssembler",
-                "PikemanAssembler",
                 "UniversalSpawner"
             };
 

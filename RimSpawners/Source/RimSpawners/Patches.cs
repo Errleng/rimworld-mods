@@ -24,7 +24,6 @@ namespace RimSpawners
     }
 
 
-    // if a pawn is downed and has the DeathOnDownedChance comp, kill it according to DeathChance
     [HarmonyPatch(typeof(Pawn_HealthTracker), "MakeDowned")]
     class Pawn_HealthTracker_MakeDowned_Patch
     {
@@ -41,34 +40,55 @@ namespace RimSpawners
                 }
             }
 
-            // kill pawns from spawners
             // the spawner Lord has LordJob.RemoveDownedPawns = true
             //   cannot loop over spawnedPawns later to kill downed, must kill before MakeDowned runs
             if ((___pawn.Faction != null) && ___pawn.Faction.IsPlayer)
             {
-                if (___pawn.Map.IsPlayerHome)
+                RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
+                if (customThingComp != null)
                 {
-                    RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
-                    if (customThingComp != null)
-                    {
-                        Log.Message($"Downed pawn has RimSpawners ThingComp");
-                    }
-
-                    Log.Message($"Checking to see if {___pawn.Label} is from a spawner");
-                    IEnumerable<UniversalSpawner> spawners = ___pawn.Map.listerBuildings.AllBuildingsColonistOfClass<UniversalSpawner>();
-                    foreach (UniversalSpawner spawner in spawners)
-                    {
-                        CompSpawnerPawn cps = spawner.GetComp<CompSpawnerPawn>();
-                        if (cps.spawnedPawns.Contains(___pawn))
-                        {
-                            Log.Message($"{___pawn.Label} is from a spawner and is being killed on downed");
-                            ___pawn.Kill(dinfo, null);
-                            return false;
-                        }
-                    }
+                    Log.Message($"Downed pawn has RimSpawners ThingComp");
+                    ___pawn.Kill(dinfo, null);
                 }
+
+                // old method without ThingComp
+                //if (___pawn.Map.IsPlayerHome)
+                //{
+                //    Log.Message($"Checking to see if {___pawn.Label} is from a spawner");
+                //    IEnumerable<UniversalSpawner> spawners = ___pawn.Map.listerBuildings.AllBuildingsColonistOfClass<UniversalSpawner>();
+                //    foreach (UniversalSpawner spawner in spawners)
+                //    {
+                //        CompSpawnerPawn cps = spawner.GetComp<CompSpawnerPawn>();
+                //        if (cps.spawnedPawns.Contains(___pawn))
+                //        {
+                //            Log.Message($"{___pawn.Label} is from a spawner and is being killed on downed");
+                //            ___pawn.Kill(dinfo, null);
+                //            return false;
+                //        }
+                //    }
+                //}
             }
 
+            return true;
+        }
+    }
+
+
+    [HarmonyPatch(typeof(Pawn), "Kill")]
+    class Pawn_Kill_Patch
+    {
+        public static bool Prefix(Pawn __instance)
+        {
+            if ((__instance.Faction != null) && __instance.Faction.IsPlayer)
+            {
+                RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
+                if ((customThingComp != null) && LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>().disableCorpses)
+                {
+                    Log.Message($"Downed pawn has RimSpawners ThingComp");
+                    __instance.Destroy();
+                    return false;
+                }
+            }
             return true;
         }
     }
@@ -105,11 +125,18 @@ namespace RimSpawners
                 if ((us != null) && (___chosenKind != null))
                 {
                     // handle special pawns
-                    if (___chosenKind.lifeStages.Count == 0)
+                    if ((___chosenKind.lifeStages.Count == 0) && (___chosenKind.RaceProps.Humanlike))
                     {
-                        Log.Message($"{___chosenKind.label} has no lifestages, trying to create a placeholder");
+
                         ___chosenKind.lifeStages = new List<PawnKindLifeStage>();
-                        ___chosenKind.lifeStages.Add(new PawnKindLifeStage());
+
+                        // TrySpawnPawn picks the age of the pawn at lifeStageAges[(lifeStages.Count - 1)]
+                        int numLifeStages = ___chosenKind.race.race.lifeStageAges.Count;
+                        PawnKindLifeStage placeholderLifeStage = new PawnKindLifeStage();
+                        for (int i = 0; i < numLifeStages; i++)
+                        {
+                            ___chosenKind.lifeStages.Add(placeholderLifeStage);
+                        }
                     }
                 }
             }
@@ -131,8 +158,26 @@ namespace RimSpawners
                     customThingComp.parent = pawn;
                     pawn.AllComps.Add(customThingComp);
                     customThingComp.Initialize(customThingCompProps);
+
+                    Lord currentLord = pawn.GetLord();
+                    Log.Message($"Current pawn {pawn.Label} lord: {currentLord.DebugString()}");
                 }
             }
+        }
+    }
+
+
+    [HarmonyPatch(typeof(PawnDiedOrDownedThoughtsUtility), "GetThoughts")]
+    class PawnDiedOrDownedThoughtsUtility_GetThoughts
+    {
+        public static bool Prefix(Pawn victim)
+        {
+            RimSpawnersPawnComp customThingComp = victim.GetComp<RimSpawnersPawnComp>();
+            if (customThingComp != null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

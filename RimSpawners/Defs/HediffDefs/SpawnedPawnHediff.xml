@@ -15,6 +15,10 @@
                 <hungerRateFactor>0</hungerRateFactor>
                 <restFallFactor>0</restFallFactor>
                 <totalBleedFactor>0</totalBleedFactor>
+                <naturalHealingFactor>100</naturalHealingFactor>
+                <statOffsets>
+                    <ImmunityGainSpeed>10</ImmunityGainSpeed>
+                </statOffsets>
             </li>
         </stages>
     </HediffDef>
