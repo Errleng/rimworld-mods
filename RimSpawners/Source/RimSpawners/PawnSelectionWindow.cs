@@ -65,17 +65,12 @@ namespace RimSpawners
             float currY = 0;
             foreach (PawnKindDef pawnKind in DefDatabase<PawnKindDef>.AllDefsListForReading)
             {
-                if (ShouldDrawPawnRow(currY, scrollPos.y, outRect.height))
+                if (searchKeyword.NullOrEmpty() || (pawnKind.label.IndexOf(searchKeyword, StringComparison.InvariantCultureIgnoreCase) >= 0))
                 {
-                    if (searchKeyword.NullOrEmpty() || (pawnKind.label.IndexOf(searchKeyword, StringComparison.InvariantCultureIgnoreCase) >= 0))
                     if (ShouldDrawPawnRow(currY, scrollPos.y, outRect.height))
                     {
                         DrawPawnRow(pawnKind, currY, viewRect.width);
-                        currY += PAWN_ROW_HEIGHT;
                     }
-                }
-                else
-                {
                     currY += PAWN_ROW_HEIGHT;
                 }
             }
