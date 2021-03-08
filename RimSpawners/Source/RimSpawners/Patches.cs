@@ -84,7 +84,10 @@ namespace RimSpawners
                 RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
                 if ((customThingComp != null) && LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>().disableCorpses)
                 {
-                    Log.Message($"Downed pawn has RimSpawners ThingComp");
+                    Log.Message($"Killed pawn has RimSpawners ThingComp");
+
+                    // maybe call pawn DeathActionWorker here (e.g. boomalopes explode on death)
+
                     __instance.Destroy();
                     return false;
                 }

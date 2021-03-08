@@ -25,6 +25,22 @@ namespace RimSpawners
             }
         }
 
+        public override void ExposeData()
+        {
+            base.ExposeData();
+
+            // add custom ThingComp to all pawns when loading a save
+            CompSpawnerPawn cps = GetComp<CompSpawnerPawn>();
+            foreach (Pawn pawn in cps.spawnedPawns)
+            {
+                RimSpawnersPawnComp customThingComp = new RimSpawnersPawnComp();
+                RimSpawnersPawnCompProperties customThingCompProps = new RimSpawnersPawnCompProperties();
+                customThingComp.parent = pawn;
+                pawn.AllComps.Add(customThingComp);
+                customThingComp.Initialize(customThingCompProps);
+            }
+        }
+
         public override string GetInspectString()
         {
             CompProperties_SpawnerPawn comp = def.GetCompProperties<CompProperties_SpawnerPawn>();
