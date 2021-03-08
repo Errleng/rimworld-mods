@@ -32,10 +32,8 @@ namespace RimSpawners
         private void RemovePawnNeeds()
         {
             Pawn parentPawn = parent as Pawn;
-            Log.Message($"Parent: {parentPawn.ToStringNullable()}");
             if (parentPawn != null)
             {
-                Log.Message($"RimSpawners ThingComp remove all needs from pawns");
                 //parentPawn.needs.AllNeeds.Clear();
 
                 // add hediff to remove pawn needs

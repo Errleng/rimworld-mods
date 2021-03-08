@@ -47,7 +47,6 @@ namespace RimSpawners
                 RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
                 if (customThingComp != null)
                 {
-                    Log.Message($"Downed pawn has RimSpawners ThingComp");
                     ___pawn.Kill(dinfo, null);
                 }
 
@@ -84,8 +83,6 @@ namespace RimSpawners
                 RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
                 if ((customThingComp != null) && LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>().disableCorpses)
                 {
-                    Log.Message($"Killed pawn has RimSpawners ThingComp");
-
                     // maybe call pawn DeathActionWorker here (e.g. boomalopes explode on death)
 
                     __instance.Destroy();
@@ -163,7 +160,6 @@ namespace RimSpawners
                     customThingComp.Initialize(customThingCompProps);
 
                     Lord currentLord = pawn.GetLord();
-                    Log.Message($"Current pawn {pawn.Label} lord: {currentLord.DebugString()}");
                 }
             }
         }
