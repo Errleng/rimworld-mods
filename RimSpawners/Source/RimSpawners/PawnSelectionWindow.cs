@@ -68,6 +68,7 @@ namespace RimSpawners
                 if (ShouldDrawPawnRow(currY, scrollPos.y, outRect.height))
                 {
                     if (searchKeyword.NullOrEmpty() || (pawnKind.label.IndexOf(searchKeyword, StringComparison.InvariantCultureIgnoreCase) >= 0))
+                    if (ShouldDrawPawnRow(currY, scrollPos.y, outRect.height))
                     {
                         DrawPawnRow(pawnKind, currY, viewRect.width);
                         currY += PAWN_ROW_HEIGHT;
