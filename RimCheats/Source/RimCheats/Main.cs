@@ -82,232 +82,235 @@ namespace RimCheats
     [StaticConstructorOnStartup]
     public class Patcher
     {
+        static RimCheatsSettings settings;
+
         static Patcher()
         {
+            settings = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>();
             var harmony = new Harmony("com.rimcheats.rimworld.mod");
             var assembly = Assembly.GetExecutingAssembly();
             harmony.PatchAll(assembly);
             Log.Message("RimCheats loaded");
         }
-    }
 
-    [HarmonyPatch(typeof(Pawn_PathFollower), "PatherTick")]
-    class PatchPawn_PathFollowerPatherTick
-    {
-        private static IntVec3 lastPos;
-
-        static void Postfix(Pawn_PathFollower __instance, Pawn ___pawn)
+        [HarmonyPatch(typeof(Pawn_PathFollower), "PatherTick")]
+        class PatchPawn_PathFollowerPatherTick
         {
-            bool enablePathing = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().enablePathing;
-            if (___pawn.IsColonistPlayerControlled && __instance.Moving && enablePathing)
+            private static IntVec3 lastPos;
+
+            static void Postfix(Pawn_PathFollower __instance, Pawn ___pawn)
             {
-                if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander))
+                bool enablePathing = settings.enablePathing;
+                if (___pawn.IsColonistPlayerControlled && __instance.Moving && enablePathing)
                 {
-                    return;
-                }
-
-                if (__instance.nextCellCostLeft > 0f)
-                {
-                    __instance.nextCellCostLeft = 0;
-                }
-
-                if (!___pawn.Position.Equals(lastPos))
-                {
-                    lastPos = ___pawn.Position;
-                    __instance.PatherTick();
-                }
-                else
-                {
-                    lastPos = ___pawn.Position;
-                }
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(Pawn_PathFollower), "CostToMoveIntoCell", new Type[] { typeof(Pawn), typeof(IntVec3) })]
-    class PatchPawn_CostToMoveIntoCell
-    {
-        private static IntVec3 lastPos;
-
-        static void Postfix(Pawn_PathFollower __instance, Pawn pawn, IntVec3 c, ref int __result)
-        {
-            bool disableTerrainCost = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().disableTerrainCost;
-            if (pawn.IsColonistPlayerControlled && disableTerrainCost)
-            {
-                // based off floating pawn code from Alpha Animals
-                int cost = __result;
-                if (cost < 10000)
-                {
-                    if (c.x == pawn.Position.x || c.z == pawn.Position.z)
+                    if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander))
                     {
-                        cost = pawn.TicksPerMoveCardinal;
+                        return;
+                    }
+
+                    if (__instance.nextCellCostLeft > 0f)
+                    {
+                        __instance.nextCellCostLeft = 0;
+                    }
+
+                    if (!___pawn.Position.Equals(lastPos))
+                    {
+                        lastPos = ___pawn.Position;
+                        __instance.PatherTick();
                     }
                     else
                     {
-                        cost = pawn.TicksPerMoveDiagonal;
+                        lastPos = ___pawn.Position;
                     }
-                    TerrainDef terrainDef = pawn.Map.terrainGrid.TerrainAt(c);
-                    if (terrainDef == null)
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(Pawn_PathFollower), "CostToMoveIntoCell", new Type[] { typeof(Pawn), typeof(IntVec3) })]
+        class PatchPawn_CostToMoveIntoCell
+        {
+            private static IntVec3 lastPos;
+
+            static void Postfix(Pawn_PathFollower __instance, Pawn pawn, IntVec3 c, ref int __result)
+            {
+                bool disableTerrainCost = settings.disableTerrainCost;
+                if (pawn.IsColonistPlayerControlled && disableTerrainCost)
+                {
+                    // based off floating pawn code from Alpha Animals
+                    int cost = __result;
+                    if (cost < 10000)
                     {
-                        cost = 10000;
-                    }
-                    else if (terrainDef.passability == Traversability.Impassable && !terrainDef.IsWater)
-                    {
-                        cost = 10000;
-                    }
-                    //else if (terrainDef.IsWater)
-                    //{
-                    //    cost = 10000;
-                    //}
-                    List<Thing> list = pawn.Map.thingGrid.ThingsListAt(c);
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        Thing thing = list[i];
-                        if (thing.def.passability == Traversability.Impassable)
+                        if (c.x == pawn.Position.x || c.z == pawn.Position.z)
+                        {
+                            cost = pawn.TicksPerMoveCardinal;
+                        }
+                        else
+                        {
+                            cost = pawn.TicksPerMoveDiagonal;
+                        }
+                        TerrainDef terrainDef = pawn.Map.terrainGrid.TerrainAt(c);
+                        if (terrainDef == null)
                         {
                             cost = 10000;
                         }
-                        //if (thing is Building_Door)
+                        else if (terrainDef.passability == Traversability.Impassable && !terrainDef.IsWater)
+                        {
+                            cost = 10000;
+                        }
+                        //else if (terrainDef.IsWater)
                         //{
-                        //    cost += 45;
+                        //    cost = 10000;
                         //}
+                        List<Thing> list = pawn.Map.thingGrid.ThingsListAt(c);
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            Thing thing = list[i];
+                            if (thing.def.passability == Traversability.Impassable)
+                            {
+                                cost = 10000;
+                            }
+                            //if (thing is Building_Door)
+                            //{
+                            //    cost += 45;
+                            //}
+                        }
+                        __result = cost;
                     }
-                    __result = cost;
                 }
             }
         }
-    }
 
-    [HarmonyPatch(typeof(StatExtension), "GetStatValue")]
-    class PatchStatExtensionGetStatValue
-    {
-        static void Postfix(Thing thing, StatDef stat, bool applyPostProcess, ref float __result)
+        [HarmonyPatch(typeof(StatExtension), "GetStatValue")]
+        class PatchStatExtensionGetStatValue
         {
-            Pawn pawn = thing as Pawn;
-            if ((pawn != null) && (pawn.IsColonistPlayerControlled))
+            static void Postfix(Thing thing, StatDef stat, bool applyPostProcess, ref float __result)
             {
-                bool enableWorking = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().enableWorking;
-                bool enableLearning = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().enableLearning;
-                bool enableCarryingCapacity = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().enableCarryingCapacity;
+                Pawn pawn = thing as Pawn;
+                if ((pawn != null) && (pawn.IsColonistPlayerControlled))
+                {
+                    bool enableWorking = settings.enableWorking;
+                    bool enableLearning = settings.enableLearning;
+                    bool enableCarryingCapacity = settings.enableCarryingCapacity;
 
-                if (enableWorking && stat.Equals(StatDefOf.WorkSpeedGlobal))
-                {
-                    float workMultiplier = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().workMultiplier;
-                    __result *= workMultiplier;
-                }
-                else if (enableLearning && stat.Equals(StatDefOf.GlobalLearningFactor))
-                {
-                    float learnMultiplier = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().learnMultiplier;
-                    __result *= learnMultiplier;
-                }
-                else if (enableCarryingCapacity && stat.Equals(StatDefOf.CarryingCapacity))
-                {
-                    float carryingCapacityMultiplier = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().carryingCapacityMultiplier;
-                    __result *= carryingCapacityMultiplier;
-                }
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(Toils_General), "Wait")]
-    class Patch_Toils_General_Wait
-    {
-        static void Postfix(ref Toil __result)
-        {
-            bool enableFasterProgressBars = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().enableFasterProgressBars;
-            if (enableFasterProgressBars)
-            {
-                Toil toil = __result;
-                __result.initAction = delegate ()
-                {
-                    if (toil.actor.IsColonistPlayerControlled)
+                    if (enableWorking && stat.Equals(StatDefOf.WorkSpeedGlobal))
                     {
-                        float progressBarSpeedMultiplier = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().progressBarSpeedMultiplier;
-
-                        float oldDefaultDuration = toil.defaultDuration;
-                        float oldTicksLeftThisToil = toil.actor.jobs.curDriver.ticksLeftThisToil;
-                        toil.defaultDuration = (int)(toil.defaultDuration / progressBarSpeedMultiplier);
-                        //Log.Message($"Toil defaultDuration: {oldDefaultDuration} -> {toil.defaultDuration}");
-                        toil.actor.jobs.curDriver.ticksLeftThisToil = (int)(toil.actor.jobs.curDriver.ticksLeftThisToil / progressBarSpeedMultiplier);
-                        //Log.Message($"CurDriver ticksLeftThisToil: {oldTicksLeftThisToil} -> {toil.actor.jobs.curDriver.ticksLeftThisToil}");
+                        float workMultiplier = settings.workMultiplier;
+                        __result *= workMultiplier;
                     }
-                    toil.actor.pather.StopDead();
-                };
-            }
-        }
-    }
-
-    // carrying capacity is different from "mass capacity"/"inventory space"
-    [HarmonyPatch(typeof(MassUtility), "Capacity")]
-    public static class MassUtility_Capacity_Patch
-    {
-        [HarmonyPrefix]
-        public static bool Capacity(ref float __result, Pawn p, StringBuilder explanation = null)
-        {
-            bool enableCarryingCapacityMass = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>().enableCarryingCapacityMass;
-            if (enableCarryingCapacityMass)
-            {
-                if (!MassUtility.CanEverCarryAnything(p))
-                {
-                    __result = 0f;
-                    return false;
-                }
-
-                float capacity = p.BodySize * 35f * p.GetStatValue(StatDefOf.CarryingCapacity);
-
-                if (explanation != null)
-                {
-                    if (explanation.Length > 0)
+                    else if (enableLearning && stat.Equals(StatDefOf.GlobalLearningFactor))
                     {
-                        explanation.AppendLine();
+                        float learnMultiplier = settings.learnMultiplier;
+                        __result *= learnMultiplier;
                     }
-                    explanation.Append("  - " + p.LabelShortCap + ": " + capacity.ToStringMassOffset());
+                    else if (enableCarryingCapacity && stat.Equals(StatDefOf.CarryingCapacity))
+                    {
+                        float carryingCapacityMultiplier = settings.carryingCapacityMultiplier;
+                        __result *= carryingCapacityMultiplier;
+                    }
                 }
-                __result = capacity;
             }
-            return false;
         }
+
+        [HarmonyPatch(typeof(Toils_General), "Wait")]
+        class Patch_Toils_General_Wait
+        {
+            static void Postfix(ref Toil __result)
+            {
+                bool enableFasterProgressBars = settings.enableFasterProgressBars;
+                if (enableFasterProgressBars)
+                {
+                    Toil toil = __result;
+                    __result.initAction = delegate ()
+                    {
+                        if (toil.actor.IsColonistPlayerControlled)
+                        {
+                            float progressBarSpeedMultiplier = settings.progressBarSpeedMultiplier;
+
+                            float oldDefaultDuration = toil.defaultDuration;
+                            float oldTicksLeftThisToil = toil.actor.jobs.curDriver.ticksLeftThisToil;
+                            toil.defaultDuration = (int)(toil.defaultDuration / progressBarSpeedMultiplier);
+                            //Log.Message($"Toil defaultDuration: {oldDefaultDuration} -> {toil.defaultDuration}");
+                            toil.actor.jobs.curDriver.ticksLeftThisToil = (int)(toil.actor.jobs.curDriver.ticksLeftThisToil / progressBarSpeedMultiplier);
+                            //Log.Message($"CurDriver ticksLeftThisToil: {oldTicksLeftThisToil} -> {toil.actor.jobs.curDriver.ticksLeftThisToil}");
+                        }
+                        toil.actor.pather.StopDead();
+                    };
+                }
+            }
+        }
+
+        // carrying capacity is different from "mass capacity"/"inventory space"
+        [HarmonyPatch(typeof(MassUtility), "Capacity")]
+        public static class MassUtility_Capacity_Patch
+        {
+            [HarmonyPrefix]
+            public static bool Capacity(ref float __result, Pawn p, StringBuilder explanation = null)
+            {
+                bool enableCarryingCapacityMass = settings.enableCarryingCapacityMass;
+                if (enableCarryingCapacityMass)
+                {
+                    if (!MassUtility.CanEverCarryAnything(p))
+                    {
+                        __result = 0f;
+                        return false;
+                    }
+
+                    float capacity = p.BodySize * 35f * p.GetStatValue(StatDefOf.CarryingCapacity);
+
+                    if (explanation != null)
+                    {
+                        if (explanation.Length > 0)
+                        {
+                            explanation.AppendLine();
+                        }
+                        explanation.Append("  - " + p.LabelShortCap + ": " + capacity.ToStringMassOffset());
+                    }
+                    __result = capacity;
+                }
+                return false;
+            }
+        }
+
+        // faster job speed
+        //[HarmonyPatch(typeof(JobDriver), "DriverTick")]
+        //class PatchJobDriverDriverTick
+        //{
+        //    static void Postfix(JobDriver __instance, bool ___wantBeginNextToil, ToilCompleteMode ___curToilCompleteMode, int ___curToilIndex, List<Toil> ___toils)
+        //    {
+        //        if ((__instance.pawn != null) && __instance.pawn.IsColonistPlayerControlled)
+        //        {
+        //            if (___curToilIndex < 0 || __instance.job == null || __instance.pawn.CurJob != __instance.job)
+        //            {
+        //                return;
+        //            }
+        //            if (___curToilIndex >= ___toils.Count)
+        //            {
+        //                return;
+        //            }
+        //            Toil curToil = ___toils[___curToilIndex];
+        //            if (curToil != null)
+        //            {
+        //                Job job = __instance.job;
+        //                JobDef jobDef = job.def;
+        //                if (jobDef.joyDuration == 0 || ((jobDef.joyDuration == 4000) && (jobDef.joyGainRate == 1f) && (jobDef.joyMaxParticipants == 1)))
+        //                {
+        //                    __instance.ticksLeftThisToil = 0;
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
+        //[HarmonyPatch(typeof(JobDriver_CleanFilth), "Filth", MethodType.Getter)]
+        //class PatchJobDriver_CleanFilthFilth
+        //{
+        //    static void Postfix(ref Filth __result)
+        //    {
+        //        if (!__result.Destroyed)
+        //        {
+        //            __result.Destroy(DestroyMode.Vanish);
+        //        }
+        //    }
+        //}
     }
-
-    // faster job speed
-    //[HarmonyPatch(typeof(JobDriver), "DriverTick")]
-    //class PatchJobDriverDriverTick
-    //{
-    //    static void Postfix(JobDriver __instance, bool ___wantBeginNextToil, ToilCompleteMode ___curToilCompleteMode, int ___curToilIndex, List<Toil> ___toils)
-    //    {
-    //        if ((__instance.pawn != null) && __instance.pawn.IsColonistPlayerControlled)
-    //        {
-    //            if (___curToilIndex < 0 || __instance.job == null || __instance.pawn.CurJob != __instance.job)
-    //            {
-    //                return;
-    //            }
-    //            if (___curToilIndex >= ___toils.Count)
-    //            {
-    //                return;
-    //            }
-    //            Toil curToil = ___toils[___curToilIndex];
-    //            if (curToil != null)
-    //            {
-    //                Job job = __instance.job;
-    //                JobDef jobDef = job.def;
-    //                if (jobDef.joyDuration == 0 || ((jobDef.joyDuration == 4000) && (jobDef.joyGainRate == 1f) && (jobDef.joyMaxParticipants == 1)))
-    //                {
-    //                    __instance.ticksLeftThisToil = 0;
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-
-    //[HarmonyPatch(typeof(JobDriver_CleanFilth), "Filth", MethodType.Getter)]
-    //class PatchJobDriver_CleanFilthFilth
-    //{
-    //    static void Postfix(ref Filth __result)
-    //    {
-    //        if (!__result.Destroyed)
-    //        {
-    //            __result.Destroy(DestroyMode.Vanish);
-    //        }
-    //    }
-    //}
 }

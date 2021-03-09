@@ -9,11 +9,15 @@ namespace RimSpawners
 {
     class RimSpawnersPawnComp : ThingComp
     {
+        static RimSpawnersSettings settings;
+
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
+
             Log.Message($"RimSpawners ThingComp Initialize");
-            if (LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>().disableNeeds)
+            settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
+            if (settings.disableNeeds)
             {
                 RemovePawnNeeds();
             }
@@ -23,7 +27,7 @@ namespace RimSpawners
         {
             base.PostExposeData();
             Log.Message($"RimSpawners ThingComp PostExposeData");
-            if (LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>().disableNeeds)
+            if (settings.disableNeeds)
             {
                 RemovePawnNeeds();
             }
