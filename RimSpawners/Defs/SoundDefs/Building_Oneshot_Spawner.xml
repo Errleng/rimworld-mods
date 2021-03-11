@@ -2,14 +2,14 @@
 <Defs>
 
   <SoundDef>
-    <defName>Drone_Spawn</defName>
+    <defName>SpawnSound</defName>
     <context>MapOnly</context>
     <maxSimultaneous>1</maxSimultaneous>
     <subSounds>
       <li>
         <grains>
           <li Class="AudioGrain_Folder">
-            <clipFolderPath>Building/Drone_Spawn</clipFolderPath>
+            <clipFolderPath>Building/SpawnSound</clipFolderPath>
           </li>
         </grains>
         <distRange>10~100</distRange>

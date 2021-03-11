@@ -20,14 +20,18 @@ namespace RimSpawners
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
-            listingStandard.CheckboxLabeled($"Disable spawned pawn corpses: {settings.disableCorpses}", ref settings.disableCorpses);
-            listingStandard.CheckboxLabeled($"Disable future spawned pawn needs: {settings.disableNeeds}", ref settings.disableNeeds);
-            listingStandard.Label($"Maximum points: {settings.maxSpawnerPoints}");
+
             // A year is four quadrums and a quadrum is fifteen days
+            listingStandard.Label($"Maximum points: {settings.maxSpawnerPoints}");
             settings.maxSpawnerPoints = listingStandard.Slider(settings.maxSpawnerPoints, 200f, 2000f);
             listingStandard.Label($"Spawn interval: {settings.daysToSpawn} days");
             // A year is four quadrums and a quadrum is fifteen days
             settings.daysToSpawn = listingStandard.Slider(settings.daysToSpawn, 0.01f, 15f);
+
+            listingStandard.CheckboxLabeled($"Disable spawned pawn corpses: {settings.disableCorpses}", ref settings.disableCorpses);
+            listingStandard.CheckboxLabeled($"Disable future spawned pawn needs: {settings.disableNeeds}", ref settings.disableNeeds);
+            listingStandard.CheckboxLabeled($"Spawn all pawns only on threats: {settings.spawnOnlyOnThreat}", ref settings.spawnOnlyOnThreat);
+
             listingStandard.End();
             settings.ApplySettings();
             base.DoSettingsWindowContents(inRect);

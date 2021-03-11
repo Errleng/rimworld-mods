@@ -18,7 +18,7 @@
       <Mass>35</Mass>
       <WorkToBuild>8000</WorkToBuild>
     </statBases>
-    <tickerType>Normal</tickerType>
+    <tickerType>Rare</tickerType>
     <size>(2, 2)</size>
     <fillPercent>1.0</fillPercent>
     <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
@@ -55,7 +55,7 @@
     <thingSetMakerTags>
       <li>RewardStandardHighFreq</li>
     </thingSetMakerTags>
-    <tickerType>Normal</tickerType>
+    <tickerType>Rare</tickerType>
     <size>(2, 2)</size>
     <fillPercent>1.0</fillPercent>
     <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
@@ -91,7 +91,7 @@
         <chooseSingleTypeToSpawn>True</chooseSingleTypeToSpawn>
         <nextSpawnInspectStringKey>MechAssemblyCompleteIn</nextSpawnInspectStringKey>
         <maxSpawnedPawnsPoints>500</maxSpawnedPawnsPoints>
-        <spawnSound>Drone_Spawn</spawnSound>
+        <spawnSound>MechAssembler_Spawn</spawnSound>
         <lordJob>LordJob_AssaultColony</lordJob>
         <pawnSpawnIntervalDays>0.1</pawnSpawnIntervalDays>
         <showNextSpawnInInspect>true</showNextSpawnInInspect>

@@ -31,17 +31,6 @@ namespace RimSpawners
         {
             public static bool Prefix(Pawn_HealthTracker __instance, DamageInfo? dinfo, Hediff hediff, Pawn ___pawn)
             {
-                DeathOnDownedChance comp = ___pawn.GetComp<DeathOnDownedChance>();
-                if (comp != null)
-                {
-                    // roll the dice for the pawn dying
-                    if (Rand.Chance(comp.Props.deathChance))
-                    {
-                        ___pawn.Kill(dinfo, null);
-                        return false;
-                    }
-                }
-
                 // the spawner Lord has LordJob.RemoveDownedPawns = true
                 //   cannot loop over spawnedPawns later to kill downed, must kill before MakeDowned runs
                 if ((___pawn.Faction != null) && ___pawn.Faction.IsPlayer)
@@ -102,7 +91,6 @@ namespace RimSpawners
         //{
         //    public static bool Prefix(Pawn ___pawn)
         //    {
-        //        DeathOnDownedChance comp = ___pawn.GetComp<DeathOnDownedChance>();
         //        if (comp != null)
         //        {
         //            // need relations to be non-null for SetFaction to notify
@@ -116,63 +104,13 @@ namespace RimSpawners
         //    }
         //}
 
-        [HarmonyPatch(typeof(CompSpawnerPawn), "TrySpawnPawn")]
-        class CompSpawnerPawn_TrySpawnPawn_Patch
-        {
-            public static bool Prefix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind)
-            {
-                if (__instance.parent.Faction.IsPlayer)
-                {
-                    UniversalSpawner us = __instance.parent as UniversalSpawner;
-                    if ((us != null) && (___chosenKind != null))
-                    {
-                        // handle special pawns
-                        if ((___chosenKind.lifeStages.Count == 0) && (___chosenKind.RaceProps.Humanlike))
-                        {
-
-                            ___chosenKind.lifeStages = new List<PawnKindLifeStage>();
-
-                            // TrySpawnPawn picks the age of the pawn at lifeStageAges[(lifeStages.Count - 1)]
-                            int numLifeStages = ___chosenKind.race.race.lifeStageAges.Count;
-                            PawnKindLifeStage placeholderLifeStage = new PawnKindLifeStage();
-                            for (int i = 0; i < numLifeStages; i++)
-                            {
-                                ___chosenKind.lifeStages.Add(placeholderLifeStage);
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-
-            public static void Postfix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind, ref Pawn pawn)
-            {
-                if (__instance.parent.Faction.IsPlayer)
-                {
-                    UniversalSpawner us = __instance.parent as UniversalSpawner;
-                    if ((us != null) && (us.GetChosenKind() != null))
-                    {
-                        // pawn spawned notification
-                        Messages.Message($"{___chosenKind.label} assembly complete".Translate(), __instance.parent, MessageTypeDefOf.PositiveEvent, true);
-
-                        RimSpawnersPawnComp customThingComp = new RimSpawnersPawnComp();
-                        RimSpawnersPawnCompProperties customThingCompProps = new RimSpawnersPawnCompProperties();
-                        customThingComp.parent = pawn;
-                        pawn.AllComps.Add(customThingComp);
-                        customThingComp.Initialize(customThingCompProps);
-
-                        Lord currentLord = pawn.GetLord();
-                    }
-                }
-            }
-        }
-
 
         [HarmonyPatch(typeof(PawnDiedOrDownedThoughtsUtility), "GetThoughts")]
         class PawnDiedOrDownedThoughtsUtility_GetThoughts
         {
             public static bool Prefix(Pawn victim)
             {
+                // prevent spawned humanlike pawns from causing mood debuffs (e.g. "Colonist died")
                 RimSpawnersPawnComp customThingComp = victim.GetComp<RimSpawnersPawnComp>();
                 if (customThingComp != null)
                 {
@@ -181,5 +119,88 @@ namespace RimSpawners
                 return true;
             }
         }
+
+        class CompSpawnerPawn_Patches
+        {
+
+            [HarmonyPatch(typeof(CompSpawnerPawn), "TrySpawnPawn")]
+            class CompSpawnerPawn_TrySpawnPawn_Patch
+            {
+                public static bool Prefix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind)
+                {
+                    // before spawn hooks and logic
+                    if (__instance.parent.Faction.IsPlayer)
+                    {
+                        UniversalSpawner us = __instance.parent as UniversalSpawner;
+                        if ((us != null) && (___chosenKind != null))
+                        {
+                            // handle humanlikes, which have no lifeStages (causes errors)
+                            if ((___chosenKind.lifeStages.Count == 0) && (___chosenKind.RaceProps.Humanlike))
+                            {
+
+                                ___chosenKind.lifeStages = new List<PawnKindLifeStage>();
+
+                                // TrySpawnPawn picks the age of the pawn at lifeStageAges[(lifeStages.Count - 1)]
+                                int numLifeStages = ___chosenKind.race.race.lifeStageAges.Count;
+                                PawnKindLifeStage placeholderLifeStage = new PawnKindLifeStage();
+                                for (int i = 0; i < numLifeStages; i++)
+                                {
+                                    ___chosenKind.lifeStages.Add(placeholderLifeStage);
+                                }
+                            }
+                        }
+                    }
+                    return true;
+                }
+
+                public static void Postfix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind, ref Pawn pawn)
+                {
+                    // on spawn hooks and logic
+                    if (__instance.parent.Faction.IsPlayer)
+                    {
+                        UniversalSpawner us = __instance.parent as UniversalSpawner;
+                        if ((us != null) && (us.GetChosenKind() != null))
+                        {
+                            // pawn spawned notification
+                            Messages.Message($"{___chosenKind.label} assembly complete".Translate(), __instance.parent, MessageTypeDefOf.PositiveEvent, true);
+
+                            // add custom ThingComp to spawned pawn
+                            RimSpawnersPawnComp customThingComp = new RimSpawnersPawnComp();
+                            RimSpawnersPawnCompProperties customThingCompProps = new RimSpawnersPawnCompProperties();
+                            customThingComp.parent = pawn;
+                            pawn.AllComps.Add(customThingComp);
+                            customThingComp.Initialize(customThingCompProps);
+
+                            Lord currentLord = pawn.GetLord();
+                        }
+                    }
+                }
+            }
+
+            [HarmonyPatch(typeof(CompSpawnerPawn), "CompTick")]
+            class CompSpawnerPawn_CompTick_Patch
+            {
+                public static bool Prefix(CompSpawnerPawn __instance)
+                {
+                    if (__instance.parent.Faction.IsPlayer)
+                    {
+                        UniversalSpawner us = __instance.parent as UniversalSpawner;
+                        if ((us != null) && (us.GetChosenKind() != null))
+                        {
+                            // continue spawning pawns while under threat
+                            if (settings.spawnOnlyOnThreat && !us.ThreatActive)
+                            {
+                                // CompTick only deals with interval spawns
+                                // Disable CompTick and call TrySpawnPawn using SpawnPawnsUntilPoints
+                                return false;
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+            }
+        }
+
     }
 }

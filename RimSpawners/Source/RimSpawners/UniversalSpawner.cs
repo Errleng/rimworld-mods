@@ -12,6 +12,9 @@ namespace RimSpawners
 {
     class UniversalSpawner : Building
     {
+        static RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
+        public bool ThreatActive { get; set; }
+
         public List<PawnKindDef> GetPawnKindsToSpawn()
         {
             CompProperties_SpawnerPawn comp = def.GetCompProperties<CompProperties_SpawnerPawn>();
@@ -49,7 +52,44 @@ namespace RimSpawners
             Type cpsType = typeof(CompSpawnerPawn);
             PropertyInfo spawnedPawnsPointsProperty = cpsType.GetProperty("SpawnedPawnsPoints", BindingFlags.Instance | BindingFlags.NonPublic);
             float currentPoints = (float)spawnedPawnsPointsProperty.GetValue(cps);
-            return base.GetInspectString() + $"\n{currentPoints}/{comp.maxSpawnedPawnsPoints} points";
+
+            string inspectStringAppend = "";
+            if (GetChosenKind() != null)
+            {
+                inspectStringAppend = "\n";
+            }
+            inspectStringAppend += $"{currentPoints}/{comp.maxSpawnedPawnsPoints} points";
+            return base.GetInspectString() + inspectStringAppend;
+        }
+
+        public override void TickRare()
+        {
+            base.TickRare();
+
+            if (settings.spawnOnlyOnThreat)
+            {
+                bool isThreatOnMap = ParentHolder is Map &&
+                    GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction, false) ||
+                    Map.listerThings.ThingsOfDef(ThingDefOf.Tornado).Any() ||
+                    Map.listerThings.ThingsOfDef(ThingDefOf.DropPodIncoming).Any();
+
+                if (isThreatOnMap)
+                {
+                    // only spawn all pawns when the threat is first detected
+                    if (!ThreatActive)
+                    {
+                        Log.Message($"Spawning pawns in response to threat");
+                        CompSpawnerPawn cps = GetComp<CompSpawnerPawn>();
+                        cps.SpawnPawnsUntilPoints(settings.maxSpawnerPoints);
+                        ThreatActive = true;
+                    }
+                }
+                else if (ThreatActive)
+                {
+                    Log.Message($"Threat is over");
+                    ThreatActive = false;
+                }
+            }
         }
 
         public void SetPawnKindsToSpawn(List<PawnKindDef> newPawnKindsToSpawn)

@@ -14,6 +14,7 @@ namespace RimSpawners
         public float daysToSpawn;
         public bool disableCorpses;
         public bool disableNeeds;
+        public bool spawnOnlyOnThreat;
 
         public override void ExposeData()
         {
@@ -21,6 +22,7 @@ namespace RimSpawners
             Scribe_Values.Look(ref daysToSpawn, "daysToSpawn", 1f);
             Scribe_Values.Look(ref disableCorpses, "disableCorpses", false);
             Scribe_Values.Look(ref disableNeeds, "disableNeeds", false);
+            Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat", false);
             base.ExposeData();
         }
 

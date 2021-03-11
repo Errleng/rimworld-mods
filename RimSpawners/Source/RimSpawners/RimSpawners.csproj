@@ -57,7 +57,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DeathOnDownedChance.cs" />
     <Compile Include="DefExtensions.cs" />
     <Compile Include="PawnSelectionITab.cs" />
     <Compile Include="CompPawnSelectionGizmo.cs" />
