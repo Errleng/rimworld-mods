@@ -126,7 +126,7 @@ namespace RimSpawners
             [HarmonyPatch(typeof(CompSpawnerPawn), "TrySpawnPawn")]
             class CompSpawnerPawn_TrySpawnPawn_Patch
             {
-                public static bool Prefix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind)
+                public static void Prefix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind)
                 {
                     // before spawn hooks and logic
                     if (__instance.parent.Faction.IsPlayer)
@@ -150,7 +150,6 @@ namespace RimSpawners
                             }
                         }
                     }
-                    return true;
                 }
 
                 public static void Postfix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind, ref Pawn pawn)
@@ -164,14 +163,18 @@ namespace RimSpawners
                             // pawn spawned notification
                             Messages.Message($"{___chosenKind.label} assembly complete".Translate(), __instance.parent, MessageTypeDefOf.PositiveEvent, true);
 
+                            // fix humanlike ai
+                            if (___chosenKind.race.race.Humanlike)
+                            {
+                                pawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
+                            }
+
                             // add custom ThingComp to spawned pawn
                             RimSpawnersPawnComp customThingComp = new RimSpawnersPawnComp();
                             RimSpawnersPawnCompProperties customThingCompProps = new RimSpawnersPawnCompProperties();
                             customThingComp.parent = pawn;
                             pawn.AllComps.Add(customThingComp);
                             customThingComp.Initialize(customThingCompProps);
-
-                            Lord currentLord = pawn.GetLord();
                         }
                     }
                 }
