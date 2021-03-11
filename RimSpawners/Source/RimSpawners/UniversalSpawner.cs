@@ -28,6 +28,18 @@ namespace RimSpawners
             }
         }
 
+        private void RemoveAllSpawnedPawns()
+        {
+            Log.Message("Spawner is destroying all spawned pawns");
+
+            CompSpawnerPawn cps = GetComp<CompSpawnerPawn>();
+            for (int i = cps.spawnedPawns.Count - 1; i >= 0; i--)
+            {
+                cps.spawnedPawns[i].Destroy();
+                cps.spawnedPawns.RemoveAt(i);
+            }
+        }
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -66,8 +78,8 @@ namespace RimSpawners
         {
             base.Tick();
 
-            // run every 300 ticks (5 seconds)
-            if (this.IsHashIntervalTick(300))
+            // run every 300 ticks (5 seconds on Normal)
+            if (this.IsHashIntervalTick(5 * 60))
             {
                 if (settings.spawnOnlyOnThreat)
                 {
@@ -92,6 +104,15 @@ namespace RimSpawners
                         Log.Message($"Threat is over");
                         ThreatActive = false;
                     }
+                }
+            }
+
+            // run every 5 minutes (Normal)
+            if (this.IsHashIntervalTick(5 * 60 * 60))
+            {
+                if (settings.spawnOnlyOnThreat && !ThreatActive)
+                {
+                    RemoveAllSpawnedPawns();
                 }
             }
         }
@@ -123,13 +144,9 @@ namespace RimSpawners
 
         public void ResetCompSpawnerPawn()
         {
-            Log.Message($"Resetting spawner: destroying all its spawned pawns");
+            Log.Message($"Resetting spawner");
 
-            CompSpawnerPawn cps = GetComp<CompSpawnerPawn>();
-            foreach (Pawn pawn in cps.spawnedPawns)
-            {
-                pawn.Destroy();
-            }
+            RemoveAllSpawnedPawns();
         }
     }
 }
