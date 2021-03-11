@@ -18,7 +18,7 @@
       <Mass>35</Mass>
       <WorkToBuild>8000</WorkToBuild>
     </statBases>
-    <tickerType>Rare</tickerType>
+    <tickerType>Normal</tickerType>
     <size>(2, 2)</size>
     <fillPercent>1.0</fillPercent>
     <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
@@ -55,7 +55,7 @@
     <thingSetMakerTags>
       <li>RewardStandardHighFreq</li>
     </thingSetMakerTags>
-    <tickerType>Rare</tickerType>
+    <tickerType>Normal</tickerType>
     <size>(2, 2)</size>
     <fillPercent>1.0</fillPercent>
     <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>

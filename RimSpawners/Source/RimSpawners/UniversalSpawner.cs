@@ -62,32 +62,36 @@ namespace RimSpawners
             return base.GetInspectString() + inspectStringAppend;
         }
 
-        public override void TickRare()
+        public override void Tick()
         {
-            base.TickRare();
+            base.Tick();
 
-            if (settings.spawnOnlyOnThreat)
+            // run every 300 ticks (5 seconds)
+            if (this.IsHashIntervalTick(300))
             {
-                bool isThreatOnMap = ParentHolder is Map &&
-                    GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction, false) ||
-                    Map.listerThings.ThingsOfDef(ThingDefOf.Tornado).Any() ||
-                    Map.listerThings.ThingsOfDef(ThingDefOf.DropPodIncoming).Any();
+                if (settings.spawnOnlyOnThreat)
+                {
+                    bool isThreatOnMap = ParentHolder is Map &&
+                        GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction, false) ||
+                        Map.listerThings.ThingsOfDef(ThingDefOf.Tornado).Any() ||
+                        Map.listerThings.ThingsOfDef(ThingDefOf.DropPodIncoming).Any();
 
-                if (isThreatOnMap)
-                {
-                    // only spawn all pawns when the threat is first detected
-                    if (!ThreatActive)
+                    if (isThreatOnMap)
                     {
-                        Log.Message($"Spawning pawns in response to threat");
-                        CompSpawnerPawn cps = GetComp<CompSpawnerPawn>();
-                        cps.SpawnPawnsUntilPoints(settings.maxSpawnerPoints);
-                        ThreatActive = true;
+                        // only spawn all pawns when the threat is first detected
+                        if (!ThreatActive)
+                        {
+                            Log.Message($"Spawning pawns in response to threat");
+                            CompSpawnerPawn cps = GetComp<CompSpawnerPawn>();
+                            cps.SpawnPawnsUntilPoints(settings.maxSpawnerPoints);
+                            ThreatActive = true;
+                        }
                     }
-                }
-                else if (ThreatActive)
-                {
-                    Log.Message($"Threat is over");
-                    ThreatActive = false;
+                    else if (ThreatActive)
+                    {
+                        Log.Message($"Threat is over");
+                        ThreatActive = false;
+                    }
                 }
             }
         }
