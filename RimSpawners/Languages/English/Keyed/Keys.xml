@@ -10,15 +10,15 @@
   <RimSpawners_SettingsScaleSpawnTimePointsPerSecond>Scale spawn interval points per second: {0}</RimSpawners_SettingsScaleSpawnTimePointsPerSecond>
 
   <!-- PAWN SELECTION -->
-  <RimSpawners_PawnSelection>Select pawn to spawn</RimSpawners_PawnSelection>
-  <RimSpawners_PawnSelectionDesc>Select the type of pawn to spawn</RimSpawners_PawnSelectionDesc>
-  <RimSpawners_PawnSelectionTabName>Pawns</RimSpawners_PawnSelectionTabName>
+  <RimSpawners_PawnSelection>Select creature to spawn</RimSpawners_PawnSelection>
+  <RimSpawners_PawnSelectionDesc>Select the type of creature to spawn</RimSpawners_PawnSelectionDesc>
+  <RimSpawners_PawnSelectionTabName>Creatures</RimSpawners_PawnSelectionTabName>
   <RimSpawners_PawnSelectionButtonUnselected>Select</RimSpawners_PawnSelectionButtonUnselected>
   <RimSpawners_PawnSelectionButtonSelected>Current</RimSpawners_PawnSelectionButtonSelected>
 
   <!-- RESET COMPSPAWNERPAWN -->
-  <RimSpawners_Reset>Reset</RimSpawners_Reset>
-  <RimSpawners_ResetDesc>Resets the spawner and its AI</RimSpawners_ResetDesc>
+  <RimSpawners_Reset>Activate kill switch</RimSpawners_Reset>
+  <RimSpawners_ResetDesc>Kills all fabricated creatures</RimSpawners_ResetDesc>
 
   <!-- UNIVERSAL ASSEMBLER INFORMATION -->
   <RimSpawners_UniversalAssemblerInspectPoints>{0} / {1} points</RimSpawners_UniversalAssemblerInspectPoints>

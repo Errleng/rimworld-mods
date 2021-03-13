@@ -100,7 +100,10 @@ namespace RimSpawners
                 RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
                 if ((customThingComp != null) && settings.disableCorpses)
                 {
-                    __instance.Corpse.Destroy();
+                    if (__instance.Corpse != null)
+                    {
+                        __instance.Corpse.Destroy();
+                    }
                 }
             }
         }
@@ -160,24 +163,25 @@ namespace RimSpawners
                         // pawn spawned notification
                         Messages.Message($"{___chosenKind.label} assembly complete".Translate(), __instance.parent, MessageTypeDefOf.PositiveEvent, true);
 
-                        // fix humanlike ai
                         if (___chosenKind.race.race.Humanlike)
                         {
+                            // fix humanlike ai
                             pawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
-                        }
 
-                        if (ModLister.RoyaltyInstalled)
-                        {
-                            // disable royalty titles because
-                            //   the pawn may use permits or psychic powers (too powerful)
-                            //   on death, the pawn's title may be inherited by a colonist
-                            List<RoyalTitle> titles = pawn.royalty.AllTitlesForReading;
-                            List<Faction> titleFactions = titles.Select(title => title.faction).Distinct().ToList();
-                            foreach (Faction faction in titleFactions)
+                            if (ModLister.RoyaltyInstalled)
                             {
-                                pawn.royalty.SetTitle(faction, null, false, false, false);
+                                // disable royalty titles because
+                                //   the pawn may use permits or psychic powers (too powerful)
+                                //   on death, the pawn's title may be inherited by a colonist
+                                List<RoyalTitle> titles = pawn.royalty.AllTitlesForReading;
+                                List<Faction> titleFactions = titles.Select(title => title.faction).Distinct().ToList();
+                                foreach (Faction faction in titleFactions)
+                                {
+                                    pawn.royalty.SetTitle(faction, null, false, false, false);
+                                }
                             }
                         }
+
 
                         // add custom ThingComp to spawned pawn
                         RimSpawnersPawnComp customThingComp = new RimSpawnersPawnComp();
