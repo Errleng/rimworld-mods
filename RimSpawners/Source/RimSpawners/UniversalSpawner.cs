@@ -12,7 +12,9 @@ namespace RimSpawners
 {
     class UniversalSpawner : Building
     {
-        static RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
+        static readonly RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
+        static readonly int threatCheckTicks = GenTicks.SecondsToTicks(10);
+        static readonly int threatOverDestroyPawnTicks = GenTicks.SecondsToTicks(300);
 
         private CompSpawnerPawn cps;
 
@@ -46,10 +48,17 @@ namespace RimSpawners
             string inspectStringAppend = "";
             if (GetChosenKind() != null)
             {
-                inspectStringAppend += $"({GenTicks.ToStringSecondsFromTicks(cps.nextPawnSpawnTick - Find.TickManager.TicksGame)})";
                 inspectStringAppend += "\n";
+                inspectStringAppend += $"{currentPoints}/{comp.maxSpawnedPawnsPoints} points";
+                if (settings.spawnOnlyOnThreat)
+                {
+                    inspectStringAppend += $"Dormant until a threat is detected";
+                }
+                else
+                {
+                    inspectStringAppend += $"Next spawn in {GenTicks.ToStringSecondsFromTicks(cps.nextPawnSpawnTick - Find.TickManager.TicksGame)}";
+                }
             }
-            inspectStringAppend += $"{currentPoints}/{comp.maxSpawnedPawnsPoints} points";
             return base.GetInspectString() + inspectStringAppend;
         }
 
@@ -57,8 +66,7 @@ namespace RimSpawners
         {
             base.Tick();
 
-            // run every 300 ticks (5 seconds on Normal)
-            if (this.IsHashIntervalTick(5 * 60))
+            if (this.IsHashIntervalTick(threatCheckTicks))
             {
                 if (settings.spawnOnlyOnThreat)
                 {
@@ -86,8 +94,7 @@ namespace RimSpawners
                 }
             }
 
-            // run every 5 minutes (Normal)
-            if (this.IsHashIntervalTick(5 * 60 * 60))
+            if (this.IsHashIntervalTick(threatOverDestroyPawnTicks))
             {
                 if (settings.spawnOnlyOnThreat && !ThreatActive)
                 {
