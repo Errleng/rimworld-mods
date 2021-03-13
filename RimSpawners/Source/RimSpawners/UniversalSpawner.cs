@@ -84,9 +84,10 @@ namespace RimSpawners
                 if (settings.spawnOnlyOnThreat)
                 {
                     bool isThreatOnMap = ParentHolder is Map &&
-                        GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction, false) ||
-                        Map.listerThings.ThingsOfDef(ThingDefOf.Tornado).Any() ||
-                        Map.listerThings.ThingsOfDef(ThingDefOf.DropPodIncoming).Any();
+                        GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction, false)
+                        //|| Map.listerThings.ThingsOfDef(ThingDefOf.Tornado).Any()
+                        //|| Map.listerThings.ThingsOfDef(ThingDefOf.DropPodIncoming).Any()
+                        ;
 
                     if (isThreatOnMap)
                     {
@@ -115,6 +116,12 @@ namespace RimSpawners
                     RemoveAllSpawnedPawns();
                 }
             }
+        }
+
+        public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
+        {
+            base.Destroy(mode);
+            RemoveAllSpawnedPawns();
         }
 
         public void SetPawnKindsToSpawn(List<PawnKindDef> newPawnKindsToSpawn)

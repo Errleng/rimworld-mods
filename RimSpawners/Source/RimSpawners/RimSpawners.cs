@@ -31,8 +31,12 @@ namespace RimSpawners
             listingStandard.CheckboxLabeled($"Disable spawned pawn corpses: {settings.disableCorpses}", ref settings.disableCorpses);
             listingStandard.CheckboxLabeled($"Disable future spawned pawn needs: {settings.disableNeeds}", ref settings.disableNeeds);
             listingStandard.CheckboxLabeled($"Spawn all pawns only on threats: {settings.spawnOnlyOnThreat}", ref settings.spawnOnlyOnThreat);
+            listingStandard.CheckboxLabeled($"Scale spawn time to pawn combat power: {settings.scaleSpawnIntervals}", ref settings.scaleSpawnIntervals);
+            listingStandard.Label($"Scale spawn time points per second: {settings.pointsPerSecond}");
+            settings.pointsPerSecond = listingStandard.Slider(settings.pointsPerSecond, 0.01f, 50f);
 
             listingStandard.End();
+
             settings.ApplySettings();
             base.DoSettingsWindowContents(inRect);
         }

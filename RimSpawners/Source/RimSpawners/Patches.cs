@@ -25,6 +25,16 @@ namespace RimSpawners
             Log.Message("RimSpawners loaded");
         }
 
+        static UniversalSpawner GetUniversalSpawner(CompSpawnerPawn cps)
+        {
+            if (cps.parent.Faction.IsPlayer)
+            {
+                UniversalSpawner us = cps.parent as UniversalSpawner;
+                return us;
+            }
+            return null;
+        }
+
 
         [HarmonyPatch(typeof(Pawn_HealthTracker), "MakeDowned")]
         class Pawn_HealthTracker_MakeDowned_Patch
@@ -74,8 +84,6 @@ namespace RimSpawners
                     RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
                     if ((customThingComp != null) && settings.disableCorpses)
                     {
-                        // maybe call pawn DeathActionWorker here (e.g. boomalopes explode on death)
-
                         __instance.Destroy();
                         return false;
                     }
@@ -155,27 +163,23 @@ namespace RimSpawners
                 public static void Postfix(CompSpawnerPawn __instance, PawnKindDef ___chosenKind, ref Pawn pawn)
                 {
                     // on spawn hooks and logic
-                    if (__instance.parent.Faction.IsPlayer)
+                    if (GetUniversalSpawner(__instance) != null)
                     {
-                        UniversalSpawner us = __instance.parent as UniversalSpawner;
-                        if ((us != null) && (us.GetChosenKind() != null))
+                        // pawn spawned notification
+                        Messages.Message($"{___chosenKind.label} assembly complete".Translate(), __instance.parent, MessageTypeDefOf.PositiveEvent, true);
+
+                        // fix humanlike ai
+                        if (___chosenKind.race.race.Humanlike)
                         {
-                            // pawn spawned notification
-                            Messages.Message($"{___chosenKind.label} assembly complete".Translate(), __instance.parent, MessageTypeDefOf.PositiveEvent, true);
-
-                            // fix humanlike ai
-                            if (___chosenKind.race.race.Humanlike)
-                            {
-                                pawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
-                            }
-
-                            // add custom ThingComp to spawned pawn
-                            RimSpawnersPawnComp customThingComp = new RimSpawnersPawnComp();
-                            RimSpawnersPawnCompProperties customThingCompProps = new RimSpawnersPawnCompProperties();
-                            customThingComp.parent = pawn;
-                            pawn.AllComps.Add(customThingComp);
-                            customThingComp.Initialize(customThingCompProps);
+                            pawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
                         }
+
+                        // add custom ThingComp to spawned pawn
+                        RimSpawnersPawnComp customThingComp = new RimSpawnersPawnComp();
+                        RimSpawnersPawnCompProperties customThingCompProps = new RimSpawnersPawnCompProperties();
+                        customThingComp.parent = pawn;
+                        pawn.AllComps.Add(customThingComp);
+                        customThingComp.Initialize(customThingCompProps);
                     }
                 }
             }
@@ -185,25 +189,39 @@ namespace RimSpawners
             {
                 public static bool Prefix(CompSpawnerPawn __instance)
                 {
-                    if (__instance.parent.Faction.IsPlayer)
+                    UniversalSpawner us = GetUniversalSpawner(__instance);
+                    if (us != null)
                     {
-                        UniversalSpawner us = __instance.parent as UniversalSpawner;
-                        if ((us != null) && (us.GetChosenKind() != null))
+                        // continue spawning pawns while under threat
+                        if (settings.spawnOnlyOnThreat && !us.ThreatActive)
                         {
-                            // continue spawning pawns while under threat
-                            if (settings.spawnOnlyOnThreat && !us.ThreatActive)
-                            {
-                                // CompTick only deals with interval spawns
-                                // Disable CompTick and call TrySpawnPawn using SpawnPawnsUntilPoints
-                                return false;
-                            }
+                            // CompTick only deals with interval spawns
+                            // Disable CompTick and call TrySpawnPawn using SpawnPawnsUntilPoints
+                            return false;
                         }
                     }
 
                     return true;
                 }
             }
-        }
 
+            [HarmonyPatch(typeof(CompSpawnerPawn), "CalculateNextPawnSpawnTick", new Type[] { typeof(float) })]
+            class CompSpawnerPawn_CalculateNextPawnSpawnTick_Patch
+            {
+                public static void Prefix(CompSpawnerPawn __instance, ref float delayTicks, PawnKindDef ___chosenKind)
+                {
+                    // custom calculation for nextSpawnTick
+                    if (GetUniversalSpawner(__instance) != null)
+                    {
+                        if (settings.scaleSpawnIntervals)
+                        {
+                            float secondsToNextSpawn = ___chosenKind.combatPower / settings.pointsPerSecond;
+                            float ticksToNextSpawn = GenTicks.SecondsToTicks(secondsToNextSpawn);
+                            delayTicks = ticksToNextSpawn;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

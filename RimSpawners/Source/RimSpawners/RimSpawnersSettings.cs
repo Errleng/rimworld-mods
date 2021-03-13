@@ -16,6 +16,9 @@ namespace RimSpawners
         public bool disableNeeds;
         public bool spawnOnlyOnThreat;
 
+        public bool scaleSpawnIntervals;
+        public float pointsPerSecond;
+
         public override void ExposeData()
         {
             Scribe_Values.Look(ref maxSpawnerPoints, "maxSpawnerPoints", 500f);
@@ -23,6 +26,8 @@ namespace RimSpawners
             Scribe_Values.Look(ref disableCorpses, "disableCorpses", false);
             Scribe_Values.Look(ref disableNeeds, "disableNeeds", false);
             Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat", false);
+            Scribe_Values.Look(ref scaleSpawnIntervals, "scaleSpawnIntervals", false);
+            Scribe_Values.Look(ref pointsPerSecond, "pointsPerSecond", 1f);
             base.ExposeData();
         }
 
