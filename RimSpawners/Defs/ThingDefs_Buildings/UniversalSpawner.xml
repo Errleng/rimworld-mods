@@ -5,14 +5,14 @@
       <li>BuildingsSecurity</li>
     </thingCategories>
     <costList>
-      <Plasteel>25</Plasteel>
-      <Steel>200</Steel>
-      <ComponentSpacer>6</ComponentSpacer>
+      <Plasteel>100</Plasteel>
+      <Steel>500</Steel>
+      <ComponentSpacer>10</ComponentSpacer>
     </costList>
     <altitudeLayer>Building</altitudeLayer>
     <statBases>
-      <MarketValue>2000</MarketValue>
-      <MaxHitPoints>200</MaxHitPoints>
+      <MarketValue>5000</MarketValue>
+      <MaxHitPoints>1000</MaxHitPoints>
       <Flammability>1.0</Flammability>
       <Beauty>0</Beauty>
       <Mass>35</Mass>
@@ -22,48 +22,14 @@
     <size>(2, 2)</size>
     <fillPercent>1.0</fillPercent>
     <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
-    <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+    <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
     <passability>PassThroughOnly</passability>
     <rotatable>false</rotatable>
     <canOverlapZones>false</canOverlapZones>
     <minifiedDef>MinifiedThing</minifiedDef>
     <tradeTags>
-      <li>Spawners</li>
+      <li>Exotic</li>
     </tradeTags>
-    <designationCategory>Security</designationCategory>
-  </ThingDef>
-
-  <!-- Base Spawner Elite -->
-  <ThingDef ParentName="BuildingBase" Name="SpawnerBaseElite" Abstract="True">
-    <thingCategories>
-      <li>BuildingsSecurity</li>
-    </thingCategories>
-    <costList>
-      <Plasteel>25</Plasteel>
-      <Steel>200</Steel>
-      <ComponentSpacer>6</ComponentSpacer>
-    </costList>
-    <altitudeLayer>Building</altitudeLayer>
-    <statBases>
-      <MarketValue>2000</MarketValue>
-      <MaxHitPoints>200</MaxHitPoints>
-      <Flammability>1.0</Flammability>
-      <Beauty>0</Beauty>
-      <Mass>35</Mass>
-      <WorkToBuild>8000</WorkToBuild>
-    </statBases>
-    <thingSetMakerTags>
-      <li>RewardStandardHighFreq</li>
-    </thingSetMakerTags>
-    <tickerType>Normal</tickerType>
-    <size>(2, 2)</size>
-    <fillPercent>1.0</fillPercent>
-    <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
-    <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
-    <passability>PassThroughOnly</passability>
-    <rotatable>false</rotatable>
-    <canOverlapZones>false</canOverlapZones>
-    <minifiedDef>MinifiedThing</minifiedDef>
     <designationCategory>Security</designationCategory>
   </ThingDef>
 
@@ -71,7 +37,10 @@
   <ThingDef ParentName="SpawnerBase">
     <defName>UniversalSpawner</defName>
     <label>universal assembler</label>
-    <description>Passively fabricates mechanoids with rudimentary vanometric tech and particles extracted from the atmosphere. \n\nMechanoids are loyal to the faction that owns the assembler.</description>
+    <description>
+      An ultra-tech vanometric fabrication unit used to automatically create any creature from pets to insectoids to mechanoids.
+      Passively fabricates mechanoids with rudimentary vanometric tech and particles extracted from the atmosphere. \n\nMechanoids are loyal to the faction that owns the assembler.
+    </description>
     <thingClass>RimSpawners.UniversalSpawner</thingClass>
     <graphicData>
       <texPath>Things/Building/Spawner/Spawner_mech</texPath>

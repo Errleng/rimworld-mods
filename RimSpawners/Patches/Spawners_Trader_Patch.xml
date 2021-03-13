@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <Patch>
 
-<!-- Exotic -->
+	<!-- Exotic -->
 	<Operation Class="PatchOperationAdd">
 		<xpath>*/TraderKindDef[defName="Orbital_Exotic"]/stockGenerators</xpath>
 		<value>
@@ -14,7 +14,7 @@
 				<price>Expensive</price>
 				<totalPriceRange>
 					<min>2500</min>
-					<max>6000</max>
+					<max>10000</max>
 				</totalPriceRange>
 			</li>
 			<li Class="StockGenerator_Tag">
@@ -31,7 +31,7 @@
 			</li>
 		</value>
 	</Operation>
-	
+
 	<Operation Class="PatchOperationAdd">
 		<xpath>*/TraderKindDef[defName="Caravan_Outlander_Exotic"]/stockGenerators</xpath>
 		<value>
@@ -50,7 +50,7 @@
 		</value>
 	</Operation>
 
-<!-- Combat -->
+	<!-- Combat -->
 	<Operation Class="PatchOperationAdd">
 		<xpath>*/TraderKindDef[defName="Caravan_Outlander_CombatSupplier" or defName="Orbital_CombatSupplier"]/stockGenerators</xpath>
 		<value>
@@ -93,7 +93,7 @@
 		</value>
 	</Operation>
 
-<!-- Pirate -->
+	<!-- Pirate -->
 	<Operation Class="PatchOperationAdd">
 		<xpath>*/TraderKindDef[defName="Orbital_PirateMerchant"]/stockGenerators</xpath>
 		<value>
@@ -123,7 +123,7 @@
 			</li>
 		</value>
 	</Operation>
-	
+
 	<Operation Class="PatchOperationAdd">
 		<xpath>*/TraderKindDef[defName="Caravan_Outlander_PirateMerchant"]/stockGenerators</xpath>
 		<value>
@@ -142,4 +142,3 @@
 		</value>
 	</Operation>
 </Patch>
-

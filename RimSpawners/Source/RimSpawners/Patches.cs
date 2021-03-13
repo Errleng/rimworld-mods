@@ -77,21 +77,35 @@ namespace RimSpawners
         [HarmonyPatch(typeof(Pawn), "Kill")]
         class Pawn_Kill_Patch
         {
-            public static bool Prefix(Pawn __instance)
+            //public static bool Prefix(Pawn __instance)
+            //{
+            //    if ((__instance.Faction != null) && __instance.Faction.IsPlayer)
+            //    {
+            //        RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
+            //        if ((customThingComp != null) && settings.disableCorpses)
+            //        {
+            //            __instance.Destroy();
+            //            return false;
+            //        }
+            //    }
+            //    return true;
+            //}
+
+            public static void Postfix(Pawn __instance)
             {
                 if ((__instance.Faction != null) && __instance.Faction.IsPlayer)
                 {
                     RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
                     if ((customThingComp != null) && settings.disableCorpses)
                     {
-                        __instance.Destroy();
-                        return false;
+                        __instance.inventory.DestroyAll();
+                        __instance.apparel.DestroyAll();
+                        __instance.equipment.DestroyAllEquipment();
+                        __instance.Corpse.Destroy();
                     }
                 }
-                return true;
             }
         }
-
 
         // handles death message of pawns
         //[HarmonyPatch(typeof(Pawn_HealthTracker), "NotifyPlayerOfKilled")]

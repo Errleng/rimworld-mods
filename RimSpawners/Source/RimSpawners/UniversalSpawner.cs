@@ -50,7 +50,8 @@ namespace RimSpawners
             {
                 inspectStringAppend += "\n";
                 inspectStringAppend += $"{currentPoints}/{comp.maxSpawnedPawnsPoints} points";
-                if (settings.spawnOnlyOnThreat)
+                inspectStringAppend += "\n";
+                if (settings.spawnOnlyOnThreat && !ThreatActive)
                 {
                     inspectStringAppend += $"Dormant until a threat is detected";
                 }
