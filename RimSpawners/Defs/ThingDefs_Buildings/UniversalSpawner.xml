@@ -37,10 +37,7 @@
   <ThingDef ParentName="SpawnerBase">
     <defName>UniversalSpawner</defName>
     <label>universal assembler</label>
-    <description>
-      An ultra-tech vanometric fabrication unit used to automatically create any creature from pets to insectoids to mechanoids.
-      Passively fabricates mechanoids with rudimentary vanometric tech and particles extracted from the atmosphere. \n\nMechanoids are loyal to the faction that owns the assembler.
-    </description>
+    <description>An ultra-tech vanometric fabrication unit used to automatically create any creature from pets to mechanoids to other humans. Assembled creatures are loyal to the owner of the assembler and will aggressively pursue threats.</description>
     <thingClass>RimSpawners.UniversalSpawner</thingClass>
     <graphicData>
       <texPath>Things/Building/Spawner/Spawner_mech</texPath>

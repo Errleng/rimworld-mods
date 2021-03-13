@@ -1,12 +1,8 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 using Verse;
-using Verse.AI.Group;
 
 namespace RimSpawners
 {
@@ -43,21 +39,20 @@ namespace RimSpawners
 
             Type cpsType = typeof(CompSpawnerPawn);
             PropertyInfo spawnedPawnsPointsProperty = cpsType.GetProperty("SpawnedPawnsPoints", BindingFlags.Instance | BindingFlags.NonPublic);
-            float currentPoints = (float)spawnedPawnsPointsProperty.GetValue(cps);
 
             string inspectStringAppend = "";
             if (GetChosenKind() != null)
             {
                 inspectStringAppend += "\n";
-                inspectStringAppend += $"{currentPoints}/{comp.maxSpawnedPawnsPoints} points";
+                inspectStringAppend += "RimSpawners_UniversalAssemblerInspectPoints".Translate((float)spawnedPawnsPointsProperty.GetValue(cps), comp.maxSpawnedPawnsPoints);
                 inspectStringAppend += "\n";
                 if (settings.spawnOnlyOnThreat && !ThreatActive)
                 {
-                    inspectStringAppend += $"Dormant until a threat is detected";
+                    inspectStringAppend += "RimSpawners_UniversalAssemblerInspectDormant".Translate();
                 }
                 else
                 {
-                    inspectStringAppend += $"Next spawn in {GenTicks.ToStringSecondsFromTicks(cps.nextPawnSpawnTick - Find.TickManager.TicksGame)}";
+                    inspectStringAppend += "RimSpawners_UniversalAssemblerInspectNextSpawn".Translate(GenTicks.ToStringSecondsFromTicks(cps.nextPawnSpawnTick - Find.TickManager.TicksGame));
                 }
             }
             return base.GetInspectString() + inspectStringAppend;
@@ -153,6 +148,10 @@ namespace RimSpawners
             Type cpsType = typeof(CompSpawnerPawn);
             FieldInfo chosenKindField = cpsType.GetField("chosenKind", BindingFlags.NonPublic | BindingFlags.Instance);
             chosenKindField.SetValue(cps, newChosenKind);
+
+            // recalculate spawn time
+            CompProperties_SpawnerPawn comp = def.GetCompProperties<CompProperties_SpawnerPawn>();
+            cps.CalculateNextPawnSpawnTick(comp.pawnSpawnIntervalDays.RandomInRange * 60000f);
 
             Log.Message($"Set spawner chosen pawn kind to {GetChosenKind().defName} with point cost {newChosenKind.combatPower}");
         }

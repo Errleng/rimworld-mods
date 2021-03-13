@@ -49,6 +49,7 @@ namespace RimSpawners
                     if (customThingComp != null)
                     {
                         ___pawn.Kill(dinfo, null);
+                        return false;
                     }
 
                     // old method without ThingComp
@@ -77,55 +78,32 @@ namespace RimSpawners
         [HarmonyPatch(typeof(Pawn), "Kill")]
         class Pawn_Kill_Patch
         {
-            //public static bool Prefix(Pawn __instance)
-            //{
-            //    if ((__instance.Faction != null) && __instance.Faction.IsPlayer)
-            //    {
-            //        RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
-            //        if ((customThingComp != null) && settings.disableCorpses)
-            //        {
-            //            __instance.Destroy();
-            //            return false;
-            //        }
-            //    }
-            //    return true;
-            //}
-
-            public static void Postfix(Pawn __instance)
+            public static bool Prefix(Pawn __instance)
             {
                 if ((__instance.Faction != null) && __instance.Faction.IsPlayer)
                 {
                     RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
                     if ((customThingComp != null) && settings.disableCorpses)
                     {
+                        __instance.SetFaction(null, null);
+
                         __instance.inventory.DestroyAll();
                         __instance.apparel.DestroyAll();
                         __instance.equipment.DestroyAllEquipment();
-                        __instance.Corpse.Destroy();
                     }
+                }
+                return true;
+            }
+
+            public static void Postfix(Pawn __instance)
+            {
+                RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
+                if ((customThingComp != null) && settings.disableCorpses)
+                {
+                    __instance.Corpse.Destroy();
                 }
             }
         }
-
-        // handles death message of pawns
-        //[HarmonyPatch(typeof(Pawn_HealthTracker), "NotifyPlayerOfKilled")]
-        //class Pawn_HealthTracker_NotifyPlayerOfKilled_Patch
-        //{
-        //    public static bool Prefix(Pawn ___pawn)
-        //    {
-        //        if (comp != null)
-        //        {
-        //            // need relations to be non-null for SetFaction to notify
-        //            if (___pawn.relations == null)
-        //            {
-        //                ___pawn.relations = new RimWorld.Pawn_RelationsTracker(___pawn);
-        //            }
-        //            ___pawn.SetFaction(null, null);
-        //        }
-        //        return true;
-        //    }
-        //}
-
 
         [HarmonyPatch(typeof(PawnDiedOrDownedThoughtsUtility), "GetThoughts")]
         class PawnDiedOrDownedThoughtsUtility_GetThoughts
@@ -186,6 +164,19 @@ namespace RimSpawners
                         if (___chosenKind.race.race.Humanlike)
                         {
                             pawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
+                        }
+
+                        if (ModLister.RoyaltyInstalled)
+                        {
+                            // disable royalty titles because
+                            //   the pawn may use permits or psychic powers (too powerful)
+                            //   on death, the pawn's title may be inherited by a colonist
+                            List<RoyalTitle> titles = pawn.royalty.AllTitlesForReading;
+                            List<Faction> titleFactions = titles.Select(title => title.faction).Distinct().ToList();
+                            foreach (Faction faction in titleFactions)
+                            {
+                                pawn.royalty.SetTitle(faction, null, false, false, false);
+                            }
                         }
 
                         // add custom ThingComp to spawned pawn

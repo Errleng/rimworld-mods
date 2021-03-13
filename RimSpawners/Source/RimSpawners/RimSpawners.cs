@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace RimSpawners
@@ -22,17 +17,17 @@ namespace RimSpawners
             listingStandard.Begin(inRect);
 
             // A year is four quadrums and a quadrum is fifteen days
-            listingStandard.Label($"Maximum points: {settings.maxSpawnerPoints}");
-            settings.maxSpawnerPoints = listingStandard.Slider(settings.maxSpawnerPoints, 200f, 2000f);
-            listingStandard.Label($"Spawn interval: {settings.daysToSpawn} days");
+            listingStandard.Label($"RimSpawners_SettingsMaximumPoints".Translate(settings.maxSpawnerPoints));
+            settings.maxSpawnerPoints = listingStandard.Slider(settings.maxSpawnerPoints, 10f, 2000f);
+            listingStandard.Label($"RimSpawners_SettingsSpawnInterval".Translate(settings.daysToSpawn));
             // A year is four quadrums and a quadrum is fifteen days
             settings.daysToSpawn = listingStandard.Slider(settings.daysToSpawn, 0.01f, 15f);
 
-            listingStandard.CheckboxLabeled($"Disable spawned pawn corpses: {settings.disableCorpses}", ref settings.disableCorpses);
-            listingStandard.CheckboxLabeled($"Disable future spawned pawn needs: {settings.disableNeeds}", ref settings.disableNeeds);
-            listingStandard.CheckboxLabeled($"Spawn all pawns only on threats: {settings.spawnOnlyOnThreat}", ref settings.spawnOnlyOnThreat);
-            listingStandard.CheckboxLabeled($"Scale spawn time to pawn combat power: {settings.scaleSpawnIntervals}", ref settings.scaleSpawnIntervals);
-            listingStandard.Label($"Scale spawn time points per second: {settings.pointsPerSecond}");
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsDisableNeeds".Translate(), ref settings.disableNeeds);
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsDisableCorpses".Translate(), ref settings.disableCorpses);
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnOnThreats".Translate(), ref settings.spawnOnlyOnThreat);
+            listingStandard.CheckboxLabeled($"RimSpawners_SettingsScaleSpawnTime".Translate(), ref settings.scaleSpawnIntervals);
+            listingStandard.Label("RimSpawners_SettingsScaleSpawnTime".Translate(settings.pointsPerSecond));
             settings.pointsPerSecond = listingStandard.Slider(settings.pointsPerSecond, 0.01f, 50f);
 
             listingStandard.End();

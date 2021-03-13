@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
+  <!-- MOD SETTINGS -->
+  <RimSpawners_SettingsMaximumPoints>Maximum points: {0}</RimSpawners_SettingsMaximumPoints>
+  <RimSpawners_SettingsSpawnInterval>Fixed spawn interval: {0} days</RimSpawners_SettingsSpawnInterval>
+  <RimSpawners_SettingsDisableNeeds>Disable spawned pawn needs</RimSpawners_SettingsDisableNeeds>
+  <RimSpawners_SettingsDisableCorpses>Disable spawned pawn corpses and dropped items</RimSpawners_SettingsDisableCorpses>
+  <RimSpawners_SettingsSpawnOnThreats>Spawn pawns only when threats are detected</RimSpawners_SettingsSpawnOnThreats>
+  <RimSpawners_SettingsScaleSpawnTime>Scale spawn interval to pawn combat power (overrides fixed spawn interval)</RimSpawners_SettingsScaleSpawnTime>
+  <RimSpawners_SettingsScaleSpawnTimePointsPerSecond>Scale spawn interval points per second: {0}</RimSpawners_SettingsScaleSpawnTimePointsPerSecond>
+
   <!-- PAWN SELECTION -->
   <RimSpawners_PawnSelection>Select pawn to spawn</RimSpawners_PawnSelection>
   <RimSpawners_PawnSelectionDesc>Select the type of pawn to spawn</RimSpawners_PawnSelectionDesc>
@@ -10,4 +19,9 @@
   <!-- RESET COMPSPAWNERPAWN -->
   <RimSpawners_Reset>Reset</RimSpawners_Reset>
   <RimSpawners_ResetDesc>Resets the spawner and its AI</RimSpawners_ResetDesc>
+
+  <!-- UNIVERSAL ASSEMBLER INFORMATION -->
+  <RimSpawners_UniversalAssemblerInspectPoints>{0} / {1} points</RimSpawners_UniversalAssemblerInspectPoints>
+  <RimSpawners_UniversalAssemblerInspectDormant>Dormant until a threat is detected</RimSpawners_UniversalAssemblerInspectDormant>
+  <RimSpawners_UniversalAssemblerInspectNextSpawn>Assembly complete in {0}</RimSpawners_UniversalAssemblerInspectNextSpawn>
 </LanguageData>
