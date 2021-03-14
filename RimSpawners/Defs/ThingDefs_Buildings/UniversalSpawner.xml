@@ -11,7 +11,6 @@
     </costList>
     <altitudeLayer>Building</altitudeLayer>
     <statBases>
-      <MarketValue>5000</MarketValue>
       <MaxHitPoints>1000</MaxHitPoints>
       <Flammability>1.0</Flammability>
       <Beauty>0</Beauty>

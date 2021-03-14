@@ -16,6 +16,11 @@ namespace RimSpawners
 
         public bool ThreatActive { get; set; }
 
+        public UniversalSpawner()
+        {
+            cps = GetComp<CompSpawnerPawn>();
+        }
+
         public override void ExposeData()
         {
             base.ExposeData();
