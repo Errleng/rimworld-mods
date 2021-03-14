@@ -2,12 +2,13 @@
 <LanguageData>
   <!-- MOD SETTINGS -->
   <RimSpawners_SettingsMaximumPoints>Maximum points: {0}</RimSpawners_SettingsMaximumPoints>
-  <RimSpawners_SettingsSpawnInterval>Fixed spawn interval: {0} days</RimSpawners_SettingsSpawnInterval>
+  <RimSpawners_SettingsScaledSpawnTimeButton>Scale spawn time to pawn combat power</RimSpawners_SettingsScaledSpawnTimeButton>
+  <RimSpawners_SettingsFixedSpawnTimeButton>Fix spawn time to certain amount</RimSpawners_SettingsFixedSpawnTimeButton>
+  <RimSpawners_SettingsScaledSpawnTimePointsPerSecond>Scaled spawn interval points per second: {0}</RimSpawners_SettingsScaledSpawnTimePointsPerSecond>
+  <RimSpawners_SettingsFixedSpawnTimeSeconds>Fixed spawn interval seconds per spawn: {0}</RimSpawners_SettingsFixedSpawnTimeSeconds>
   <RimSpawners_SettingsDisableNeeds>Disable spawned pawn needs</RimSpawners_SettingsDisableNeeds>
   <RimSpawners_SettingsDisableCorpses>Disable spawned pawn corpses and dropped items</RimSpawners_SettingsDisableCorpses>
   <RimSpawners_SettingsSpawnOnThreats>Spawn pawns only when threats are detected</RimSpawners_SettingsSpawnOnThreats>
-  <RimSpawners_SettingsScaleSpawnTime>Scale spawn interval to pawn combat power (overrides fixed spawn interval)</RimSpawners_SettingsScaleSpawnTime>
-  <RimSpawners_SettingsScaleSpawnTimePointsPerSecond>Scale spawn interval points per second: {0}</RimSpawners_SettingsScaleSpawnTimePointsPerSecond>
 
   <!-- PAWN SELECTION -->
   <RimSpawners_PawnSelection>Select creature to spawn</RimSpawners_PawnSelection>
@@ -15,13 +16,19 @@
   <RimSpawners_PawnSelectionTabName>Creatures</RimSpawners_PawnSelectionTabName>
   <RimSpawners_PawnSelectionButtonUnselected>Select</RimSpawners_PawnSelectionButtonUnselected>
   <RimSpawners_PawnSelectionButtonSelected>Current</RimSpawners_PawnSelectionButtonSelected>
+  <RimSpawners_PawnSelectionListEntry>{0} ({1} points)</RimSpawners_PawnSelectionListEntry>
 
   <!-- RESET COMPSPAWNERPAWN -->
   <RimSpawners_Reset>Activate kill switch</RimSpawners_Reset>
   <RimSpawners_ResetDesc>Kills all fabricated creatures</RimSpawners_ResetDesc>
 
-  <!-- UNIVERSAL ASSEMBLER INFORMATION -->
-  <RimSpawners_UniversalAssemblerInspectPoints>{0} / {1} points</RimSpawners_UniversalAssemblerInspectPoints>
-  <RimSpawners_UniversalAssemblerInspectDormant>Dormant until a threat is detected</RimSpawners_UniversalAssemblerInspectDormant>
-  <RimSpawners_UniversalAssemblerInspectNextSpawn>Assembly complete in {0}</RimSpawners_UniversalAssemblerInspectNextSpawn>
+  <!-- UNIVERSAL ASSEMBLER INSPECT -->
+  <RimSpawners_UniversalAssemblerInspectNoneChosen>Nothing chosen to fabricate.</RimSpawners_UniversalAssemblerInspectNoneChosen>
+  <RimSpawners_UniversalAssemblerInspectChosen>Chosen to fabricate {0}. Current creatures are using {1}/{2} control points.</RimSpawners_UniversalAssemblerInspectChosen>
+  <RimSpawners_UniversalAssemblerInspectLimit>Chosen to fabricate {0}. Current creatures are using up all {1} control points. Fabrication is paused until control points are available.</RimSpawners_UniversalAssemblerInspectLimit>
+  <RimSpawners_UniversalAssemblerInspectNextSpawn>\nFabrication complete in {0}.</RimSpawners_UniversalAssemblerInspectNextSpawn>
+  <RimSpawners_UniversalAssemblerInspectDormant>\nAssembler is dormant until a threat is detected.</RimSpawners_UniversalAssemblerInspectDormant>
+
+  <!-- UNIVERSAL ASSEMBLER NOTIFICATIONS AND MESSAGES -->
+  <RimSpawners_UniversalAssemblerSpawnMessage>{0} fabricated</RimSpawners_UniversalAssemblerSpawnMessage>
 </LanguageData>

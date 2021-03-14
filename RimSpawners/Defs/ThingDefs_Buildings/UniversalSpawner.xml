@@ -54,12 +54,10 @@
       <li Class="RimSpawners.CompProperties_UniversalSpawnerPawn">
         <spawnablePawnKinds></spawnablePawnKinds>
         <chooseSingleTypeToSpawn>True</chooseSingleTypeToSpawn>
-        <nextSpawnInspectStringKey>MechAssemblyCompleteIn</nextSpawnInspectStringKey>
         <maxSpawnedPawnsPoints>500</maxSpawnedPawnsPoints>
         <spawnSound>MechAssembler_Spawn</spawnSound>
         <lordJob>LordJob_AssaultColony</lordJob>
-        <pawnSpawnIntervalDays>0.1</pawnSpawnIntervalDays>
-        <showNextSpawnInInspect>true</showNextSpawnInInspect>
+        <pawnSpawnIntervalSeconds>100</pawnSpawnIntervalSeconds>
       </li>
       <li Class="CompProperties_Glower">
         <glowRadius>3</glowRadius>

@@ -68,6 +68,7 @@
     <Compile Include="RimSpawnersSettings.cs" />
     <Compile Include="Patches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpawnTimeSetting.cs" />
     <Compile Include="Texture2DExtensions.cs" />
     <Compile Include="UniversalSpawner.cs" />
   </ItemGroup>

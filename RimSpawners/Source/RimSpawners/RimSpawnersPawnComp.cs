@@ -15,7 +15,6 @@ namespace RimSpawners
         {
             base.Initialize(props);
 
-            Log.Message($"RimSpawners ThingComp Initialize");
             settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
             if (settings.disableNeeds)
             {
@@ -26,7 +25,6 @@ namespace RimSpawners
         public override void PostExposeData()
         {
             base.PostExposeData();
-            Log.Message($"RimSpawners ThingComp PostExposeData");
             if (settings.disableNeeds)
             {
                 RemovePawnNeeds();

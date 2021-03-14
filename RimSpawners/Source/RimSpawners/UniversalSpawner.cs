@@ -12,7 +12,7 @@ namespace RimSpawners
         static readonly int threatCheckTicks = GenTicks.SecondsToTicks(10);
         static readonly int threatOverDestroyPawnTicks = GenTicks.SecondsToTicks(300);
 
-        private CompSpawnerPawn cps;
+        private CompUniversalSpawnerPawn cups;
 
         public bool ThreatActive { get; set; }
 
@@ -20,47 +20,12 @@ namespace RimSpawners
         {
             base.SpawnSetup(map, respawningAfterLoad);
 
-            cps = GetComp<CompSpawnerPawn>();
-
-            // add custom ThingComp to all pawns when loading a save
-            foreach (Pawn pawn in cps.spawnedPawns)
-            {
-                RimSpawnersPawnComp customThingComp = new RimSpawnersPawnComp();
-                RimSpawnersPawnCompProperties customThingCompProps = new RimSpawnersPawnCompProperties();
-                customThingComp.parent = pawn;
-                pawn.AllComps.Add(customThingComp);
-                customThingComp.Initialize(customThingCompProps);
-            }
+            cups = GetComp<CompUniversalSpawnerPawn>();
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-        }
-
-        public override string GetInspectString()
-        {
-            CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
-
-            Type cpsType = typeof(CompSpawnerPawn);
-            PropertyInfo spawnedPawnsPointsProperty = cpsType.GetProperty("SpawnedPawnsPoints", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            string inspectStringAppend = "";
-            if (GetChosenKind() != null)
-            {
-                inspectStringAppend += "\n";
-                inspectStringAppend += "RimSpawners_UniversalAssemblerInspectPoints".Translate((float)spawnedPawnsPointsProperty.GetValue(cps), comp.maxSpawnedPawnsPoints);
-                inspectStringAppend += "\n";
-                if (settings.spawnOnlyOnThreat && !ThreatActive)
-                {
-                    inspectStringAppend += "RimSpawners_UniversalAssemblerInspectDormant".Translate();
-                }
-                else
-                {
-                    inspectStringAppend += "RimSpawners_UniversalAssemblerInspectNextSpawn".Translate(GenTicks.ToStringSecondsFromTicks(cps.nextPawnSpawnTick - Find.TickManager.TicksGame));
-                }
-            }
-            return base.GetInspectString() + inspectStringAppend;
         }
 
         public override void Tick()
@@ -82,13 +47,15 @@ namespace RimSpawners
                         // only spawn all pawns when the threat is first detected
                         if (!ThreatActive)
                         {
-                            cps.SpawnPawnsUntilPoints(settings.maxSpawnerPoints);
-                            ThreatActive = true;
+                            cups.SpawnPawnsUntilPoints(settings.maxSpawnerPoints);
                         }
+                        ThreatActive = true;
+                        cups.Dormant = false;
                     }
-                    else if (ThreatActive)
+                    else
                     {
                         ThreatActive = false;
+                        cups.Dormant = true;
                     }
                 }
             }
@@ -112,50 +79,43 @@ namespace RimSpawners
         {
             Log.Message("Spawner is destroying all spawned pawns");
 
-            for (int i = cps.spawnedPawns.Count - 1; i >= 0; i--)
+            for (int i = cups.spawnedPawns.Count - 1; i >= 0; i--)
             {
-                cps.spawnedPawns[i].Destroy();
-                cps.spawnedPawns.RemoveAt(i);
+                cups.spawnedPawns[i].Destroy();
+                cups.spawnedPawns.RemoveAt(i);
             }
         }
 
-        public List<PawnKindDef> GetPawnKindsToSpawn()
-        {
-            CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
-            if (comp.spawnablePawnKinds == null)
-            {
-                return new List<PawnKindDef>();
-            }
-            else
-            {
-                return comp.spawnablePawnKinds;
-            }
-        }
+        //public List<PawnKindDef> GetPawnKindsToSpawn()
+        //{
+        //    CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
+        //    if (comp.spawnablePawnKinds == null)
+        //    {
+        //        return new List<PawnKindDef>();
+        //    }
+        //    else
+        //    {
+        //        return comp.spawnablePawnKinds;
+        //    }
+        //}
 
-        public void SetPawnKindsToSpawn(List<PawnKindDef> newPawnKindsToSpawn)
-        {
-            CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
-            comp.spawnablePawnKinds = newPawnKindsToSpawn;
-            Log.Message($"Set spawner pawn kinds to {string.Join(", ", comp.spawnablePawnKinds)}");
-        }
+        //public void SetPawnKindsToSpawn(List<PawnKindDef> newPawnKindsToSpawn)
+        //{
+        //    CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
+        //    comp.spawnablePawnKinds = newPawnKindsToSpawn;
+        //    Log.Message($"Set spawner pawn kinds to {string.Join(", ", comp.spawnablePawnKinds)}");
+        //}
 
         public PawnKindDef GetChosenKind()
         {
-            Type cpsType = typeof(CompSpawnerPawn);
-            FieldInfo chosenKindField = cpsType.GetField("chosenKind", BindingFlags.Instance | BindingFlags.NonPublic);
-            return (PawnKindDef)(chosenKindField.GetValue(cps));
+            return cups.ChosenKind;
         }
 
         public void SetChosenKind(PawnKindDef newChosenKind)
         {
-            Type cpsType = typeof(CompSpawnerPawn);
-            FieldInfo chosenKindField = cpsType.GetField("chosenKind", BindingFlags.NonPublic | BindingFlags.Instance);
-            chosenKindField.SetValue(cps, newChosenKind);
-
+            cups.ChosenKind = newChosenKind;
             // recalculate spawn time
-            CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
-            cps.CalculateNextPawnSpawnTick(comp.pawnSpawnIntervalDays.RandomInRange * 60000f);
-
+            cups.CalculateNextPawnSpawnTick();
             Log.Message($"Set spawner chosen pawn kind to {GetChosenKind().defName} with point cost {newChosenKind.combatPower}");
         }
 

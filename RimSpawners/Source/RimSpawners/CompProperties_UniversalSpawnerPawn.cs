@@ -21,11 +21,11 @@ namespace RimSpawners
 
         public string spawnMessageKey;
 
-        public string noPawnsLeftToSpawnKey;
+        //public string noPawnsLeftToSpawnKey;
 
-        public string pawnsLeftToSpawnKey;
+        //public string pawnsLeftToSpawnKey;
 
-        public bool showNextSpawnInInspect;
+        //public bool showNextSpawnInInspect;
 
         public bool shouldJoinParentLord;
 
@@ -39,16 +39,12 @@ namespace RimSpawners
 
         public float maxSpawnedPawnsPoints = -1f;
 
-        public FloatRange pawnSpawnIntervalDays = new FloatRange(0.85f, 1.15f);
+        public float pawnSpawnIntervalSeconds;
 
         public int pawnSpawnRadius = 2;
 
         public IntRange maxPawnsToSpawn = IntRange.zero;
 
         public bool chooseSingleTypeToSpawn;
-
-        public string nextSpawnInspectStringKey;
-
-        public string nextSpawnInspectStringKeyDormant;
     }
 }

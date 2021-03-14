@@ -11,23 +11,23 @@ namespace RimSpawners
     class RimSpawnersSettings : ModSettings
     {
         public float maxSpawnerPoints;
-        public float daysToSpawn;
+        public float spawnTimeSecondsPerSpawn;
         public bool disableCorpses;
         public bool disableNeeds;
         public bool spawnOnlyOnThreat;
 
-        public bool scaleSpawnIntervals;
-        public float pointsPerSecond;
+        public SpawnTimeSetting spawnTime;
+        public float spawnTimePointsPerSecond;
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref maxSpawnerPoints, "maxSpawnerPoints", 500f);
-            Scribe_Values.Look(ref daysToSpawn, "daysToSpawn", 1f);
+            Scribe_Values.Look(ref spawnTime, "spawnTime", SpawnTimeSetting.Scaled);
+            Scribe_Values.Look(ref spawnTimePointsPerSecond, "spawnTimePointsPerSecond", 1f);
+            Scribe_Values.Look(ref spawnTimeSecondsPerSpawn, "spawnTimeSecondsPerSpawn", 1f);
             Scribe_Values.Look(ref disableCorpses, "disableCorpses", false);
             Scribe_Values.Look(ref disableNeeds, "disableNeeds", false);
             Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat", false);
-            Scribe_Values.Look(ref scaleSpawnIntervals, "scaleSpawnIntervals", false);
-            Scribe_Values.Look(ref pointsPerSecond, "pointsPerSecond", 1f);
             base.ExposeData();
         }
 
@@ -43,8 +43,7 @@ namespace RimSpawners
                 ThingDef spawner = DefDatabase<ThingDef>.GetNamed(spawnerName, true);
                 CompProperties_UniversalSpawnerPawn comp = spawner.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
                 comp.maxSpawnedPawnsPoints = maxSpawnerPoints;
-                comp.pawnSpawnIntervalDays.min = daysToSpawn;
-                comp.pawnSpawnIntervalDays.max = daysToSpawn;
+                comp.pawnSpawnIntervalSeconds = spawnTimeSecondsPerSpawn;
                 comp.chooseSingleTypeToSpawn = true;
             }
         }

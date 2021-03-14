@@ -114,7 +114,7 @@ namespace RimSpawners
 
             // pawn kind name and point cost
             Rect labelRect = new Rect(60, currentY, width, PAWN_ROW_HEIGHT);
-            Widgets.Label(labelRect, $"{pawnKind.label} ({pawnKind.combatPower} points)");
+            Widgets.Label(labelRect, "RimSpawners_PawnSelectionListEntry".Translate(pawnKind.LabelCap, pawnKind.combatPower));
 
             // button for selecting a new pawn kind
             Rect selectButtonRect = new Rect(350, currentY, 100, PAWN_ROW_HEIGHT);
