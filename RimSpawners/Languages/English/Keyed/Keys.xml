@@ -18,9 +18,11 @@
   <RimSpawners_PawnSelectionButtonSelected>Current</RimSpawners_PawnSelectionButtonSelected>
   <RimSpawners_PawnSelectionListEntry>{0} ({1} points)</RimSpawners_PawnSelectionListEntry>
 
-  <!-- RESET COMPSPAWNERPAWN -->
-  <RimSpawners_Reset>Activate kill switch</RimSpawners_Reset>
-  <RimSpawners_ResetDesc>Kills all fabricated creatures</RimSpawners_ResetDesc>
+  <!-- COMPSPAWNERPAWN GIZMOS -->
+  <RimSpawners_KillSwitch>Activate kill switch</RimSpawners_KillSwitch>
+  <RimSpawners_KillSwitchDesc>Destroys all fabricated creatures</RimSpawners_KillSwitchDesc>
+  <RimSpawners_Reset>Reset</RimSpawners_Reset>
+  <RimSpawners_ResetDesc>Reset chosen creature to none</RimSpawners_ResetDesc>
 
   <!-- UNIVERSAL ASSEMBLER INSPECT -->
   <RimSpawners_UniversalAssemblerInspectNoneChosen>Nothing chosen to fabricate.</RimSpawners_UniversalAssemblerInspectNoneChosen>

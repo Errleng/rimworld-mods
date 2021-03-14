@@ -75,7 +75,7 @@ namespace RimSpawners
             RemoveAllSpawnedPawns();
         }
 
-        private void RemoveAllSpawnedPawns()
+        public void RemoveAllSpawnedPawns()
         {
             Log.Message("Spawner is destroying all spawned pawns");
 
@@ -116,14 +116,6 @@ namespace RimSpawners
             cups.ChosenKind = newChosenKind;
             // recalculate spawn time
             cups.CalculateNextPawnSpawnTick();
-            Log.Message($"Set spawner chosen pawn kind to {GetChosenKind().defName} with point cost {newChosenKind.combatPower}");
-        }
-
-        public void ResetCompUniversalSpawnerPawn()
-        {
-            Log.Message($"Resetting spawner");
-
-            RemoveAllSpawnedPawns();
         }
     }
 }

@@ -28,6 +28,20 @@ namespace RimSpawners
             };
             yield return new Command_Action()
             {
+                defaultLabel = "RimSpawners_KillSwitch".Translate(),
+                defaultDesc = "RimSpawners_KillSwitchDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/Commands/Detonate"),
+                action = () =>
+                {
+                    UniversalSpawner us = parent as UniversalSpawner;
+                    if (us != null)
+                    {
+                        us.RemoveAllSpawnedPawns();
+                    }
+                }
+            };
+            yield return new Command_Action()
+            {
                 defaultLabel = "RimSpawners_Reset".Translate(),
                 defaultDesc = "RimSpawners_ResetDesc".Translate(),
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/TryReconnect"),
@@ -36,7 +50,7 @@ namespace RimSpawners
                     UniversalSpawner us = parent as UniversalSpawner;
                     if (us != null)
                     {
-                        us.ResetCompUniversalSpawnerPawn();
+                        us.SetChosenKind(null);
                     }
                 }
             };
