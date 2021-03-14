@@ -108,7 +108,7 @@ namespace RimCheats
                 {
                     appliesToPawn = ___pawn.IsColonistPlayerControlled;
                 }
-                if (!appliesToPawn && settings.enablePathingNonHuman)
+                if (settings.enablePathingNonHuman && !___pawn.IsColonistPlayerControlled)
                 {
                     appliesToPawn = (___pawn.Faction != null) && ___pawn.Faction.IsPlayer;
                 }
