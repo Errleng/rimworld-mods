@@ -16,14 +16,9 @@ namespace RimSpawners
 
         public bool ThreatActive { get; set; }
 
-        public UniversalSpawner()
+        public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
-            cps = GetComp<CompSpawnerPawn>();
-        }
-
-        public override void ExposeData()
-        {
-            base.ExposeData();
+            base.SpawnSetup(map, respawningAfterLoad);
 
             cps = GetComp<CompSpawnerPawn>();
 
@@ -36,6 +31,11 @@ namespace RimSpawners
                 pawn.AllComps.Add(customThingComp);
                 customThingComp.Initialize(customThingCompProps);
             }
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
         }
 
         public override string GetInspectString()
@@ -82,14 +82,12 @@ namespace RimSpawners
                         // only spawn all pawns when the threat is first detected
                         if (!ThreatActive)
                         {
-                            Log.Message($"Spawning pawns in response to threat");
                             cps.SpawnPawnsUntilPoints(settings.maxSpawnerPoints);
                             ThreatActive = true;
                         }
                     }
                     else if (ThreatActive)
                     {
-                        Log.Message($"Threat is over");
                         ThreatActive = false;
                     }
                 }

@@ -64,6 +64,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../Assemblies"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../Assemblies"
+copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimCheats\Assemblies"</PostBuildEvent>
   </PropertyGroup>
 </Project>
