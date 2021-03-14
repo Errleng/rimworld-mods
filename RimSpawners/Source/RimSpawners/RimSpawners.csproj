@@ -60,7 +60,6 @@
     <Compile Include="CompProperties_UniversalSpawnerPawn.cs" />
     <Compile Include="CompUniversalSpawnerPawn.cs" />
     <Compile Include="DefExtensions.cs" />
-    <Compile Include="PawnSelectionITab.cs" />
     <Compile Include="CompPawnSelectionGizmo.cs" />
     <Compile Include="PawnSelectionWindow.cs" />
     <Compile Include="RimSpawners.cs" />

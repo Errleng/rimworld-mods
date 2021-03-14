@@ -47,9 +47,6 @@
         <offset>(0.0, 0.0, 0.0)</offset>
       </shadowData>
     </graphicData>
-    <inspectorTabs>
-      <li>RimSpawners.PawnSelectionITab</li>
-    </inspectorTabs>
     <comps>
       <li Class="RimSpawners.CompProperties_UniversalSpawnerPawn">
         <spawnablePawnKinds></spawnablePawnKinds>
