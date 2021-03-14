@@ -24,6 +24,7 @@ namespace RimCheats
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
             listingStandard.CheckboxLabeled("Enable pathing", ref settings.enablePathing, "Paths and moves in one tick");
+            listingStandard.CheckboxLabeled("Enable pathing for non-humans", ref settings.enablePathingNonHuman, "Paths and moves in one tick");
             listingStandard.CheckboxLabeled("Enable ignore terrain cost", ref settings.disableTerrainCost, "Colonists ignore terrain movement penalties");
             listingStandard.CheckboxLabeled("Enable working", ref settings.enableWorking, "Global work speed multiplied by amount");
             listingStandard.CheckboxLabeled("Enable learning", ref settings.enableLearning, "Global learning speed multiplied by amount");
@@ -51,6 +52,7 @@ namespace RimCheats
     public class RimCheatsSettings : ModSettings
     {
         public bool enablePathing;
+        public bool enablePathingNonHuman;
         public bool enableWorking;
         public bool enableLearning;
         public bool disableTerrainCost;
@@ -65,6 +67,7 @@ namespace RimCheats
         public override void ExposeData()
         {
             Scribe_Values.Look(ref enablePathing, "enablePathing");
+            Scribe_Values.Look(ref enablePathingNonHuman, "enablePathingNonHuman");
             Scribe_Values.Look(ref enableWorking, "enableWorking");
             Scribe_Values.Look(ref enableLearning, "enableLearning");
             Scribe_Values.Look(ref disableTerrainCost, "disableTerrainCost");
@@ -100,8 +103,16 @@ namespace RimCheats
 
             static void Postfix(Pawn_PathFollower __instance, Pawn ___pawn)
             {
-                bool enablePathing = settings.enablePathing;
-                if (___pawn.IsColonistPlayerControlled && __instance.Moving && enablePathing)
+                bool appliesToPawn = false;
+                if (settings.enablePathing)
+                {
+                    appliesToPawn = ___pawn.IsColonistPlayerControlled;
+                }
+                if (!appliesToPawn && settings.enablePathingNonHuman)
+                {
+                    appliesToPawn = (___pawn.Faction != null) && ___pawn.Faction.IsPlayer;
+                }
+                if (appliesToPawn && __instance.Moving)
                 {
                     if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander))
                     {
