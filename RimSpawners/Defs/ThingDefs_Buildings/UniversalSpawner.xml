@@ -51,7 +51,7 @@
       <li>RimSpawners.PawnSelectionITab</li>
     </inspectorTabs>
     <comps>
-      <li Class="CompProperties_SpawnerPawn">
+      <li Class="RimSpawners.CompProperties_UniversalSpawnerPawn">
         <spawnablePawnKinds></spawnablePawnKinds>
         <chooseSingleTypeToSpawn>True</chooseSingleTypeToSpawn>
         <nextSpawnInspectStringKey>MechAssemblyCompleteIn</nextSpawnInspectStringKey>

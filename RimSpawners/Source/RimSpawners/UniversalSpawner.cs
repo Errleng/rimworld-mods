@@ -40,7 +40,7 @@ namespace RimSpawners
 
         public override string GetInspectString()
         {
-            CompProperties_SpawnerPawn comp = def.GetCompProperties<CompProperties_SpawnerPawn>();
+            CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
 
             Type cpsType = typeof(CompSpawnerPawn);
             PropertyInfo spawnedPawnsPointsProperty = cpsType.GetProperty("SpawnedPawnsPoints", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -121,7 +121,7 @@ namespace RimSpawners
 
         public List<PawnKindDef> GetPawnKindsToSpawn()
         {
-            CompProperties_SpawnerPawn comp = def.GetCompProperties<CompProperties_SpawnerPawn>();
+            CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
             if (comp.spawnablePawnKinds == null)
             {
                 return new List<PawnKindDef>();
@@ -134,7 +134,7 @@ namespace RimSpawners
 
         public void SetPawnKindsToSpawn(List<PawnKindDef> newPawnKindsToSpawn)
         {
-            CompProperties_SpawnerPawn comp = def.GetCompProperties<CompProperties_SpawnerPawn>();
+            CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
             comp.spawnablePawnKinds = newPawnKindsToSpawn;
             Log.Message($"Set spawner pawn kinds to {string.Join(", ", comp.spawnablePawnKinds)}");
         }
@@ -153,13 +153,13 @@ namespace RimSpawners
             chosenKindField.SetValue(cps, newChosenKind);
 
             // recalculate spawn time
-            CompProperties_SpawnerPawn comp = def.GetCompProperties<CompProperties_SpawnerPawn>();
+            CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
             cps.CalculateNextPawnSpawnTick(comp.pawnSpawnIntervalDays.RandomInRange * 60000f);
 
             Log.Message($"Set spawner chosen pawn kind to {GetChosenKind().defName} with point cost {newChosenKind.combatPower}");
         }
 
-        public void ResetCompSpawnerPawn()
+        public void ResetCompUniversalSpawnerPawn()
         {
             Log.Message($"Resetting spawner");
 

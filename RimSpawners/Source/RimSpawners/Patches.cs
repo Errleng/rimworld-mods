@@ -25,11 +25,11 @@ namespace RimSpawners
             Log.Message("RimSpawners loaded");
         }
 
-        static UniversalSpawner GetUniversalSpawner(CompSpawnerPawn cps)
+        static UniversalSpawner GetUniversalSpawner(CompSpawnerPawn cusp)
         {
-            if (cps.parent.Faction.IsPlayer)
+            if (cusp.parent.Faction.IsPlayer)
             {
-                UniversalSpawner us = cps.parent as UniversalSpawner;
+                UniversalSpawner us = cusp.parent as UniversalSpawner;
                 return us;
             }
             return null;

@@ -41,7 +41,7 @@ namespace RimSpawners
             foreach (string spawnerName in spawnerNames)
             {
                 ThingDef spawner = DefDatabase<ThingDef>.GetNamed(spawnerName, true);
-                CompProperties_SpawnerPawn comp = spawner.GetCompProperties<CompProperties_SpawnerPawn>();
+                CompProperties_UniversalSpawnerPawn comp = spawner.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
                 comp.maxSpawnedPawnsPoints = maxSpawnerPoints;
                 comp.pawnSpawnIntervalDays.min = daysToSpawn;
                 comp.pawnSpawnIntervalDays.max = daysToSpawn;

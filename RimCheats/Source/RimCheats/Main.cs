@@ -114,6 +114,7 @@ namespace RimCheats
                 }
                 if (appliesToPawn && __instance.Moving)
                 {
+                    // disable speed on wander or waiting for better idle pawn performance
                     if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander))
                     {
                         return;

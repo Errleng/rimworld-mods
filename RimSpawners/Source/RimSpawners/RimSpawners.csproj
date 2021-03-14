@@ -57,6 +57,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompProperties_UniversalSpawnerPawn.cs" />
+    <Compile Include="CompUniversalSpawnerPawn.cs" />
     <Compile Include="DefExtensions.cs" />
     <Compile Include="PawnSelectionITab.cs" />
     <Compile Include="CompPawnSelectionGizmo.cs" />

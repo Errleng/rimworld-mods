@@ -36,7 +36,7 @@ namespace RimSpawners
                     UniversalSpawner us = parent as UniversalSpawner;
                     if (us != null)
                     {
-                        us.ResetCompSpawnerPawn();
+                        us.ResetCompUniversalSpawnerPawn();
                     }
                 }
             };
