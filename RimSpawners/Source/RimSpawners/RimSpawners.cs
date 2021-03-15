@@ -37,7 +37,10 @@ namespace RimSpawners
 
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDisableNeeds".Translate(), ref settings.disableNeeds);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDisableCorpses".Translate(), ref settings.disableCorpses);
+
             listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnOnThreats".Translate(), ref settings.spawnOnlyOnThreat);
+            listingStandard.Label("RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier".Translate(settings.spawnOnThreatSpeedMultiplier));
+            settings.spawnOnThreatSpeedMultiplier = listingStandard.Slider(settings.spawnOnThreatSpeedMultiplier, 0.01f, 10f);
 
             listingStandard.End();
 

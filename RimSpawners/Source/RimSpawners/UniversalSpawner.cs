@@ -47,7 +47,8 @@ namespace RimSpawners
                         // only spawn all pawns when the threat is first detected
                         if (!ThreatActive)
                         {
-                            cups.SpawnPawnsUntilPoints(settings.maxSpawnerPoints);
+                            //cups.SpawnPawnsUntilPoints(settings.maxSpawnerPoints);
+                            cups.SpawnUntilFullSpeedMultiplier = settings.spawnOnThreatSpeedMultiplier;
                         }
                         ThreatActive = true;
                         cups.Dormant = false;

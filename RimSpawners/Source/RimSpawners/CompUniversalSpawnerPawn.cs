@@ -26,6 +26,8 @@ namespace RimSpawners
 
         public PawnKindDef ChosenKind { get => chosenKind; set => chosenKind = value; }
 
+        public float SpawnUntilFullSpeedMultiplier { set => spawnUntilFullSpeedMultiplier = value; }
+
         public Lord Lord
         {
             get
@@ -198,7 +200,8 @@ namespace RimSpawners
                     }
                 case SpawnTimeSetting.Fixed:
                     {
-                        CalculateNextPawnSpawnTick(GenTicks.SecondsToTicks(Props.pawnSpawnIntervalSeconds));
+                        float ticksToNextSpawn = GenTicks.SecondsToTicks(Props.pawnSpawnIntervalSeconds);
+                        CalculateNextPawnSpawnTick(ticksToNextSpawn);
                         break;
                     }
                 default:
@@ -214,6 +217,9 @@ namespace RimSpawners
             //    nextPawnSpawnTick = Find.TickManager.TicksGame + (int)(delayTicks / (existingPawnSlowdown * Find.Storyteller.difficultyValues.enemyReproductionRateFactor));
             //    return;
             //}
+
+            delayTicks /= spawnUntilFullSpeedMultiplier;
+
             nextPawnSpawnTick = Find.TickManager.TicksGame + (int)delayTicks;
         }
 
@@ -273,7 +279,9 @@ namespace RimSpawners
             }
             float? pawnMinAge = new float?(chosenKind.RaceProps.lifeStageAges[maxLifeStageIndex].minAge);
 
-            PawnGenerationRequest request = new PawnGenerationRequest(chosenKind, parent.Faction, PawnGenerationContext.NonPlayer, -1, false, false, false, false, true, false, 1f, false, true, true, true, false, false, false, false, 0f, null, 1f, null, null, null, null, null, pawnMinAge, null, null, null, null, null, null);
+            Faction pawnFaction = parent.Faction;
+
+            PawnGenerationRequest request = new PawnGenerationRequest(chosenKind, pawnFaction, PawnGenerationContext.NonPlayer, -1, false, false, false, false, true, false, 1f, false, true, true, true, false, false, false, false, 0f, null, 1f, null, null, null, null, null, pawnMinAge, null, null, null, null, null, null);
 
             if (ModLister.RoyaltyInstalled)
             {
@@ -355,11 +363,18 @@ namespace RimSpawners
                 FilterOutUnspawnedPawns();
                 if (Active && Find.TickManager.TicksGame >= nextPawnSpawnTick)
                 {
+                    if (SpawnedPawnsPoints >= Props.maxSpawnedPawnsPoints)
+                    {
+                        spawnUntilFullSpeedMultiplier = 1f;
+                    }
+
                     Pawn pawn;
+
                     if ((Props.maxSpawnedPawnsPoints < 0f || SpawnedPawnsPoints < Props.maxSpawnedPawnsPoints) && Find.Storyteller.difficultyValues.enemyReproductionRateFactor > 0f && TrySpawnPawn(out pawn) && pawn.caller != null)
                     {
                         pawn.caller.DoCall();
                     }
+
                     CalculateNextPawnSpawnTick();
                 }
             }
@@ -457,5 +472,7 @@ namespace RimSpawners
         private bool dormant = false;
 
         private PawnKindDef chosenKind;
+
+        private float spawnUntilFullSpeedMultiplier = 1f;
     }
 }

@@ -9,6 +9,7 @@
   <RimSpawners_SettingsDisableNeeds>Disable spawned pawn needs</RimSpawners_SettingsDisableNeeds>
   <RimSpawners_SettingsDisableCorpses>Disable spawned pawn corpses and dropped items</RimSpawners_SettingsDisableCorpses>
   <RimSpawners_SettingsSpawnOnThreats>Spawn pawns only when threats are detected</RimSpawners_SettingsSpawnOnThreats>
+  <RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier>Spawning speed multiplier when initially spawning in reaction to threats: {0}</RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier>
 
   <!-- PAWN SELECTION -->
   <RimSpawners_PawnSelection>Select creature to spawn</RimSpawners_PawnSelection>

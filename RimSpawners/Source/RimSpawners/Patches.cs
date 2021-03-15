@@ -32,14 +32,11 @@ namespace RimSpawners
             {
                 // the spawner Lord has LordJob.RemoveDownedPawns = true
                 //   cannot loop over spawnedPawns later to kill downed, must kill before MakeDowned runs
-                if ((___pawn.Faction != null) && ___pawn.Faction.IsPlayer)
+                RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
+                if (customThingComp != null)
                 {
-                    RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
-                    if (customThingComp != null)
-                    {
-                        ___pawn.Kill(dinfo, null);
-                        return false;
-                    }
+                    ___pawn.Kill(dinfo, null);
+                    return false;
                 }
 
                 return true;
@@ -52,17 +49,14 @@ namespace RimSpawners
         {
             public static bool Prefix(Pawn __instance)
             {
-                if ((__instance.Faction != null) && __instance.Faction.IsPlayer)
+                RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
+                if ((customThingComp != null) && settings.disableCorpses)
                 {
-                    RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
-                    if ((customThingComp != null) && settings.disableCorpses)
-                    {
-                        __instance.SetFaction(null, null);
+                    __instance.SetFaction(null, null);
 
-                        __instance.inventory?.DestroyAll();
-                        __instance.apparel?.DestroyAll();
-                        __instance.equipment?.DestroyAllEquipment();
-                    }
+                    __instance.inventory?.DestroyAll();
+                    __instance.apparel?.DestroyAll();
+                    __instance.equipment?.DestroyAllEquipment();
                 }
                 return true;
             }

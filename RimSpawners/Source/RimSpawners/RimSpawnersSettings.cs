@@ -14,7 +14,9 @@ namespace RimSpawners
         public float spawnTimeSecondsPerSpawn;
         public bool disableCorpses;
         public bool disableNeeds;
+
         public bool spawnOnlyOnThreat;
+        public float spawnOnThreatSpeedMultiplier;
 
         public SpawnTimeSetting spawnTime;
         public float spawnTimePointsPerSecond;
@@ -28,6 +30,7 @@ namespace RimSpawners
             Scribe_Values.Look(ref disableCorpses, "disableCorpses", false);
             Scribe_Values.Look(ref disableNeeds, "disableNeeds", false);
             Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat", false);
+            Scribe_Values.Look(ref spawnOnThreatSpeedMultiplier, "spawnOnThreatSpeedMultiplier", 2f);
             base.ExposeData();
         }
 
