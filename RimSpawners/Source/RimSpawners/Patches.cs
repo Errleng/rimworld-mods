@@ -59,9 +59,9 @@ namespace RimSpawners
                     {
                         __instance.SetFaction(null, null);
 
-                        __instance.inventory.DestroyAll();
-                        __instance.apparel.DestroyAll();
-                        __instance.equipment.DestroyAllEquipment();
+                        __instance.inventory?.DestroyAll();
+                        __instance.apparel?.DestroyAll();
+                        __instance.equipment?.DestroyAllEquipment();
                     }
                 }
                 return true;
@@ -72,10 +72,7 @@ namespace RimSpawners
                 RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
                 if ((customThingComp != null) && settings.disableCorpses)
                 {
-                    if (__instance.Corpse != null)
-                    {
-                        __instance.Corpse.Destroy();
-                    }
+                    __instance.Corpse?.Destroy();
                 }
             }
         }
