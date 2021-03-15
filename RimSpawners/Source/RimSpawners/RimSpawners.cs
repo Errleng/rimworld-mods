@@ -35,6 +35,7 @@ namespace RimSpawners
             listingStandard.Label("RimSpawners_SettingsFixedSpawnTimeSeconds".Translate(settings.spawnTimeSecondsPerSpawn));
             settings.spawnTimeSecondsPerSpawn = listingStandard.Slider(settings.spawnTimeSecondsPerSpawn, 1f, 600f);
 
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsUseAllyFaction".Translate(), ref settings.useAllyFaction);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDisableNeeds".Translate(), ref settings.disableNeeds);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDisableCorpses".Translate(), ref settings.disableCorpses);
 

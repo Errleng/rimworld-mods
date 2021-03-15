@@ -280,6 +280,10 @@ namespace RimSpawners
             float? pawnMinAge = new float?(chosenKind.RaceProps.lifeStageAges[maxLifeStageIndex].minAge);
 
             Faction pawnFaction = parent.Faction;
+            if (pawnFaction.IsPlayer && settings.useAllyFaction)
+            {
+                pawnFaction = Find.FactionManager.FirstFactionOfDef(DefDatabase<FactionDef>.GetNamed("RimSpawnersFriendlyFaction", true));
+            }
 
             PawnGenerationRequest request = new PawnGenerationRequest(chosenKind, pawnFaction, PawnGenerationContext.NonPlayer, -1, false, false, false, false, true, false, 1f, false, true, true, true, false, false, false, false, 0f, null, 1f, null, null, null, null, null, pawnMinAge, null, null, null, null, null, null);
 
@@ -294,7 +298,7 @@ namespace RimSpawners
 
             pawn = PawnGenerator.GeneratePawn(request);
 
-            if (spawningHumanlike)
+            if (spawningHumanlike && pawn.IsColonistPlayerControlled)
             {
                 pawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
             }

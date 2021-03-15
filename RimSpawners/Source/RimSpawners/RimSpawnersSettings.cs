@@ -12,6 +12,7 @@ namespace RimSpawners
     {
         public float maxSpawnerPoints;
         public float spawnTimeSecondsPerSpawn;
+        public bool useAllyFaction;
         public bool disableCorpses;
         public bool disableNeeds;
 
@@ -27,6 +28,7 @@ namespace RimSpawners
             Scribe_Values.Look(ref spawnTime, "spawnTime", SpawnTimeSetting.Scaled);
             Scribe_Values.Look(ref spawnTimePointsPerSecond, "spawnTimePointsPerSecond", 1f);
             Scribe_Values.Look(ref spawnTimeSecondsPerSpawn, "spawnTimeSecondsPerSpawn", 1f);
+            Scribe_Values.Look(ref useAllyFaction, "useAllyFaction", false);
             Scribe_Values.Look(ref disableCorpses, "disableCorpses", false);
             Scribe_Values.Look(ref disableNeeds, "disableNeeds", false);
             Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat", false);

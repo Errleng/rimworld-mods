@@ -9,8 +9,8 @@ namespace RimSpawners
     class UniversalSpawner : Building
     {
         static readonly RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
-        static readonly int threatCheckTicks = GenTicks.SecondsToTicks(10);
-        static readonly int threatOverDestroyPawnTicks = GenTicks.SecondsToTicks(300);
+        static readonly int THREAT_CHECK_TICKS = GenTicks.SecondsToTicks(10);
+        static readonly int THREAT_OVER_DESTROY_PAWNS_TICKS = GenTicks.SecondsToTicks(300);
 
         private CompUniversalSpawnerPawn cups;
 
@@ -32,9 +32,9 @@ namespace RimSpawners
         {
             base.Tick();
 
-            if (this.IsHashIntervalTick(threatCheckTicks))
+            if (settings.spawnOnlyOnThreat)
             {
-                if (settings.spawnOnlyOnThreat)
+                if (this.IsHashIntervalTick(THREAT_CHECK_TICKS))
                 {
                     bool isThreatOnMap = ParentHolder is Map &&
                         GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction, false)
@@ -59,13 +59,13 @@ namespace RimSpawners
                         cups.Dormant = true;
                     }
                 }
-            }
 
-            if (this.IsHashIntervalTick(threatOverDestroyPawnTicks))
-            {
-                if (settings.spawnOnlyOnThreat && !ThreatActive)
+                if (this.IsHashIntervalTick(THREAT_OVER_DESTROY_PAWNS_TICKS))
                 {
-                    RemoveAllSpawnedPawns();
+                    if (!ThreatActive)
+                    {
+                        RemoveAllSpawnedPawns();
+                    }
                 }
             }
         }
