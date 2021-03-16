@@ -16,15 +16,7 @@ namespace RimSpawners
 
         private CompProperties_UniversalSpawnerPawn Props => (CompProperties_UniversalSpawnerPawn)props;
 
-        public bool Dormant
-        {
-            get => dormant;
-            set
-            {
-                dormant = value;
-                CalculateNextPawnSpawnTick();
-            }
-        }
+        public bool Dormant { get => dormant; set => dormant = value; }
 
         public PawnKindDef ChosenKind { get => chosenKind; set => chosenKind = value; }
 
@@ -275,40 +267,34 @@ namespace RimSpawners
                 pawnFaction = Find.FactionManager.FirstFactionOfDef(DefDatabase<FactionDef>.GetNamed("RimSpawnersFriendlyFaction", true));
             }
 
-            PawnGenerationRequest request = new PawnGenerationRequest(chosenKind,
-                                                                      pawnFaction,
-                                                                      PawnGenerationContext.NonPlayer,
-                                                                      -1,
-                                                                      false,
-                                                                      false,
-                                                                      false,
-                                                                      false,
-                                                                      false,
-                                                                      true,
-                                                                      0f,
-                                                                      false,
-                                                                      true,
-                                                                      true,
-                                                                      true,
-                                                                      false,
-                                                                      false,
-                                                                      false,
-                                                                      false,
-                                                                      0f,
-                                                                      null,
-                                                                      0f,
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      pawnMinAge,
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      null,
-                                                                      null);
+            var request = new PawnGenerationRequest(chosenKind,
+                pawnFaction,
+                PawnGenerationContext.NonPlayer,
+                -1,
+                true,
+                false,
+                false,
+                false,
+                false,
+                true,
+                1f,
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                0f,
+                null,
+                1f,
+                null,
+                null,
+                null,
+                null,
+                null,
+                pawnMinAge);
 
             if (ModLister.RoyaltyInstalled)
             {
