@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
@@ -43,9 +41,9 @@ namespace RimSpawners
 
             // get all selected sapwners
             spawners = Find.Selector.SelectedObjects.OfType<UniversalSpawner>().ToList();
-            if (GenList.NullOrEmpty(spawners))
+            if (spawners.NullOrEmpty())
             {
-                Close(true);
+                Close();
                 return;
             }
 
@@ -59,7 +57,7 @@ namespace RimSpawners
             // setup scrolling menu
             Rect outRect = new Rect(5f, PAWN_ROW_HEIGHT + yOffset + 5f, WINDOW_SIZE.x - 30, WINDOW_SIZE.y - yOffset - 30f);
             Rect viewRect = new Rect(0f, 0f, outRect.width - 16f, scrollViewHeight);
-            Widgets.BeginScrollView(outRect, ref scrollPos, viewRect, true);
+            Widgets.BeginScrollView(outRect, ref scrollPos, viewRect);
 
             // draw each entry
             float currY = 0;
@@ -125,7 +123,7 @@ namespace RimSpawners
                     foreach (UniversalSpawner spawner in spawners)
                     {
                         spawner.SetChosenKind(pawnKind);
-                        Close(true);
+                        Close();
                     }
                 }
             }

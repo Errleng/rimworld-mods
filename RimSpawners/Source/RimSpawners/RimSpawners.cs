@@ -5,7 +5,7 @@ namespace RimSpawners
 {
     class RimSpawners : Mod
     {
-        private RimSpawnersSettings settings;
+        private readonly RimSpawnersSettings settings;
         public RimSpawners(ModContentPack content) : base(content)
         {
             settings = GetSettings<RimSpawnersSettings>();

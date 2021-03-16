@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -33,8 +29,7 @@ namespace RimSpawners
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/Detonate"),
                 action = () =>
                 {
-                    UniversalSpawner us = parent as UniversalSpawner;
-                    if (us != null)
+                    if (parent is UniversalSpawner us)
                     {
                         us.RemoveAllSpawnedPawns();
                     }
@@ -47,8 +42,7 @@ namespace RimSpawners
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/TryReconnect"),
                 action = () =>
                 {
-                    UniversalSpawner us = parent as UniversalSpawner;
-                    if (us != null)
+                    if (parent is UniversalSpawner us)
                     {
                         us.SetChosenKind(null);
                     }

@@ -1,24 +1,16 @@
 ﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 using Verse;
-using RimWorld;
-using Verse.AI.Group;
 
 namespace RimSpawners
 {
     [StaticConstructorOnStartup]
     public class Patcher
     {
-        static RimSpawnersSettings settings;
+        static readonly RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
 
         static Patcher()
         {
-            settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
             Harmony harmony = new Harmony("com.rimspawners.rimworld.mod");
             Assembly assembly = Assembly.GetExecutingAssembly();
             harmony.PatchAll(assembly);
@@ -35,7 +27,7 @@ namespace RimSpawners
                 RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
                 if (customThingComp != null)
                 {
-                    ___pawn.Kill(dinfo, null);
+                    ___pawn.Kill(dinfo);
                     return false;
                 }
 
@@ -52,7 +44,7 @@ namespace RimSpawners
                 RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
                 if ((customThingComp != null) && settings.disableCorpses)
                 {
-                    __instance.SetFaction(null, null);
+                    __instance.SetFaction(null);
 
                     __instance.inventory?.DestroyAll();
                     __instance.apparel?.DestroyAll();

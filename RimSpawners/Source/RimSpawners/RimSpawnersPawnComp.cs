@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace RimSpawners
 {
     class RimSpawnersPawnComp : ThingComp
     {
-        static RimSpawnersSettings settings;
+        static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
 
-        public override void Initialize(CompProperties props)
+        public override void Initialize(CompProperties initialProps)
         {
-            base.Initialize(props);
+            base.Initialize(initialProps);
 
-            settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
-            if (settings.disableNeeds)
+            if (Settings.disableNeeds)
             {
                 RemovePawnNeeds();
             }
@@ -25,7 +20,7 @@ namespace RimSpawners
         public override void PostExposeData()
         {
             base.PostExposeData();
-            if (settings.disableNeeds)
+            if (Settings.disableNeeds)
             {
                 RemovePawnNeeds();
             }
@@ -33,8 +28,7 @@ namespace RimSpawners
 
         private void RemovePawnNeeds()
         {
-            Pawn parentPawn = parent as Pawn;
-            if (parentPawn != null)
+            if (parent is Pawn parentPawn)
             {
                 //parentPawn.needs.AllNeeds.Clear();
 

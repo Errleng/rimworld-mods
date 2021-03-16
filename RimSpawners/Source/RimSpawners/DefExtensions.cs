@@ -1,9 +1,6 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
@@ -173,28 +170,30 @@ namespace RimSpawners
                 (tdef != null)
             )
             {
-				if (tdef.entityDefToBuild != null) {
-					_cachedDefIcons.Add (def, tdef.entityDefToBuild.IconTexture ().Crop ());
-					return _cachedDefIcons [def];
-				}
-				// corpses don't have icon
-				if (tdef.IsCorpse) {
-					return null;
-				}
-                
+                if (tdef.entityDefToBuild != null)
+                {
+                    _cachedDefIcons.Add(def, tdef.entityDefToBuild.IconTexture().Crop());
+                    return _cachedDefIcons[def];
+                }
+                // corpses don't have icon
+                if (tdef.IsCorpse)
+                {
+                    return null;
+                }
+
             }
 
             _cachedDefIcons.Add(def, bdef.uiIcon.Crop());
             return bdef.uiIcon.Crop();
         }
 
-		public static float StyledLabelAndIconSize (this Def def)
-		{
-			var WW = Text.WordWrap;
-			Text.WordWrap = false;
-			float width = Text.CalcSize (def.LabelStyled ()).x + (def.IconTexture () == null ? 0 : 20);
-			Text.WordWrap = WW;
-			return width;
-		}
+        public static float StyledLabelAndIconSize(this Def def)
+        {
+            var WW = Text.WordWrap;
+            Text.WordWrap = false;
+            float width = Text.CalcSize(def.LabelStyled()).x + (def.IconTexture() == null ? 0 : 20);
+            Text.WordWrap = WW;
+            return width;
+        }
     }
 }

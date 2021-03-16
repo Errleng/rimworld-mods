@@ -1,10 +1,4 @@
-﻿using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Verse;
+﻿using Verse;
 
 namespace RimSpawners
 {
@@ -45,7 +39,7 @@ namespace RimSpawners
 
             foreach (string spawnerName in spawnerNames)
             {
-                ThingDef spawner = DefDatabase<ThingDef>.GetNamed(spawnerName, true);
+                ThingDef spawner = DefDatabase<ThingDef>.GetNamed(spawnerName);
                 CompProperties_UniversalSpawnerPawn comp = spawner.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
                 comp.maxSpawnedPawnsPoints = maxSpawnerPoints;
                 comp.pawnSpawnIntervalSeconds = spawnTimeSecondsPerSpawn;

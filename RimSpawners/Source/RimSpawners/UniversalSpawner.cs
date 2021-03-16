@@ -1,14 +1,11 @@
 ﻿using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Verse;
 
 namespace RimSpawners
 {
     class UniversalSpawner : Building
     {
-        static readonly RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
+        static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
         static readonly int THREAT_CHECK_TICKS = GenTicks.SecondsToTicks(10);
         static readonly int THREAT_OVER_DESTROY_PAWNS_TICKS = GenTicks.SecondsToTicks(300);
 
@@ -23,21 +20,16 @@ namespace RimSpawners
             cups = GetComp<CompUniversalSpawnerPawn>();
         }
 
-        public override void ExposeData()
-        {
-            base.ExposeData();
-        }
-
         public override void Tick()
         {
             base.Tick();
 
             if (this.IsHashIntervalTick(THREAT_CHECK_TICKS))
             {
-                if (settings.spawnOnlyOnThreat)
+                if (Settings.spawnOnlyOnThreat)
                 {
                     bool isThreatOnMap = ParentHolder is Map &&
-                        GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction, false)
+                        GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction)
                         //|| Map.listerThings.ThingsOfDef(ThingDefOf.Tornado).Any()
                         //|| Map.listerThings.ThingsOfDef(ThingDefOf.DropPodIncoming).Any()
                         ;
@@ -47,8 +39,8 @@ namespace RimSpawners
                         // only spawn all pawns when the threat is first detected
                         if (!ThreatActive)
                         {
-                            //cups.SpawnPawnsUntilPoints(settings.maxSpawnerPoints);
-                            cups.SpawnUntilFullSpeedMultiplier = settings.spawnOnThreatSpeedMultiplier;
+                            //cups.SpawnPawnsUntilPoints(Settings.maxSpawnerPoints);
+                            cups.SpawnUntilFullSpeedMultiplier = Settings.spawnOnThreatSpeedMultiplier;
                         }
                         ThreatActive = true;
                         cups.Dormant = false;
@@ -69,7 +61,7 @@ namespace RimSpawners
 
             if (this.IsHashIntervalTick(THREAT_OVER_DESTROY_PAWNS_TICKS))
             {
-                if (settings.spawnOnlyOnThreat && !ThreatActive)
+                if (Settings.spawnOnlyOnThreat && !ThreatActive)
                 {
                     RemoveAllSpawnedPawns();
                 }

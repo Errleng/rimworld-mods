@@ -14,13 +14,7 @@ namespace RimSpawners
     {
         static readonly RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
 
-        private CompProperties_UniversalSpawnerPawn Props
-        {
-            get
-            {
-                return (CompProperties_UniversalSpawnerPawn)props;
-            }
-        }
+        private CompProperties_UniversalSpawnerPawn Props => (CompProperties_UniversalSpawnerPawn)props;
 
         public bool Dormant
         {
@@ -36,13 +30,7 @@ namespace RimSpawners
 
         public float SpawnUntilFullSpeedMultiplier { set => spawnUntilFullSpeedMultiplier = value; }
 
-        public Lord Lord
-        {
-            get
-            {
-                return FindLordToJoin(parent, Props.lordJob, Props.shouldJoinParentLord, null);
-            }
-        }
+        public Lord Lord => FindLordToJoin(parent, Props.lordJob, Props.shouldJoinParentLord, null);
 
         private float SpawnedPawnsPoints
         {
@@ -58,17 +46,11 @@ namespace RimSpawners
             }
         }
 
-        public bool Active
-        {
-            get
-            {
-                return pawnsLeftToSpawn != 0 && !Dormant;
-            }
-        }
+        public bool Active => pawnsLeftToSpawn != 0 && !Dormant;
 
-        public override void Initialize(CompProperties props)
+        public override void Initialize(CompProperties initialProps)
         {
-            base.Initialize(props);
+            base.Initialize(initialProps);
             if (chosenKind == null)
             {
                 chosenKind = RandomPawnKindDef();
