@@ -27,7 +27,7 @@
     <canOverlapZones>false</canOverlapZones>
     <minifiedDef>MinifiedThing</minifiedDef>
     <tradeTags>
-      <li>Exotic</li>
+      <li>Artifact</li>
     </tradeTags>
     <designationCategory>Security</designationCategory>
   </ThingDef>
@@ -35,11 +35,11 @@
   <!-- Universal Spawner -->
   <ThingDef ParentName="SpawnerBase">
     <defName>UniversalSpawner</defName>
-    <label>universal assembler</label>
-    <description>An ultra-tech vanometric fabrication unit used to automatically create any creature from pets to mechanoids to other humans. Assembled creatures are loyal to the owner of the assembler and will aggressively pursue threats.</description>
+    <label>universal fabricator</label>
+    <description>An ultra-tech vanometric fabrication unit used to automatically create any creature from pets to mechanoids to other humans. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats.</description>
     <thingClass>RimSpawners.UniversalSpawner</thingClass>
     <graphicData>
-      <texPath>Things/Building/Spawner/Spawner_mech</texPath>
+      <texPath>Things/Building/Universal_Spawner</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(1.75, 1.75)</drawSize>
       <shadowData>
@@ -55,6 +55,7 @@
         <spawnSound>MechAssembler_Spawn</spawnSound>
         <lordJob>LordJob_AssaultColony</lordJob>
         <pawnSpawnIntervalSeconds>100</pawnSpawnIntervalSeconds>
+        <spawnMessageKey>RimSpawners_UniversalAssemblerSpawnMessage</spawnMessageKey>
       </li>
       <li Class="CompProperties_Glower">
         <glowRadius>3</glowRadius>

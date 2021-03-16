@@ -285,7 +285,40 @@ namespace RimSpawners
                 pawnFaction = Find.FactionManager.FirstFactionOfDef(DefDatabase<FactionDef>.GetNamed("RimSpawnersFriendlyFaction", true));
             }
 
-            PawnGenerationRequest request = new PawnGenerationRequest(chosenKind, pawnFaction, PawnGenerationContext.NonPlayer, -1, false, false, false, false, true, false, 1f, false, true, true, true, false, false, false, false, 0f, null, 1f, null, null, null, null, null, pawnMinAge, null, null, null, null, null, null);
+            PawnGenerationRequest request = new PawnGenerationRequest(chosenKind,
+                                                                      pawnFaction,
+                                                                      PawnGenerationContext.NonPlayer,
+                                                                      -1,
+                                                                      false,
+                                                                      false,
+                                                                      false,
+                                                                      false,
+                                                                      false,
+                                                                      true,
+                                                                      0f,
+                                                                      false,
+                                                                      true,
+                                                                      true,
+                                                                      true,
+                                                                      false,
+                                                                      false,
+                                                                      false,
+                                                                      false,
+                                                                      0f,
+                                                                      null,
+                                                                      0f,
+                                                                      null,
+                                                                      null,
+                                                                      null,
+                                                                      null,
+                                                                      null,
+                                                                      pawnMinAge,
+                                                                      null,
+                                                                      null,
+                                                                      null,
+                                                                      null,
+                                                                      null,
+                                                                      null);
 
             if (ModLister.RoyaltyInstalled)
             {
