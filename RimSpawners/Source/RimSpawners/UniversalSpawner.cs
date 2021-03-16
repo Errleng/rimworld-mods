@@ -32,9 +32,9 @@ namespace RimSpawners
         {
             base.Tick();
 
-            if (settings.spawnOnlyOnThreat)
+            if (this.IsHashIntervalTick(THREAT_CHECK_TICKS))
             {
-                if (this.IsHashIntervalTick(THREAT_CHECK_TICKS))
+                if (settings.spawnOnlyOnThreat)
                 {
                     bool isThreatOnMap = ParentHolder is Map &&
                         GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction, false)
@@ -59,13 +59,19 @@ namespace RimSpawners
                         cups.Dormant = true;
                     }
                 }
-
-                if (this.IsHashIntervalTick(THREAT_OVER_DESTROY_PAWNS_TICKS))
+                else
                 {
-                    if (!ThreatActive)
-                    {
-                        RemoveAllSpawnedPawns();
-                    }
+                    ThreatActive = false;
+                    cups.Dormant = false;
+                }
+
+            }
+
+            if (this.IsHashIntervalTick(THREAT_OVER_DESTROY_PAWNS_TICKS))
+            {
+                if (settings.spawnOnlyOnThreat && !ThreatActive)
+                {
+                    RemoveAllSpawnedPawns();
                 }
             }
         }

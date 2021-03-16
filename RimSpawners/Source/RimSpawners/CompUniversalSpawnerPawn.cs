@@ -22,7 +22,15 @@ namespace RimSpawners
             }
         }
 
-        public bool Dormant { get => dormant; set => dormant = value; }
+        public bool Dormant
+        {
+            get => dormant;
+            set
+            {
+                dormant = value;
+                CalculateNextPawnSpawnTick();
+            }
+        }
 
         public PawnKindDef ChosenKind { get => chosenKind; set => chosenKind = value; }
 
