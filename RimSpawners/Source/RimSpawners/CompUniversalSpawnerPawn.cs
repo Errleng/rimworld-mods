@@ -267,7 +267,8 @@ namespace RimSpawners
                 pawnFaction = Find.FactionManager.FirstFactionOfDef(DefDatabase<FactionDef>.GetNamed("RimSpawnersFriendlyFaction", true));
             }
 
-            var request = new PawnGenerationRequest(chosenKind,
+            var request = new PawnGenerationRequest(
+                chosenKind,
                 pawnFaction,
                 PawnGenerationContext.NonPlayer,
                 -1,
@@ -280,7 +281,7 @@ namespace RimSpawners
                 1f,
                 false,
                 true,
-                true,
+                false,
                 false,
                 false,
                 false,
@@ -294,6 +295,7 @@ namespace RimSpawners
                 null,
                 null,
                 null,
+                pawnMinAge,
                 pawnMinAge);
 
             if (ModLister.RoyaltyInstalled)
@@ -362,6 +364,12 @@ namespace RimSpawners
             foreach (Pawn pawn in spawnedPawns)
             {
                 AddCustomCompToPawn(pawn);
+
+                // following works to remove needs with ShouldHaveNeeds patch
+                if (settings.disableNeeds)
+                {
+                    pawn.needs.AddOrRemoveNeedsAsAppropriate();
+                }
             }
         }
 
