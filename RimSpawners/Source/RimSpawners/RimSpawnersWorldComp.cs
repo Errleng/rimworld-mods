@@ -23,6 +23,15 @@ namespace RimSpawners
                 {
                     // update ally faction relations to owner faction relations
                     Faction allyFaction = Find.FactionManager.FirstFactionOfDef(DefDatabase<FactionDef>.GetNamed("RimSpawnersFriendlyFaction"));
+                    allyFaction.hostileFromMemberCapture = false;
+
+                    FactionRelation playerFactionRelation = allyFaction.RelationWith(Faction.OfPlayer);
+                    if (!playerFactionRelation.kind.Equals(FactionRelationKind.Ally))
+                    {
+                        playerFactionRelation.goodwill = 100;
+                        playerFactionRelation.kind = FactionRelationKind.Ally;
+                    }
+
                     foreach (Faction otherFaction in Find.FactionManager.AllFactions)
                     {
                         if (!otherFaction.IsPlayer && !otherFaction.Equals(allyFaction))
