@@ -45,8 +45,11 @@ namespace RimSpawners
                 RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
                 if ((customThingComp != null) && settings.disableCorpses)
                 {
+                    // make it like the pawn never existed
                     __instance.SetFaction(null);
+                    __instance.relations?.ClearAllRelations();
 
+                    // destroy everything they owned
                     __instance.inventory?.DestroyAll();
                     __instance.apparel?.DestroyAll();
                     __instance.equipment?.DestroyAllEquipment();
@@ -67,7 +70,7 @@ namespace RimSpawners
         [HarmonyPatch(typeof(Pawn_NeedsTracker), "ShouldHaveNeed")]
         class Pawn_NeedsTracker_ShouldHaveNeed_Patch
         {
-            public static bool Prefix(ref bool __result, Pawn ___pawn, NeedDef nd)
+            public static bool Prefix(ref bool __result, Pawn ___pawn)
             {
                 RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
                 if (customThingComp != null && settings.disableNeeds)
@@ -78,20 +81,5 @@ namespace RimSpawners
                 return true;
             }
         }
-
-        //[HarmonyPatch(typeof(Pawn_NeedsTracker), "AddOrRemoveNeedsAsAppropriate")]
-        //class Pawn_NeedsTracker_AddOrRemoveNeedsAsAppropriate_Patch
-        //{
-        //    public static bool Prefix(Pawn ___pawn)
-        //    {
-        //        RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
-        //        if (customThingComp != null && settings.disableNeeds)
-        //        {
-        //            Log.Message("Disabling needs");
-        //            return false;
-        //        }
-        //        return true;
-        //    }
-        //}
     }
 }
