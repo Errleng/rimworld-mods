@@ -309,7 +309,7 @@ namespace RimSpawners
 
             pawn = PawnGenerator.GeneratePawn(request);
 
-            if (spawningHumanlike && pawn.IsColonistPlayerControlled)
+            if (spawningHumanlike && pawnFaction.IsPlayer)
             {
                 pawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
             }
