@@ -7,6 +7,8 @@ namespace RimSpawners
     {
         static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
 
+        public CompProperties_RimSpawnersPawn Props => (CompProperties_RimSpawnersPawn)props;
+
         public override void Initialize(CompProperties initialProps)
         {
             base.Initialize(initialProps);
@@ -28,29 +30,34 @@ namespace RimSpawners
 
         private void RemovePawnNeeds()
         {
-            if (parent is Pawn parentPawn)
-            {
-                //parentPawn.needs.AllNeeds.Clear();
+            //if (parent is Pawn parentPawn)
+            //{
+            //    //parentPawn.needs.AllNeeds.Clear();
 
-                // add hediff to remove pawn needs
-                HediffDef rimSpawnersPawnHediffDef = DefDatabase<HediffDef>.GetNamed("RimSpawnersPawnHediff");
-                if (!parentPawn.health.hediffSet.HasHediff(rimSpawnersPawnHediffDef))
-                {
-                    Hediff rimSpawnersPawnHediff = HediffMaker.MakeHediff(rimSpawnersPawnHediffDef, parentPawn);
-                    parentPawn.health.AddHediff(rimSpawnersPawnHediff);
-                }
-            }
+            //    // add hediff to remove pawn needs
+            //    HediffDef rimSpawnersPawnHediffDef = DefDatabase<HediffDef>.GetNamed("RimSpawnersPawnHediff");
+            //    if (!parentPawn.health.hediffSet.HasHediff(rimSpawnersPawnHediffDef))
+            //    {
+            //        Hediff rimSpawnersPawnHediff = HediffMaker.MakeHediff(rimSpawnersPawnHediffDef, parentPawn);
+            //        parentPawn.health.AddHediff(rimSpawnersPawnHediff);
+            //    }
+            //}
         }
     }
 
-    class RimSpawnersPawnCompProperties : CompProperties
+    class CompProperties_RimSpawnersPawn : CompProperties
     {
-        public RimSpawnersPawnCompProperties()
+        private readonly CompUniversalSpawnerPawn spawnerComp;
+
+        public CompUniversalSpawnerPawn SpawnerComp { get => spawnerComp; }
+
+        public CompProperties_RimSpawnersPawn(CompUniversalSpawnerPawn cups)
         {
             compClass = typeof(RimSpawnersPawnComp);
+            spawnerComp = cups;
         }
 
-        public RimSpawnersPawnCompProperties(Type compClass) : base(compClass)
+        public CompProperties_RimSpawnersPawn(Type compClass) : base(compClass)
         {
             this.compClass = compClass;
         }

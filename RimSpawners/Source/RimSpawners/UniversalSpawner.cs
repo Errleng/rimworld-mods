@@ -63,7 +63,7 @@ namespace RimSpawners
             {
                 if (Settings.spawnOnlyOnThreat && !ThreatActive)
                 {
-                    RemoveAllSpawnedPawns();
+                    cups.RemoveAllSpawnedPawns();
                 }
             }
         }
@@ -71,18 +71,7 @@ namespace RimSpawners
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
             base.Destroy(mode);
-            RemoveAllSpawnedPawns();
-        }
-
-        public void RemoveAllSpawnedPawns()
-        {
-            Log.Message("Spawner is destroying all spawned pawns");
-
-            for (int i = cups.spawnedPawns.Count - 1; i >= 0; i--)
-            {
-                cups.spawnedPawns[i].Destroy();
-                cups.spawnedPawns.RemoveAt(i);
-            }
+            cups.RemoveAllSpawnedPawns();
         }
 
         //public List<PawnKindDef> GetPawnKindsToSpawn()
@@ -113,8 +102,11 @@ namespace RimSpawners
         public void SetChosenKind(PawnKindDef newChosenKind)
         {
             cups.ChosenKind = newChosenKind;
-            // recalculate spawn time
-            cups.CalculateNextPawnSpawnTick();
+        }
+
+        public void RemoveAllSpawnedPawns()
+        {
+            cups.RemoveAllSpawnedPawns();
         }
     }
 }

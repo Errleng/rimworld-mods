@@ -2,11 +2,14 @@
 <Defs>
     <FactionDef>
         <defName>RimSpawnersFriendlyFaction</defName>
-        <label>Subordinate Vanofab Products</label>
-        <description>Friendly fabricated creatures</description>
+        <label>Vanofab Products</label>
+        <description>Friendly vanometrically fabricated creatures</description>
+        <colorSpectrum>
+            <li>(1.0, 0.87, 0.96)</li>
+        </colorSpectrum>
         <pawnSingular>vanofab product</pawnSingular>
         <pawnsPlural>vanofab products</pawnsPlural>
-        <fixedName>Subordinate Vanofab Products</fixedName>
+        <fixedName>Vanofab Products</fixedName>
         <techLevel>Ultra</techLevel>
         <hidden>true</hidden>
         <listOrderPriority>10</listOrderPriority>
@@ -16,6 +19,9 @@
         <humanlikeFaction>true</humanlikeFaction>
         <hairTags>
             <li>Urban</li>
+            <li>Rural</li>
+            <li>Tribal</li>
+            <li>Punk</li>
         </hairTags>
         <backstoryFilters>
             <li>

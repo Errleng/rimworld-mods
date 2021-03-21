@@ -2,13 +2,14 @@
 using System.Reflection;
 using RimWorld;
 using Verse;
+using Verse.AI.Group;
 
 namespace RimSpawners
 {
     [StaticConstructorOnStartup]
     public class Patcher
     {
-        static readonly RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
+        static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
 
         static Patcher()
         {
@@ -43,16 +44,27 @@ namespace RimSpawners
             public static bool Prefix(Pawn __instance)
             {
                 RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
-                if ((customThingComp != null) && settings.disableCorpses)
+
+                if ((customThingComp != null))
                 {
+                    if (Settings.cachePawns && __instance.RaceProps.Humanlike)
+                    {
+                        // recycle pawn into spawner
+                        CompUniversalSpawnerPawn cups = customThingComp.Props.SpawnerComp;
+                        cups.RecyclePawn(__instance);
+                    }
+
                     // make it like the pawn never existed
                     __instance.SetFaction(null);
                     __instance.relations?.ClearAllRelations();
 
-                    // destroy everything they owned
-                    __instance.inventory?.DestroyAll();
-                    __instance.apparel?.DestroyAll();
-                    __instance.equipment?.DestroyAllEquipment();
+                    if (Settings.disableCorpses)
+                    {
+                        // destroy everything they owned
+                        __instance.inventory?.DestroyAll();
+                        __instance.apparel?.DestroyAll();
+                        __instance.equipment?.DestroyAllEquipment();
+                    }
                 }
                 return true;
             }
@@ -60,7 +72,7 @@ namespace RimSpawners
             public static void Postfix(Pawn __instance)
             {
                 RimSpawnersPawnComp customThingComp = __instance.GetComp<RimSpawnersPawnComp>();
-                if ((customThingComp != null) && settings.disableCorpses)
+                if ((customThingComp != null) && Settings.disableCorpses)
                 {
                     __instance.Corpse?.Destroy();
                 }
@@ -73,7 +85,7 @@ namespace RimSpawners
             public static bool Prefix(ref bool __result, Pawn ___pawn)
             {
                 RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
-                if (customThingComp != null && settings.disableNeeds)
+                if (customThingComp != null && Settings.disableNeeds)
                 {
                     __result = false;
                     return false;

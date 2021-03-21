@@ -12,13 +12,22 @@ namespace RimSpawners
 {
     class CompUniversalSpawnerPawn : ThingComp
     {
-        static readonly RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
+        static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
 
         private CompProperties_UniversalSpawnerPawn Props => (CompProperties_UniversalSpawnerPawn)props;
 
         public bool Dormant { get => dormant; set => dormant = value; }
 
-        public PawnKindDef ChosenKind { get => chosenKind; set => chosenKind = value; }
+        public PawnKindDef ChosenKind
+        {
+            get => chosenKind;
+            set
+            {
+                chosenKind = value;
+                ClearCachedPawns();
+                CalculateNextPawnSpawnTick();
+            }
+        }
 
         public float SpawnUntilFullSpeedMultiplier { set => spawnUntilFullSpeedMultiplier = value; }
 
@@ -171,11 +180,11 @@ namespace RimSpawners
                 return;
             }
 
-            switch (settings.spawnTime)
+            switch (Settings.spawnTime)
             {
                 case SpawnTimeSetting.Scaled:
                     {
-                        float secondsToNextSpawn = chosenKind.combatPower / settings.spawnTimePointsPerSecond;
+                        float secondsToNextSpawn = chosenKind.combatPower / Settings.spawnTimePointsPerSecond;
                         float ticksToNextSpawn = GenTicks.SecondsToTicks(secondsToNextSpawn);
                         CalculateNextPawnSpawnTick(ticksToNextSpawn);
                         break;
@@ -251,8 +260,56 @@ namespace RimSpawners
                 return false;
             }
 
-            bool spawningHumanlike = chosenKind.RaceProps.Humanlike;
+            pawn = GenerateNewPawn();
 
+            bool spawningHumanlike = chosenKind.RaceProps.Humanlike;
+            if (spawningHumanlike && pawn.Faction.IsPlayer)
+            {
+                pawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
+            }
+
+            AddCustomCompToPawn(pawn);
+
+
+            // spawn pawn on map
+            spawnedPawns.Add(pawn);
+            GenSpawn.Spawn(pawn, CellFinder.RandomClosewalkCellNear(parent.Position, parent.Map, Props.pawnSpawnRadius, null), parent.Map, WipeMode.Vanish);
+
+            // setup pawn lord and AI
+            Lord lord = Lord;
+            if (lord == null)
+            {
+                lord = CreateNewLord(parent, aggressive, Props.defendRadius, Props.lordJob);
+            }
+            lord.AddPawn(pawn);
+            if (Props.spawnSound != null)
+            {
+                Props.spawnSound.PlayOneShot(parent);
+            }
+            if (pawnsLeftToSpawn > 0)
+            {
+                pawnsLeftToSpawn--;
+            }
+            SendMessage();
+            return true;
+        }
+
+        private void AddCustomCompToPawn(Pawn pawn)
+        {
+            RimSpawnersPawnComp existingSpawnedPawnComp = pawn.GetComp<RimSpawnersPawnComp>();
+            if (existingSpawnedPawnComp == null)
+            {
+                RimSpawnersPawnComp spawnedPawnComp = new RimSpawnersPawnComp();
+                CompProperties_RimSpawnersPawn spawnedPawnCompProps = new CompProperties_RimSpawnersPawn(this);
+                spawnedPawnComp.parent = pawn;
+                pawn.AllComps.Add(spawnedPawnComp);
+                spawnedPawnComp.Initialize(spawnedPawnCompProps);
+            }
+        }
+
+        private Pawn GenerateNewPawn()
+        {
+            bool spawningHumanlike = chosenKind.RaceProps.Humanlike;
             int maxLifeStageIndex = chosenKind.lifeStages.Count - 1;
             // account for humanlikes, which do not have lifeStages
             if ((maxLifeStageIndex < 0) && spawningHumanlike)
@@ -262,12 +319,12 @@ namespace RimSpawners
             float? pawnMinAge = new float?(chosenKind.RaceProps.lifeStageAges[maxLifeStageIndex].minAge);
 
             Faction pawnFaction = parent.Faction;
-            if (pawnFaction.IsPlayer && settings.useAllyFaction)
+            if (pawnFaction.IsPlayer && Settings.useAllyFaction)
             {
                 pawnFaction = Find.FactionManager.FirstFactionOfDef(DefDatabase<FactionDef>.GetNamed("RimSpawnersFriendlyFaction", true));
             }
 
-            var request = new PawnGenerationRequest(
+            PawnGenerationRequest request = new PawnGenerationRequest(
                 chosenKind,
                 pawnFaction,
                 PawnGenerationContext.NonPlayer,
@@ -307,48 +364,79 @@ namespace RimSpawners
                 request.ForbidAnyTitle = true;
             }
 
-            pawn = PawnGenerator.GeneratePawn(request);
-
-            if (spawningHumanlike && pawnFaction.IsPlayer)
+            Pawn pawn;
+            if (spawningHumanlike && Settings.cachePawns && cachedPawns.Count > 0)
             {
-                pawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
+                pawn = GetCachedPawn(request);
+            }
+            else
+            {
+                pawn = PawnGenerator.GeneratePawn(request);
             }
 
-            AddCustomCompToPawn(pawn);
-
-            // spawn pawn on map
-            spawnedPawns.Add(pawn);
-            GenSpawn.Spawn(pawn, CellFinder.RandomClosewalkCellNear(parent.Position, parent.Map, Props.pawnSpawnRadius, null), parent.Map, WipeMode.Vanish);
-
-            // setup pawn lord and AI
-            Lord lord = Lord;
-            if (lord == null)
-            {
-                lord = CreateNewLord(parent, aggressive, Props.defendRadius, Props.lordJob);
-            }
-            lord.AddPawn(pawn);
-            if (Props.spawnSound != null)
-            {
-                Props.spawnSound.PlayOneShot(parent);
-            }
-            if (pawnsLeftToSpawn > 0)
-            {
-                pawnsLeftToSpawn--;
-            }
-            SendMessage();
-            return true;
+            return pawn;
         }
 
-        private void AddCustomCompToPawn(Pawn pawn)
+        private Pawn GetCachedPawn(PawnGenerationRequest request)
         {
-            RimSpawnersPawnComp existingSpawnedPawnComp = pawn.GetComp<RimSpawnersPawnComp>();
-            if (existingSpawnedPawnComp == null)
+            // take the first pawn in the dead pawn queue
+            Pawn cachedPawn = cachedPawns[0];
+            cachedPawns.RemoveAt(0);
+
+            ResurrectionUtility.Resurrect(cachedPawn);
+            PawnGenerator.RedressPawn(cachedPawn, request);
+            Log.Message($"Using cached pawn {cachedPawn.Name}");
+            return cachedPawn;
+        }
+
+        public void RemoveAllSpawnedPawns()
+        {
+            Log.Message("Universal spawner comp is destroying all spawned pawns");
+
+            foreach (Pawn pawn in spawnedPawns)
             {
-                RimSpawnersPawnComp spawnedPawnComp = new RimSpawnersPawnComp();
-                RimSpawnersPawnCompProperties spawnedPawnCompProps = new RimSpawnersPawnCompProperties();
-                spawnedPawnComp.parent = pawn;
-                pawn.AllComps.Add(spawnedPawnComp);
-                spawnedPawnComp.Initialize(spawnedPawnCompProps);
+                if (Settings.cachePawns)
+                {
+                    // make it like the pawn never existed
+                    pawn.SetFaction(null);
+                    pawn.relations?.ClearAllRelations();
+
+                    // destroy everything they owned
+                    pawn.inventory?.DestroyAll();
+                    pawn.apparel?.DestroyAll();
+                    pawn.equipment?.DestroyAllEquipment();
+
+                    pawn.Kill(null);
+                    pawn.Corpse?.Destroy();
+                }
+                else
+                {
+                    pawn.Destroy();
+                }
+            }
+            spawnedPawns.Clear();
+        }
+
+        public void ClearCachedPawns()
+        {
+            Log.Message("Universal spawner comp is destroying all cached pawns");
+            foreach (Pawn cachedPawn in cachedPawns)
+            {
+                if (cachedPawn != null && !cachedPawn.Destroyed)
+                {
+                    cachedPawn.Destroy();
+                }
+            }
+            cachedPawns.Clear();
+        }
+
+        public void RecyclePawn(Pawn pawn)
+        {
+            if (pawn.kindDef.Equals(chosenKind))
+            {
+                Log.Message($"Recycling pawn {pawn.kindDef.LabelCap} {pawn.Name}");
+                // add dead pawns to cached pawns
+                cachedPawns.Add(pawn);
             }
         }
 
@@ -366,7 +454,15 @@ namespace RimSpawners
                 AddCustomCompToPawn(pawn);
 
                 // following works to remove needs with ShouldHaveNeeds patch
-                if (settings.disableNeeds)
+                if (Settings.disableNeeds)
+                {
+                    pawn.needs.AddOrRemoveNeedsAsAppropriate();
+                }
+            }
+            foreach (Pawn pawn in cachedPawns)
+            {
+                AddCustomCompToPawn(pawn);
+                if (Settings.disableNeeds)
                 {
                     pawn.needs.AddOrRemoveNeedsAsAppropriate();
                 }
@@ -466,6 +562,7 @@ namespace RimSpawners
             Scribe_Values.Look(ref nextPawnSpawnTick, "nextPawnSpawnTick", 0, false);
             Scribe_Values.Look(ref pawnsLeftToSpawn, "pawnsLeftToSpawn", -1, false);
             Scribe_Collections.Look(ref spawnedPawns, "spawnedPawns", LookMode.Reference, Array.Empty<object>());
+            Scribe_Collections.Look(ref cachedPawns, "cachedPawns", LookMode.Reference, Array.Empty<object>());
             Scribe_Values.Look(ref aggressive, "aggressive", false, false);
             Scribe_Values.Look(ref canSpawnPawns, "canSpawnPawns", true, false);
             Scribe_Values.Look(ref dormant, "dormant", false, false);
@@ -485,6 +582,7 @@ namespace RimSpawners
         public int pawnsLeftToSpawn = -1;
 
         public List<Pawn> spawnedPawns = new List<Pawn>();
+        public List<Pawn> cachedPawns = new List<Pawn>();
 
         public bool aggressive = true;
 
