@@ -459,13 +459,15 @@ namespace RimSpawners
                 //    pawn.needs.AddOrRemoveNeedsAsAppropriate();
                 //}
             }
+
+            cachedPawns.RemoveAll(pawn => pawn == null);
             foreach (Pawn pawn in cachedPawns)
             {
                 AddCustomCompToPawn(pawn);
-                if (Settings.disableNeeds)
-                {
-                    pawn.needs.AddOrRemoveNeedsAsAppropriate();
-                }
+                //if (Settings.disableNeeds)
+                //{
+                //    pawn.needs.AddOrRemoveNeedsAsAppropriate();
+                //}
             }
         }
 

@@ -53,10 +53,10 @@ namespace RimSpawners
 
         public CompUniversalSpawnerPawn SpawnerComp { get => spawnerComp; }
 
-        public CompProperties_RimSpawnersPawn(CompUniversalSpawnerPawn cups)
+        public CompProperties_RimSpawnersPawn(CompUniversalSpawnerPawn cusp)
         {
             compClass = typeof(RimSpawnersPawnComp);
-            spawnerComp = cups;
+            spawnerComp = cusp;
         }
 
         public CompProperties_RimSpawnersPawn(Type compClass) : base(compClass)

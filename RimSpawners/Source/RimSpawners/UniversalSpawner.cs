@@ -1,4 +1,6 @@
-﻿using RimWorld;
+﻿using System.Collections.Generic;
+using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace RimSpawners
@@ -9,7 +11,7 @@ namespace RimSpawners
         static readonly int THREAT_CHECK_TICKS = GenTicks.SecondsToTicks(10);
         static readonly int THREAT_OVER_DESTROY_PAWNS_TICKS = GenTicks.SecondsToTicks(300);
 
-        private CompUniversalSpawnerPawn cups;
+        private CompUniversalSpawnerPawn cusp;
 
         public bool ThreatActive { get; set; }
 
@@ -17,7 +19,8 @@ namespace RimSpawners
         {
             base.SpawnSetup(map, respawningAfterLoad);
 
-            cups = GetComp<CompUniversalSpawnerPawn>();
+            cusp = GetComp<CompUniversalSpawnerPawn>();
+            Log.Message($"CompUniversalSpawnerPawn is {cusp.ToStringNullable()}");
         }
 
         public override void Tick()
@@ -39,22 +42,22 @@ namespace RimSpawners
                         // only spawn all pawns when the threat is first detected
                         if (!ThreatActive)
                         {
-                            //cups.SpawnPawnsUntilPoints(Settings.maxSpawnerPoints);
-                            cups.SpawnUntilFullSpeedMultiplier = Settings.spawnOnThreatSpeedMultiplier;
+                            //cusp.SpawnPawnsUntilPoints(Settings.maxSpawnerPoints);
+                            cusp.SpawnUntilFullSpeedMultiplier = Settings.spawnOnThreatSpeedMultiplier;
                         }
                         ThreatActive = true;
-                        cups.Dormant = false;
+                        cusp.Dormant = false;
                     }
                     else
                     {
                         ThreatActive = false;
-                        cups.Dormant = true;
+                        cusp.Dormant = true;
                     }
                 }
                 else
                 {
                     ThreatActive = false;
-                    cups.Dormant = false;
+                    cusp.Dormant = false;
                 }
 
             }
@@ -63,7 +66,7 @@ namespace RimSpawners
             {
                 if (Settings.spawnOnlyOnThreat && !ThreatActive)
                 {
-                    cups.RemoveAllSpawnedPawns();
+                    cusp.RemoveAllSpawnedPawns();
                 }
             }
         }
@@ -71,7 +74,32 @@ namespace RimSpawners
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
             base.Destroy(mode);
-            cups.RemoveAllSpawnedPawns();
+            cusp.RemoveAllSpawnedPawns();
+        }
+
+        public override IEnumerable<Gizmo> GetGizmos()
+        {
+            foreach (Gizmo baseGizmo in base.GetGizmos())
+            {
+                yield return baseGizmo;
+            }
+            yield return new Command_Action()
+            {
+                defaultLabel = "RimSpawners_KillSwitch".Translate(),
+                defaultDesc = "RimSpawners_KillSwitchDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/Commands/Detonate"),
+                action = RemoveAllSpawnedPawns
+            };
+            yield return new Command_Action()
+            {
+                defaultLabel = "RimSpawners_Reset".Translate(),
+                defaultDesc = "RimSpawners_ResetDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/Commands/TryReconnect"),
+                action = () =>
+                {
+                    SetChosenKind(null);
+                }
+            };
         }
 
         //public List<PawnKindDef> GetPawnKindsToSpawn()
@@ -96,17 +124,17 @@ namespace RimSpawners
 
         public PawnKindDef GetChosenKind()
         {
-            return cups.ChosenKind;
+            return cusp.ChosenKind;
         }
 
         public void SetChosenKind(PawnKindDef newChosenKind)
         {
-            cups.ChosenKind = newChosenKind;
+            cusp.ChosenKind = newChosenKind;
         }
 
         public void RemoveAllSpawnedPawns()
         {
-            cups.RemoveAllSpawnedPawns();
+            cusp.RemoveAllSpawnedPawns();
         }
     }
 }

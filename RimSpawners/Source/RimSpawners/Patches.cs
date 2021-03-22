@@ -50,8 +50,8 @@ namespace RimSpawners
                     if (Settings.cachePawns && __instance.RaceProps.Humanlike)
                     {
                         // recycle pawn into spawner
-                        CompUniversalSpawnerPawn cups = customThingComp.Props.SpawnerComp;
-                        cups.RecyclePawn(__instance);
+                        CompUniversalSpawnerPawn cusp = customThingComp.Props.SpawnerComp;
+                        cusp.RecyclePawn(__instance);
                     }
 
                     // make it like the pawn never existed
@@ -79,12 +79,13 @@ namespace RimSpawners
             }
         }
 
+        // this isn't really necessary, just extra details
+        // disable social interactions for spawned pawns
         [HarmonyPatch(typeof(PawnUtility), "IsInteractionBlocked")]
         class PawnUtility_IsInteractionBlocked_Patch
         {
             public static bool Prefix(ref bool __result, Pawn pawn)
             {
-                // disable social interactions for spawned pawns
                 RimSpawnersPawnComp customThingComp = pawn.GetComp<RimSpawnersPawnComp>();
                 if (customThingComp != null)
                 {
