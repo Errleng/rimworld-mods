@@ -13,35 +13,37 @@ namespace RimSpawners
         {
             base.Initialize(initialProps);
 
-            if (Settings.disableNeeds)
-            {
-                RemovePawnNeeds();
-            }
+            AddCustomHediffs();
         }
 
         public override void PostExposeData()
         {
             base.PostExposeData();
-            if (Settings.disableNeeds)
-            {
-                RemovePawnNeeds();
-            }
+            AddCustomHediffs();
         }
 
-        private void RemovePawnNeeds()
+        private void AddCustomHediffs()
         {
-            //if (parent is Pawn parentPawn)
-            //{
-            //    //parentPawn.needs.AllNeeds.Clear();
+            if (parent is Pawn parentPawn)
+            {
+                // add hediff to remove pawn needs
+                HediffDef rimSpawnersPawnHediffDef = DefDatabase<HediffDef>.GetNamed("RimSpawnersPawnHediff");
+                if (!parentPawn.health.hediffSet.HasHediff(rimSpawnersPawnHediffDef))
+                {
+                    Hediff rimSpawnersPawnHediff = HediffMaker.MakeHediff(rimSpawnersPawnHediffDef, parentPawn);
+                    parentPawn.health.AddHediff(rimSpawnersPawnHediff);
+                }
 
-            //    // add hediff to remove pawn needs
-            //    HediffDef rimSpawnersPawnHediffDef = DefDatabase<HediffDef>.GetNamed("RimSpawnersPawnHediff");
-            //    if (!parentPawn.health.hediffSet.HasHediff(rimSpawnersPawnHediffDef))
-            //    {
-            //        Hediff rimSpawnersPawnHediff = HediffMaker.MakeHediff(rimSpawnersPawnHediffDef, parentPawn);
-            //        parentPawn.health.AddHediff(rimSpawnersPawnHediff);
-            //    }
-            //}
+                if (Settings.disableNeeds)
+                {
+                    HediffDef disableNeedHediffDef = DefDatabase<HediffDef>.GetNamed("RimSpawnersNoNeedsHediff");
+                    if (!parentPawn.health.hediffSet.HasHediff(disableNeedHediffDef))
+                    {
+                        Hediff disableNeedHediff = HediffMaker.MakeHediff(disableNeedHediffDef, parentPawn);
+                        parentPawn.health.AddHediff(disableNeedHediff);
+                    }
+                }
+            }
         }
     }
 

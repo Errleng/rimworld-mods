@@ -79,19 +79,38 @@ namespace RimSpawners
             }
         }
 
-        [HarmonyPatch(typeof(Pawn_NeedsTracker), "ShouldHaveNeed")]
-        class Pawn_NeedsTracker_ShouldHaveNeed_Patch
+        [HarmonyPatch(typeof(PawnUtility), "IsInteractionBlocked")]
+        class PawnUtility_IsInteractionBlocked_Patch
         {
-            public static bool Prefix(ref bool __result, Pawn ___pawn)
+            public static bool Prefix(ref bool __result, Pawn pawn)
             {
-                RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
-                if (customThingComp != null && Settings.disableNeeds)
+                // disable social interactions for spawned pawns
+                RimSpawnersPawnComp customThingComp = pawn.GetComp<RimSpawnersPawnComp>();
+                if (customThingComp != null)
                 {
-                    __result = false;
+                    __result = true;
                     return false;
                 }
+
                 return true;
             }
         }
+
+        //[HarmonyPatch(typeof(Pawn_NeedsTracker), "ShouldHaveNeed")]
+        //class Pawn_NeedsTracker_ShouldHaveNeed_Patch
+        //{
+        //    public static bool Prefix(ref bool __result, Pawn ___pawn)
+        //    {
+        //        // disabling needs with ShouldHaveNeed can cause issues
+        //        //   e.g. no food need causes null reference exception when pawn tries to take combat drugs
+        //        RimSpawnersPawnComp customThingComp = ___pawn.GetComp<RimSpawnersPawnComp>();
+        //        if (customThingComp != null && Settings.disableNeeds)
+        //        {
+        //            __result = false;
+        //            return false;
+        //        }
+        //        return true;
+        //    }
+        //}
     }
 }

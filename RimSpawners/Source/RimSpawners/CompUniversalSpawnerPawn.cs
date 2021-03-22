@@ -453,11 +453,11 @@ namespace RimSpawners
             {
                 AddCustomCompToPawn(pawn);
 
-                // following works to remove needs with ShouldHaveNeeds patch
-                if (Settings.disableNeeds)
-                {
-                    pawn.needs.AddOrRemoveNeedsAsAppropriate();
-                }
+                //// following works to remove needs with ShouldHaveNeeds patch
+                //if (Settings.disableNeeds)
+                //{
+                //    pawn.needs.AddOrRemoveNeedsAsAppropriate();
+                //}
             }
             foreach (Pawn pawn in cachedPawns)
             {
