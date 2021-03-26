@@ -270,7 +270,6 @@ namespace RimSpawners
 
             AddCustomCompToPawn(pawn);
 
-
             // spawn pawn on map
             spawnedPawns.Add(pawn);
             GenSpawn.Spawn(pawn, CellFinder.RandomClosewalkCellNear(parent.Position, parent.Map, Props.pawnSpawnRadius, null), parent.Map, WipeMode.Vanish);
@@ -316,7 +315,8 @@ namespace RimSpawners
             {
                 maxLifeStageIndex = chosenKind.RaceProps.lifeStageAges.Count - 1;
             }
-            float? pawnMinAge = new float?(chosenKind.RaceProps.lifeStageAges[maxLifeStageIndex].minAge);
+
+            float pawnMinAge = chosenKind.RaceProps.lifeStageAges[maxLifeStageIndex].minAge;
 
             Faction pawnFaction = parent.Faction;
             if (pawnFaction.IsPlayer && Settings.useAllyFaction)
@@ -443,6 +443,9 @@ namespace RimSpawners
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
+
+            cachedPawns = new List<Pawn>();
+
             if (!respawningAfterLoad && Active && nextPawnSpawnTick == -1)
             {
                 SpawnInitialPawns();
@@ -454,16 +457,6 @@ namespace RimSpawners
                 AddCustomCompToPawn(pawn);
 
                 //// following works to remove needs with ShouldHaveNeeds patch
-                //if (Settings.disableNeeds)
-                //{
-                //    pawn.needs.AddOrRemoveNeedsAsAppropriate();
-                //}
-            }
-
-            cachedPawns.RemoveAll(pawn => pawn == null);
-            foreach (Pawn pawn in cachedPawns)
-            {
-                AddCustomCompToPawn(pawn);
                 //if (Settings.disableNeeds)
                 //{
                 //    pawn.needs.AddOrRemoveNeedsAsAppropriate();
@@ -564,7 +557,6 @@ namespace RimSpawners
             Scribe_Values.Look(ref nextPawnSpawnTick, "nextPawnSpawnTick", 0, false);
             Scribe_Values.Look(ref pawnsLeftToSpawn, "pawnsLeftToSpawn", -1, false);
             Scribe_Collections.Look(ref spawnedPawns, "spawnedPawns", LookMode.Reference, Array.Empty<object>());
-            Scribe_Collections.Look(ref cachedPawns, "cachedPawns", LookMode.Reference, Array.Empty<object>());
             Scribe_Values.Look(ref aggressive, "aggressive", false, false);
             Scribe_Values.Look(ref canSpawnPawns, "canSpawnPawns", true, false);
             Scribe_Values.Look(ref dormant, "dormant", false, false);
@@ -584,7 +576,7 @@ namespace RimSpawners
         public int pawnsLeftToSpawn = -1;
 
         public List<Pawn> spawnedPawns = new List<Pawn>();
-        public List<Pawn> cachedPawns = new List<Pawn>();
+        public List<Pawn> cachedPawns;
 
         public bool aggressive = true;
 
