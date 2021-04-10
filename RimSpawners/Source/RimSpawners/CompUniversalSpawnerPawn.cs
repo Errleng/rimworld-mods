@@ -273,7 +273,29 @@ namespace RimSpawners
 
             // spawn pawn on map
             spawnedPawns.Add(pawn);
-            GenSpawn.Spawn(pawn, CellFinder.RandomClosewalkCellNear(parent.Position, parent.Map, Props.pawnSpawnRadius, null), parent.Map, WipeMode.Vanish);
+
+            bool dropPodSuccess = false;
+            if (Settings.spawnInDropPods)
+            {
+                IntVec3 dropCenter = IntVec3.Invalid;
+                Pawn target = FindRandomActiveHostile(parent.Map);
+                if (target != null)
+                {
+                    DropCellFinder.TryFindDropSpotNear(target.Position, parent.Map, out dropCenter, true, false);
+                }
+                else
+                {
+                    dropCenter = DropCellFinder.RandomDropSpot(parent.Map);
+                }
+                DropPodUtility.DropThingsNear(dropCenter, parent.Map, Gen.YieldSingle<Thing>(pawn), 250,
+                    false, false, false);
+                dropPodSuccess = true;
+            }
+
+            if (!Settings.spawnInDropPods || !dropPodSuccess)
+            {
+                GenSpawn.Spawn(pawn, CellFinder.RandomClosewalkCellNear(parent.Position, parent.Map, Props.pawnSpawnRadius, null), parent.Map, WipeMode.Vanish);
+            }
 
             // setup pawn lord and AI
             Lord lord = Lord;
@@ -293,6 +315,7 @@ namespace RimSpawners
             SendMessage();
             return true;
         }
+
 
         private void AddCustomCompToPawn(Pawn pawn)
         {
@@ -485,6 +508,34 @@ namespace RimSpawners
                 //}
             }
         }
+
+
+        private Pawn FindRandomActiveHostile(Map map)
+        {
+            Pawn hostilePawn = null;
+            List<Pawn> hostilePawns = new List<Pawn>();
+
+            List<Pawn> pawnsOnMap = parent.Map.mapPawns.AllPawnsSpawned;
+            foreach (Pawn pawn in pawnsOnMap)
+            {
+                if (pawn.HostileTo(Faction.OfPlayer) && !pawn.Downed)
+                {
+                    CompCanBeDormant dormantComp = pawn.GetComp<CompCanBeDormant>();
+                    if (dormantComp == null || dormantComp.Awake)
+                    {
+                        hostilePawns.Add(pawn);
+                    }
+                }
+            }
+
+            if (hostilePawns.Count > 0)
+            {
+                hostilePawn = hostilePawns[Rand.Range(0, hostilePawns.Count)];
+            }
+
+            return hostilePawn;
+        }
+
 
         public override void CompTick()
         {

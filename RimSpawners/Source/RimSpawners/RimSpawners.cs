@@ -44,6 +44,8 @@ namespace RimSpawners
             listingStandard.Label("RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier".Translate(settings.spawnOnThreatSpeedMultiplier));
             settings.spawnOnThreatSpeedMultiplier = listingStandard.Slider(settings.spawnOnThreatSpeedMultiplier, 0.01f, 10f);
 
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnInDropPods".Translate(), ref settings.spawnInDropPods);
+
             listingStandard.End();
 
             settings.ApplySettings();

@@ -4,19 +4,6 @@
     <thingCategories>
       <li>BuildingsSecurity</li>
     </thingCategories>
-    <costList>
-      <Plasteel>100</Plasteel>
-      <Steel>500</Steel>
-      <ComponentSpacer>10</ComponentSpacer>
-    </costList>
-    <altitudeLayer>Building</altitudeLayer>
-    <statBases>
-      <MaxHitPoints>1000</MaxHitPoints>
-      <Flammability>1.0</Flammability>
-      <Beauty>0</Beauty>
-      <Mass>35</Mass>
-      <WorkToBuild>8000</WorkToBuild>
-    </statBases>
     <tickerType>Normal</tickerType>
     <size>(2, 2)</size>
     <fillPercent>1.0</fillPercent>
@@ -27,7 +14,7 @@
     <canOverlapZones>false</canOverlapZones>
     <minifiedDef>MinifiedThing</minifiedDef>
     <tradeTags>
-      <li>Artifact</li>
+      <li>Exotic</li>
     </tradeTags>
     <designationCategory>Security</designationCategory>
   </ThingDef>
@@ -38,6 +25,20 @@
     <label>universal fabricator</label>
     <description>An ultra-tech vanometric fabrication unit used to automatically create any creature from pets to mechanoids to other humans. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats.</description>
     <thingClass>RimSpawners.UniversalSpawner</thingClass>
+    <costList>
+      <Plasteel>500</Plasteel>
+      <Steel>1000</Steel>
+      <ComponentIndustrial>50</ComponentIndustrial>
+      <ComponentSpacer>20</ComponentSpacer>
+    </costList>
+    <altitudeLayer>Building</altitudeLayer>
+    <statBases>
+      <MaxHitPoints>1000</MaxHitPoints>
+      <Flammability>1.0</Flammability>
+      <Beauty>0</Beauty>
+      <Mass>35</Mass>
+      <WorkToBuild>10000</WorkToBuild>
+    </statBases>
     <graphicData>
       <texPath>Things/Building/Universal_Spawner</texPath>
       <graphicClass>Graphic_Single</graphicClass>
