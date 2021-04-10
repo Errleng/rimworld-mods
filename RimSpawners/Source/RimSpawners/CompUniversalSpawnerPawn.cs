@@ -367,10 +367,12 @@ namespace RimSpawners
             Pawn pawn;
             if (spawningHumanlike && Settings.cachePawns && cachedPawns.Count > 0)
             {
+                Log.Message("Trying to use cached pawn");
                 pawn = GetCachedPawn(request);
             }
             else
             {
+                Log.Message("Generating new pawn");
                 pawn = PawnGenerator.GeneratePawn(request);
             }
 
@@ -383,9 +385,28 @@ namespace RimSpawners
             Pawn cachedPawn = cachedPawns[0];
             cachedPawns.RemoveAt(0);
 
+            if (cachedPawn.Discarded)
+            {
+                Log.Message("Cached pawn is discarded. Generating a new pawn.");
+                return PawnGenerator.GeneratePawn(request);
+            }
+
+            cachedPawn.Corpse?.Destroy();
+
             ResurrectionUtility.Resurrect(cachedPawn);
             PawnGenerator.RedressPawn(cachedPawn, request);
             Log.Message($"Using cached pawn {cachedPawn.Name}");
+
+            if (cachedPawn.Dead)
+            {
+                Log.Message("Cached pawn dead after resurrection??");
+                cachedPawn.health.Notify_Resurrected();
+                if (cachedPawn.Dead)
+                {
+                    Log.Message("Cached pawn still dead after resurrection??");
+                }
+            }
+
             return cachedPawn;
         }
 
