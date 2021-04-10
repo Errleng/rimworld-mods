@@ -219,7 +219,15 @@ namespace RimSpawners
         {
             for (int i = spawnedPawns.Count - 1; i >= 0; i--)
             {
-                if (!spawnedPawns[i].Spawned)
+                Pawn pawn = spawnedPawns[i];
+                if (Settings.spawnInDropPods)
+                {
+                    if (!pawn.Spawned && !ThingOwnerUtility.AnyParentIs<ActiveDropPodInfo>(pawn))
+                    {
+                        spawnedPawns.RemoveAt(i);
+                    }
+                }
+                else if (!pawn.Spawned)
                 {
                     spawnedPawns.RemoveAt(i);
                 }
@@ -286,7 +294,7 @@ namespace RimSpawners
                 {
                     dropCenter = DropCellFinder.RandomDropSpot(parent.Map);
                 }
-                DropPodUtility.DropThingsNear(dropCenter, parent.Map, Gen.YieldSingle<Thing>(pawn), 0,
+                DropPodUtility.DropThingsNear(dropCenter, parent.Map, Gen.YieldSingle<Thing>(pawn), 250,
                     false, false, false);
                 dropPodSuccess = true;
             }
@@ -544,9 +552,9 @@ namespace RimSpawners
             }
             if (parent.Spawned)
             {
-                FilterOutUnspawnedPawns();
                 if (Active && Find.TickManager.TicksGame >= nextPawnSpawnTick)
                 {
+                    FilterOutUnspawnedPawns();
                     if (SpawnedPawnsPoints >= Props.maxSpawnedPawnsPoints)
                     {
                         spawnUntilFullSpeedMultiplier = 1f;
