@@ -271,7 +271,6 @@ namespace RimSpawners
 
             AddCustomCompToPawn(pawn);
 
-            // spawn pawn on map
             spawnedPawns.Add(pawn);
 
             bool dropPodSuccess = false;
@@ -287,7 +286,7 @@ namespace RimSpawners
                 {
                     dropCenter = DropCellFinder.RandomDropSpot(parent.Map);
                 }
-                DropPodUtility.DropThingsNear(dropCenter, parent.Map, Gen.YieldSingle<Thing>(pawn), 250,
+                DropPodUtility.DropThingsNear(dropCenter, parent.Map, Gen.YieldSingle<Thing>(pawn), 0,
                     false, false, false);
                 dropPodSuccess = true;
             }

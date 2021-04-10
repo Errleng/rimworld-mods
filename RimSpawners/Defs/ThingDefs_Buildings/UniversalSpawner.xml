@@ -39,6 +39,9 @@
       <Mass>35</Mass>
       <WorkToBuild>10000</WorkToBuild>
     </statBases>
+    <researchPrerequisites>
+      <li>VanometricFabrication</li>
+    </researchPrerequisites>
     <graphicData>
       <texPath>Things/Building/Universal_Spawner</texPath>
       <graphicClass>Graphic_Single</graphicClass>
