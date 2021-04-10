@@ -85,6 +85,16 @@ namespace RimSpawners
             }
             yield return new Command_Action()
             {
+                defaultLabel = "RimSpawners_Pause".Translate(),
+                defaultDesc = "RimSpawners_PauseDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/Commands/Halt"),
+                action = () =>
+                {
+                    cusp.Paused = !cusp.Paused;
+                }
+            };
+            yield return new Command_Action()
+            {
                 defaultLabel = "RimSpawners_KillSwitch".Translate(),
                 defaultDesc = "RimSpawners_KillSwitchDesc".Translate(),
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/Detonate"),

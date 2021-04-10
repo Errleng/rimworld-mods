@@ -22,6 +22,8 @@
   <RimSpawners_PawnSelectionListEntry>{0} ({1} points)</RimSpawners_PawnSelectionListEntry>
 
   <!-- COMPSPAWNERPAWN GIZMOS -->
+  <RimSpawners_Pause>Pause</RimSpawners_Pause>
+  <RimSpawners_PauseDesc>Toggle fabrication on and off</RimSpawners_PauseDesc>
   <RimSpawners_KillSwitch>Activate kill switch</RimSpawners_KillSwitch>
   <RimSpawners_KillSwitchDesc>Destroys all fabricated creatures</RimSpawners_KillSwitchDesc>
   <RimSpawners_Reset>Reset</RimSpawners_Reset>
@@ -33,6 +35,7 @@
   <RimSpawners_UniversalAssemblerInspectLimit>Chosen to fabricate {0}. Current creatures are using up all {1} control points. Fabrication is paused until control points are available.</RimSpawners_UniversalAssemblerInspectLimit>
   <RimSpawners_UniversalAssemblerInspectNextSpawn>\nFabrication complete in {0}.</RimSpawners_UniversalAssemblerInspectNextSpawn>
   <RimSpawners_UniversalAssemblerInspectDormant>\nAssembler is dormant until a threat is detected.</RimSpawners_UniversalAssemblerInspectDormant>
+  <RimSpawners_UniversalAssemblerInspectPaused>\nAssembler is paused.</RimSpawners_UniversalAssemblerInspectPaused>
 
   <!-- UNIVERSAL ASSEMBLER NOTIFICATIONS AND MESSAGES -->
   <RimSpawners_UniversalAssemblerSpawnMessage>{0} fabricated</RimSpawners_UniversalAssemblerSpawnMessage>

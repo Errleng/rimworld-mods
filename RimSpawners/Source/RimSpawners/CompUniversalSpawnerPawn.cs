@@ -17,6 +17,7 @@ namespace RimSpawners
         private CompProperties_UniversalSpawnerPawn Props => (CompProperties_UniversalSpawnerPawn)props;
 
         public bool Dormant { get => dormant; set => dormant = value; }
+        public bool Paused { get => paused; set => paused = value; }
 
         public PawnKindDef ChosenKind
         {
@@ -47,7 +48,7 @@ namespace RimSpawners
             }
         }
 
-        public bool Active => pawnsLeftToSpawn != 0 && !Dormant;
+        public bool Active => pawnsLeftToSpawn != 0 && !Dormant && !Paused;
 
         public override void Initialize(CompProperties initialProps)
         {
@@ -554,7 +555,7 @@ namespace RimSpawners
             {
                 text = "RimSpawners_UniversalAssemblerInspectChosen".Translate(chosenKindName, SpawnedPawnsPoints, Props.maxSpawnedPawnsPoints);
 
-                if (!Dormant)
+                if (!Paused && !Dormant)
                 {
                     int ticksToNextSpawn = nextPawnSpawnTick - Find.TickManager.TicksGame;
                     text += "RimSpawners_UniversalAssemblerInspectNextSpawn".Translate(ticksToNextSpawn.ToStringSecondsFromTicks());
@@ -564,11 +565,15 @@ namespace RimSpawners
             {
                 text = "RimSpawners_UniversalAssemblerInspectLimit".Translate(chosenKindName, Props.maxSpawnedPawnsPoints);
             }
-            if (Dormant)
+
+            if (Paused)
+            {
+                text += "RimSpawners_UniversalAssemblerInspectPaused".Translate();
+            }
+            else if (Dormant)
             {
                 text += "RimSpawners_UniversalAssemblerInspectDormant".Translate();
             }
-
             return text;
         }
 
@@ -603,7 +608,8 @@ namespace RimSpawners
 
         public bool canSpawnPawns = true;
 
-        private bool dormant = false;
+        private bool dormant;
+        private bool paused;
 
         private PawnKindDef chosenKind;
 
