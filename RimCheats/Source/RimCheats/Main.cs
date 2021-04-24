@@ -204,10 +204,17 @@ namespace RimCheats
                     bool enableLearning = settings.enableLearning;
                     bool enableCarryingCapacity = settings.enableCarryingCapacity;
 
-                    if (enableWorking && stat.Equals(StatDefOf.WorkSpeedGlobal))
+                    if (enableWorking)
                     {
                         float workMultiplier = settings.workMultiplier;
-                        __result *= workMultiplier;
+                        if (stat.Equals(StatDefOf.WorkSpeedGlobal))
+                        {
+                            __result *= workMultiplier;
+                        }
+                        else if (stat.Equals(StatDefOf.ResearchSpeed))
+                        {
+                            __result /= workMultiplier;
+                        }
                     }
                     else if (enableLearning && stat.Equals(StatDefOf.GlobalLearningFactor))
                     {
