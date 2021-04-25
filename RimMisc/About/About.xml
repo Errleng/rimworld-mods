@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+   <name>RimMisc</name>
+   <author>Daze</author>
+   <supportedVersions>
+      <li>1.2</li>
+   </supportedVersions>
+   <packageId>com.rimmisc.rimworld.mod</packageId>
+   <description>Adds some useful buildings.</description>
+</ModMetaData>
