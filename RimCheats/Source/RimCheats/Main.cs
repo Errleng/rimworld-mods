@@ -34,7 +34,7 @@ namespace RimCheats
             listingStandard.Label($"Work multplier: {settings.workMultiplier}");
             settings.workMultiplier = listingStandard.Slider(settings.workMultiplier, 0f, 100f);
             listingStandard.Label($"Learning multplier: {settings.learnMultiplier}");
-            settings.learnMultiplier = listingStandard.Slider(settings.learnMultiplier, 0f, 10000f);
+            settings.learnMultiplier = listingStandard.Slider(settings.learnMultiplier, 0f, 1000f);
             listingStandard.Label($"Carrying capacity multplier: {settings.carryingCapacityMultiplier}");
             settings.carryingCapacityMultiplier = listingStandard.Slider(settings.carryingCapacityMultiplier, 0f, 100f);
             listingStandard.Label($"Progress bar speed multplier: {settings.progressBarSpeedMultiplier}");
@@ -210,10 +210,6 @@ namespace RimCheats
                         if (stat.Equals(StatDefOf.WorkSpeedGlobal))
                         {
                             __result *= workMultiplier;
-                        }
-                        else if (stat.Equals(StatDefOf.ResearchSpeed))
-                        {
-                            __result /= workMultiplier;
                         }
                     }
                     else if (enableLearning && stat.Equals(StatDefOf.GlobalLearningFactor))

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>High Density Hydroponics Custom</name>
+
+  <author>Yume</author>
+
+  <supportedVersions>
+    <li>1.0</li>
+    <li>1.1</li>
+    <li>1.2</li>
+  </supportedVersions>
+
+  <description>Adds hydroponics bays which allow for very dense concentrations of plants. This version has been modified for custom use.</description>
+
+  <packageId>Daze.HighDensityHydroCustom</packageId>
+
+  <loadAfter>
+    <li>Ludeon.RimWorld</li>
+  </loadAfter>
+</ModMetaData>
