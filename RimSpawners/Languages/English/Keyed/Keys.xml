@@ -12,7 +12,6 @@
   <RimSpawners_SettingsDisableCorpses>Disable spawned pawn corpses and dropped items</RimSpawners_SettingsDisableCorpses>
   <RimSpawners_SettingsSpawnOnThreats>Spawn pawns only when threats are detected</RimSpawners_SettingsSpawnOnThreats>
   <RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier>Spawning speed multiplier when initially spawning in reaction to threats: {0}</RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier>
-  <RimSpawners_SettingsSpawnInDropPods>Spawn pawns in drop pods near enemies</RimSpawners_SettingsSpawnInDropPods>
 
   <!-- PAWN SELECTION -->
   <RimSpawners_PawnSelection>Select creature to spawn</RimSpawners_PawnSelection>
@@ -25,6 +24,8 @@
   <!-- COMPSPAWNERPAWN GIZMOS -->
   <RimSpawners_Pause>Pause</RimSpawners_Pause>
   <RimSpawners_PauseDesc>Toggle fabrication on and off</RimSpawners_PauseDesc>
+  <RimSpawners_DropPodToggle>Drop Pods</RimSpawners_DropPodToggle>
+  <RimSpawners_DropPodToggleDesc>Call in drop pods to deliver creatures instead of fabricating</RimSpawners_DropPodToggleDesc>
   <RimSpawners_KillSwitch>Activate kill switch</RimSpawners_KillSwitch>
   <RimSpawners_KillSwitchDesc>Destroys all fabricated creatures</RimSpawners_KillSwitchDesc>
   <RimSpawners_Reset>Reset</RimSpawners_Reset>

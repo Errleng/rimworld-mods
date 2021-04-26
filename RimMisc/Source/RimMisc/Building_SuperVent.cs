@@ -31,17 +31,17 @@ namespace RimMisc
 
         public override string GetInspectString()
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append(base.GetInspectString());
+            string text = base.GetInspectString();
             if (!FlickUtility.WantsToBeOn(this))
             {
-                if (stringBuilder.Length > 0)
+                if (!text.NullOrEmpty())
                 {
-                    stringBuilder.AppendLine();
+                    text += "\n";
                 }
-                stringBuilder.Append("VentClosed".Translate());
+                text += "VentClosed".Translate();
             }
-            return stringBuilder.ToString();
+
+            return text;
         }
     }
 }

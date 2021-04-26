@@ -83,14 +83,26 @@ namespace RimSpawners
             {
                 yield return baseGizmo;
             }
-            yield return new Command_Action()
+            yield return new Command_Toggle()
             {
                 defaultLabel = "RimSpawners_Pause".Translate(),
                 defaultDesc = "RimSpawners_PauseDesc".Translate(),
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/Halt"),
-                action = () =>
+                isActive = () => cusp.Paused,
+                toggleAction = () =>
                 {
                     cusp.Paused = !cusp.Paused;
+                }
+            };
+            yield return new Command_Toggle()
+            {
+                defaultLabel = "RimSpawners_DropPodToggle".Translate(),
+                defaultDesc = "RimSpawners_DropPodToggleDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("Things/Special/DropPod"),
+                isActive = () => cusp.SpawnInDropPods,
+                toggleAction = () =>
+                {
+                    cusp.SpawnInDropPods = !cusp.SpawnInDropPods;
                 }
             };
             yield return new Command_Action()

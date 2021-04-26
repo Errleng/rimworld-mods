@@ -10,13 +10,13 @@ namespace RimSpawners
         public bool useAllyFaction;
         public bool disableCorpses;
         public bool disableNeeds;
-        public bool spawnInDropPods;
 
         public bool spawnOnlyOnThreat;
         public float spawnOnThreatSpeedMultiplier;
 
         public SpawnTimeSetting spawnTime;
         public float spawnTimePointsPerSecond;
+
 
         public override void ExposeData()
         {
@@ -30,7 +30,6 @@ namespace RimSpawners
             Scribe_Values.Look(ref disableNeeds, "disableNeeds", false);
             Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat", false);
             Scribe_Values.Look(ref spawnOnThreatSpeedMultiplier, "spawnOnThreatSpeedMultiplier", 2f);
-            Scribe_Values.Look(ref spawnInDropPods, "spawnInDropPods", false);
             base.ExposeData();
         }
 

@@ -18,6 +18,7 @@ namespace RimSpawners
 
         public bool Dormant { get => dormant; set => dormant = value; }
         public bool Paused { get => paused; set => paused = value; }
+        public bool SpawnInDropPods { get => spawnInDropPods; set => spawnInDropPods = value; }
 
         public PawnKindDef ChosenKind
         {
@@ -220,7 +221,7 @@ namespace RimSpawners
             for (int i = spawnedPawns.Count - 1; i >= 0; i--)
             {
                 Pawn pawn = spawnedPawns[i];
-                if (Settings.spawnInDropPods)
+                if (SpawnInDropPods)
                 {
                     if (!pawn.Spawned && !ThingOwnerUtility.AnyParentIs<ActiveDropPodInfo>(pawn))
                     {
@@ -282,10 +283,11 @@ namespace RimSpawners
             spawnedPawns.Add(pawn);
 
             bool dropPodSuccess = false;
-            if (Settings.spawnInDropPods)
+            if (SpawnInDropPods)
             {
                 IntVec3 dropCenter = IntVec3.Invalid;
                 Pawn target = FindRandomActiveHostile(parent.Map);
+
                 if (target != null)
                 {
                     DropCellFinder.TryFindDropSpotNear(target.Position, parent.Map, out dropCenter, true, false);
@@ -299,7 +301,7 @@ namespace RimSpawners
                 dropPodSuccess = true;
             }
 
-            if (!Settings.spawnInDropPods || !dropPodSuccess)
+            if (!SpawnInDropPods || !dropPodSuccess)
             {
                 GenSpawn.Spawn(pawn, CellFinder.RandomClosewalkCellNear(parent.Position, parent.Map, Props.pawnSpawnRadius, null), parent.Map, WipeMode.Vanish);
             }
@@ -644,6 +646,8 @@ namespace RimSpawners
             Scribe_Values.Look(ref aggressive, "aggressive", false, false);
             Scribe_Values.Look(ref canSpawnPawns, "canSpawnPawns", true, false);
             Scribe_Values.Look(ref dormant, "dormant", false, false);
+            Scribe_Values.Look(ref paused, "paused", false, false);
+            Scribe_Values.Look(ref spawnInDropPods, "spawnInDropPods", false, false);
             Scribe_Defs.Look(ref chosenKind, "chosenKind");
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -668,6 +672,7 @@ namespace RimSpawners
 
         private bool dormant;
         private bool paused;
+        private bool spawnInDropPods;
 
         private PawnKindDef chosenKind;
 
