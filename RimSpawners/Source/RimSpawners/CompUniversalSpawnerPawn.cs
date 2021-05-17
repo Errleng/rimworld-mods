@@ -19,6 +19,7 @@ namespace RimSpawners
         public bool Dormant { get => dormant; set => dormant = value; }
         public bool Paused { get => paused; set => paused = value; }
         public bool SpawnInDropPods { get => spawnInDropPods; set => spawnInDropPods = value; }
+        public IntVec3 dropSpot = IntVec3.Invalid;
 
         public PawnKindDef ChosenKind
         {
@@ -286,16 +287,26 @@ namespace RimSpawners
             if (SpawnInDropPods)
             {
                 IntVec3 dropCenter = IntVec3.Invalid;
-                Pawn target = FindRandomActiveHostile(parent.Map);
 
-                if (target != null)
+                if (dropSpot != IntVec3.Invalid)
                 {
-                    DropCellFinder.TryFindDropSpotNear(target.Position, parent.Map, out dropCenter, true, false);
+                    DropCellFinder.TryFindDropSpotNear(dropSpot, parent.Map, out dropCenter, true, false);
                 }
                 else
                 {
+                    Pawn target = FindRandomActiveHostile(parent.Map);
+
+                    if (target != null)
+                    {
+                        DropCellFinder.TryFindDropSpotNear(target.Position, parent.Map, out dropCenter, true, false);
+                    }
+                }
+
+                if (dropCenter == IntVec3.Invalid)
+                {
                     dropCenter = DropCellFinder.RandomDropSpot(parent.Map);
                 }
+
                 DropPodUtility.DropThingsNear(dropCenter, parent.Map, Gen.YieldSingle<Thing>(pawn), 250,
                     false, false, false);
                 dropPodSuccess = true;

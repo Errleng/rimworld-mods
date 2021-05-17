@@ -98,11 +98,29 @@ namespace RimSpawners
             {
                 defaultLabel = "RimSpawners_DropPodToggle".Translate(),
                 defaultDesc = "RimSpawners_DropPodToggleDesc".Translate(),
-                icon = ContentFinder<Texture2D>.Get("Things/Special/DropPod"),
+                icon = ContentFinder<Texture2D>.Get("UI/Commands/SelectAllTransporters"),
                 isActive = () => cusp.SpawnInDropPods,
                 toggleAction = () =>
                 {
                     cusp.SpawnInDropPods = !cusp.SpawnInDropPods;
+                    if (!cusp.SpawnInDropPods)
+                    {
+                        cusp.dropSpot = IntVec3.Invalid;
+                    }
+                }
+            };
+            yield return new Command_Action()
+            {
+                defaultLabel = "RimSpawners_DropSpotSelect".Translate(),
+                defaultDesc = "RimSpawners_DropSpotSelectDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("Things/Special/DropPod"),
+                action = () =>
+                {
+                    TargetingParameters targetParams = TargetingParameters.ForDropPodsDestination();
+                    Find.Targeter.BeginTargeting(targetParams, delegate (LocalTargetInfo target)
+                    {
+                        cusp.dropSpot = target.Cell;
+                    });
                 }
             };
             yield return new Command_Action()
@@ -122,6 +140,16 @@ namespace RimSpawners
                     SetChosenKind(null);
                 }
             };
+        }
+
+        public override void DrawExtraSelectionOverlays()
+        {
+            base.DrawExtraSelectionOverlays();
+            if (cusp.dropSpot != IntVec3.Invalid)
+            {
+                Vector3 vector = cusp.dropSpot.ToVector3ShiftedWithAltitude(AltitudeLayer.MetaOverlays);
+                Graphics.DrawMesh(MeshPool.plane10, vector, Quaternion.identity, GenDraw.InteractionCellMaterial, 0);
+            }
         }
 
         //public List<PawnKindDef> GetPawnKindsToSpawn()

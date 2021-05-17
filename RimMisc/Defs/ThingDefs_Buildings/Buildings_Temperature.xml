@@ -26,7 +26,66 @@
     <statBases>
       <WorkToBuild>400</WorkToBuild>
       <MaxHitPoints>100</MaxHitPoints>
-      <Flammability>1.0</Flammability>
+      <Flammability>0.0</Flammability>
+    </statBases>
+    <tickerType>Rare</tickerType>
+    <costList>
+      <Steel>100</Steel>
+    </costList>
+    <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+    <placeWorkers>
+      <li>PlaceWorker_Vent</li>
+    </placeWorkers>
+    <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+    <building>
+      <canPlaceOverWall>true</canPlaceOverWall>
+    </building>
+    <researchPrerequisites>
+      <li>ComplexFurniture</li>
+    </researchPrerequisites>
+    <designationCategory>Temperature</designationCategory>
+    <comps>
+      <li Class="CompProperties_Flickable">
+        <commandTexture>UI/Commands/Vent</commandTexture>
+        <commandLabelKey>CommandDesignateOpenCloseVentLabel</commandLabelKey>
+        <commandDescKey>CommandDesignateOpenCloseVentDesc</commandDescKey>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="BuildingBase">
+    <defName>Supervent_Over</defName>
+    <label>over-wall supervent</label>
+    <description>A very powerful vent that equalizes temperatures.</description>
+    <thingClass>RimMisc.Building_Supervent</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Misc/TempControl/Vent</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <altitudeLayer>BuildingOnTop</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <blockWind>false</blockWind>
+    <fillPercent>.6</fillPercent>
+    <coversFloor>false</coversFloor>
+    <blockLight>false</blockLight>
+    <staticSunShadowHeight>.6</staticSunShadowHeight>
+    <building>
+      <canPlaceOverWall>false</canPlaceOverWall>
+      <isEdifice>false</isEdifice>
+    </building>
+    <castEdgeShadows>true</castEdgeShadows>
+    <canOverlapZones>false</canOverlapZones>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <statBases>
+      <WorkToBuild>400</WorkToBuild>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Flammability>0.0</Flammability>
     </statBases>
     <tickerType>Rare</tickerType>
     <costList>
@@ -87,7 +146,7 @@
       <WorkToBuild>1000</WorkToBuild>
       <MaxHitPoints>100</MaxHitPoints>
       <Mass>6</Mass>
-      <Flammability>0.5</Flammability>
+      <Flammability>0.0</Flammability>
     </statBases>
     <tickerType>Rare</tickerType>
     <building>
@@ -161,7 +220,7 @@
       <WorkToBuild>1000</WorkToBuild>
       <MaxHitPoints>100</MaxHitPoints>
       <Mass>6</Mass>
-      <Flammability>0.5</Flammability>
+      <Flammability>0.0</Flammability>
     </statBases>
     <tickerType>Rare</tickerType>
     <building>

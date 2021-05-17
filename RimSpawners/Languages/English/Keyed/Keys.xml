@@ -26,6 +26,8 @@
   <RimSpawners_PauseDesc>Toggle fabrication on and off</RimSpawners_PauseDesc>
   <RimSpawners_DropPodToggle>Drop Pods</RimSpawners_DropPodToggle>
   <RimSpawners_DropPodToggleDesc>Call in drop pods to deliver creatures instead of fabricating</RimSpawners_DropPodToggleDesc>
+  <RimSpawners_DropSpotSelect>Select Drop Spot</RimSpawners_DropSpotSelect>
+  <RimSpawners_DropSpotSelectDesc>Select drop pod location</RimSpawners_DropSpotSelectDesc>
   <RimSpawners_KillSwitch>Activate kill switch</RimSpawners_KillSwitch>
   <RimSpawners_KillSwitchDesc>Destroys all fabricated creatures</RimSpawners_KillSwitchDesc>
   <RimSpawners_Reset>Reset</RimSpawners_Reset>
