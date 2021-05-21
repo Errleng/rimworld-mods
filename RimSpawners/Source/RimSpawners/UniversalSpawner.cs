@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -119,7 +120,11 @@ namespace RimSpawners
                     TargetingParameters targetParams = TargetingParameters.ForDropPodsDestination();
                     Find.Targeter.BeginTargeting(targetParams, delegate (LocalTargetInfo target)
                     {
-                        cusp.dropSpot = target.Cell;
+                        List<UniversalSpawner> spawners = Find.Selector.SelectedObjects.OfType<UniversalSpawner>().ToList();
+                        foreach (UniversalSpawner spawner in spawners)
+                        {
+                            spawner.cusp.dropSpot = target.Cell;
+                        }
                     });
                 }
             };
