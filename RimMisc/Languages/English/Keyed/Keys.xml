@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <VentClosed>Closed</VentClosed>
+  <DefaultDoUntil>Use "Do Until X" as default</DefaultDoUntil>
+  <AutoCloseLetters>A letter is automatically closed after a minute</AutoCloseLetters>
 </LanguageData>
