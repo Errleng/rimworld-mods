@@ -33,14 +33,14 @@
   <RimSpawners_Reset>Reset</RimSpawners_Reset>
   <RimSpawners_ResetDesc>Reset chosen creature to none</RimSpawners_ResetDesc>
 
-  <!-- UNIVERSAL ASSEMBLER INSPECT -->
-  <RimSpawners_UniversalAssemblerInspectNoneChosen>Nothing chosen to fabricate.</RimSpawners_UniversalAssemblerInspectNoneChosen>
-  <RimSpawners_UniversalAssemblerInspectChosen>Chosen to fabricate {0}. Current creatures are using {1}/{2} control points.</RimSpawners_UniversalAssemblerInspectChosen>
-  <RimSpawners_UniversalAssemblerInspectLimit>Chosen to fabricate {0}. Current creatures are using up all {1} control points. Fabrication is paused until control points are available.</RimSpawners_UniversalAssemblerInspectLimit>
-  <RimSpawners_UniversalAssemblerInspectNextSpawn>\nFabrication complete in {0}.</RimSpawners_UniversalAssemblerInspectNextSpawn>
-  <RimSpawners_UniversalAssemblerInspectDormant>\nAssembler is dormant until a threat is detected.</RimSpawners_UniversalAssemblerInspectDormant>
-  <RimSpawners_UniversalAssemblerInspectPaused>\nAssembler is paused.</RimSpawners_UniversalAssemblerInspectPaused>
+  <!-- VANOMETRIC FABRICATOR INSPECT -->
+  <RimSpawners_VanometricFabricatorInspectNoneChosen>Nothing chosen to fabricate.</RimSpawners_VanometricFabricatorInspectNoneChosen>
+  <RimSpawners_VanometricFabricatorInspectChosen>Chosen to fabricate {0}. Current creatures are using {1}/{2} control points.</RimSpawners_VanometricFabricatorInspectChosen>
+  <RimSpawners_VanometricFabricatorInspectLimit>Chosen to fabricate {0}. Current creatures are using up all {1} control points. Fabrication is paused until control points are available.</RimSpawners_VanometricFabricatorInspectLimit>
+  <RimSpawners_VanometricFabricatorInspectNextSpawn>\nFabrication complete in {0}.</RimSpawners_VanometricFabricatorInspectNextSpawn>
+  <RimSpawners_VanometricFabricatorInspectDormant>\nAssembler is dormant until a threat is detected.</RimSpawners_VanometricFabricatorInspectDormant>
+  <RimSpawners_VanometricFabricatorInspectPaused>\nAssembler is paused.</RimSpawners_VanometricFabricatorInspectPaused>
 
-  <!-- UNIVERSAL ASSEMBLER NOTIFICATIONS AND MESSAGES -->
-  <RimSpawners_UniversalAssemblerSpawnMessage>{0} fabricated</RimSpawners_UniversalAssemblerSpawnMessage>
+  <!-- VANOMETRIC FABRICATOR NOTIFICATIONS AND MESSAGES -->
+  <RimSpawners_VanometricFabricatorSpawnMessage>{0} fabricated</RimSpawners_VanometricFabricatorSpawnMessage>
 </LanguageData>

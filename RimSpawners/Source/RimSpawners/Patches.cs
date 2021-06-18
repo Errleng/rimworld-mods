@@ -50,7 +50,7 @@ namespace RimSpawners
                     if (Settings.cachePawns && __instance.RaceProps.Humanlike)
                     {
                         // recycle pawn into spawner
-                        CompUniversalSpawnerPawn cusp = customThingComp.Props.SpawnerComp;
+                        CompVanometricFabricatorPawn cusp = customThingComp.Props.SpawnerComp;
                         cusp.RecyclePawn(__instance);
                     }
 

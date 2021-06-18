@@ -4,11 +4,11 @@ using Verse;
 
 namespace RimSpawners
 {
-    class CompProperties_UniversalSpawnerPawn : CompProperties
+    class CompProperties_VanometricFabricatorPawn : CompProperties
     {
-        public CompProperties_UniversalSpawnerPawn()
+        public CompProperties_VanometricFabricatorPawn()
         {
-            compClass = typeof(CompUniversalSpawnerPawn);
+            compClass = typeof(CompVanometricFabricatorPawn);
         }
 
         public List<PawnKindDef> spawnablePawnKinds;

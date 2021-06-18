@@ -19,12 +19,12 @@
     <designationCategory>Security</designationCategory>
   </ThingDef>
 
-  <!-- Universal Spawner -->
+  <!-- Vanometric Fabricator -->
   <ThingDef ParentName="SpawnerBase">
-    <defName>UniversalSpawner</defName>
-    <label>universal fabricator</label>
+    <defName>VanometricFabricator</defName>
+    <label>vanometric fabricator</label>
     <description>An ultra-tech vanometric fabrication unit used to automatically create any creature from pets to mechanoids to other humans. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats.</description>
-    <thingClass>RimSpawners.UniversalSpawner</thingClass>
+    <thingClass>RimSpawners.VanometricFabricator</thingClass>
     <costList>
       <Plasteel>500</Plasteel>
       <Steel>1000</Steel>
@@ -43,7 +43,7 @@
       <li>VanometricFabrication</li>
     </researchPrerequisites>
     <graphicData>
-      <texPath>Things/Building/Universal_Spawner</texPath>
+      <texPath>Things/Building/Vanometric_Fabricator</texPath>
       <graphicClass>Graphic_Single</graphicClass>
       <drawSize>(1.75, 1.75)</drawSize>
       <shadowData>
@@ -52,14 +52,14 @@
       </shadowData>
     </graphicData>
     <comps>
-      <li Class="RimSpawners.CompProperties_UniversalSpawnerPawn">
+      <li Class="RimSpawners.CompProperties_VanometricFabricatorPawn">
         <spawnablePawnKinds></spawnablePawnKinds>
         <chooseSingleTypeToSpawn>True</chooseSingleTypeToSpawn>
         <maxSpawnedPawnsPoints>500</maxSpawnedPawnsPoints>
         <spawnSound>MechAssembler_Spawn</spawnSound>
         <lordJob>LordJob_AssaultColony</lordJob>
         <pawnSpawnIntervalSeconds>100</pawnSpawnIntervalSeconds>
-        <spawnMessageKey>RimSpawners_UniversalAssemblerSpawnMessage</spawnMessageKey>
+        <spawnMessageKey>RimSpawners_VanometricFabricatorSpawnMessage</spawnMessageKey>
       </li>
       <li Class="CompProperties_Glower">
         <glowRadius>3</glowRadius>

@@ -13,7 +13,7 @@ namespace RimSpawners
         private static readonly float PAWN_ROW_HEIGHT = 30f;
         private float scrollViewHeight;
         private Vector2 scrollPos;
-        private List<UniversalSpawner> spawners;
+        private List<VanometricFabricator> spawners;
         private string searchKeyword;
 
         public PawnSelectionWindow()
@@ -40,7 +40,7 @@ namespace RimSpawners
             list.Begin(inRect);
 
             // get all selected sapwners
-            spawners = Find.Selector.SelectedObjects.OfType<UniversalSpawner>().ToList();
+            spawners = Find.Selector.SelectedObjects.OfType<VanometricFabricator>().ToList();
             if (spawners.NullOrEmpty())
             {
                 Close();
@@ -120,7 +120,7 @@ namespace RimSpawners
             {
                 if (spawners != null)
                 {
-                    foreach (UniversalSpawner spawner in spawners)
+                    foreach (VanometricFabricator spawner in spawners)
                     {
                         spawner.SetChosenKind(pawnKind);
                         Close();

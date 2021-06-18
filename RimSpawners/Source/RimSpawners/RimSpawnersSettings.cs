@@ -37,13 +37,13 @@ namespace RimSpawners
         {
             string[] spawnerNames = new string[]
             {
-                "UniversalSpawner"
+                "VanometricFabricator"
             };
 
             foreach (string spawnerName in spawnerNames)
             {
                 ThingDef spawner = DefDatabase<ThingDef>.GetNamed(spawnerName);
-                CompProperties_UniversalSpawnerPawn comp = spawner.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
+                CompProperties_VanometricFabricatorPawn comp = spawner.GetCompProperties<CompProperties_VanometricFabricatorPawn>();
                 comp.maxSpawnedPawnsPoints = maxSpawnerPoints;
                 comp.pawnSpawnIntervalSeconds = spawnTimeSecondsPerSpawn;
                 comp.chooseSingleTypeToSpawn = true;

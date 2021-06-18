@@ -49,11 +49,11 @@ namespace RimSpawners
 
     class CompProperties_RimSpawnersPawn : CompProperties
     {
-        private readonly CompUniversalSpawnerPawn spawnerComp;
+        private readonly CompVanometricFabricatorPawn spawnerComp;
 
-        public CompUniversalSpawnerPawn SpawnerComp { get => spawnerComp; }
+        public CompVanometricFabricatorPawn SpawnerComp { get => spawnerComp; }
 
-        public CompProperties_RimSpawnersPawn(CompUniversalSpawnerPawn cusp)
+        public CompProperties_RimSpawnersPawn(CompVanometricFabricatorPawn cusp)
         {
             compClass = typeof(RimSpawnersPawnComp);
             spawnerComp = cusp;

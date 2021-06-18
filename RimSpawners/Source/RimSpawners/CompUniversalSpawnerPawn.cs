@@ -10,11 +10,11 @@ using Verse.Sound;
 
 namespace RimSpawners
 {
-    class CompUniversalSpawnerPawn : ThingComp
+    class CompVanometricFabricatorPawn : ThingComp
     {
         static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
 
-        private CompProperties_UniversalSpawnerPawn Props => (CompProperties_UniversalSpawnerPawn)props;
+        private CompProperties_VanometricFabricatorPawn Props => (CompProperties_VanometricFabricatorPawn)props;
 
         public bool Dormant { get => dormant; set => dormant = value; }
         public bool Paused { get => paused; set => paused = value; }
@@ -82,7 +82,7 @@ namespace RimSpawners
                 {
                     spawnedPawnSelector = delegate (Thing s)
                     {
-                        CompUniversalSpawnerPawn cusp = s.TryGetComp<CompUniversalSpawnerPawn>();
+                        CompVanometricFabricatorPawn cusp = s.TryGetComp<CompVanometricFabricatorPawn>();
                         if (cusp != null)
                         {
                             return cusp.spawnedPawns;
@@ -456,7 +456,7 @@ namespace RimSpawners
 
         public void RemoveAllSpawnedPawns()
         {
-            Log.Message("Universal spawner comp is destroying all spawned pawns");
+            Log.Message("Vanometric fabricator comp is destroying all spawned pawns");
 
             foreach (Pawn pawn in spawnedPawns)
             {
@@ -484,7 +484,7 @@ namespace RimSpawners
 
         public void ClearCachedPawns()
         {
-            Log.Message("Universal spawner comp is destroying all cached pawns");
+            Log.Message("Vanometric fabricator comp is destroying all cached pawns");
             foreach (Pawn cachedPawn in cachedPawns)
             {
                 if (cachedPawn != null && !cachedPawn.Destroyed)
@@ -615,7 +615,7 @@ namespace RimSpawners
         {
             if (chosenKind == null)
             {
-                return "RimSpawners_UniversalAssemblerInspectNoneChosen".Translate();
+                return "RimSpawners_VanometricFabricatorInspectNoneChosen".Translate();
             }
 
             string text;
@@ -624,26 +624,26 @@ namespace RimSpawners
 
             if (SpawnedPawnsPoints < Props.maxSpawnedPawnsPoints)
             {
-                text = "RimSpawners_UniversalAssemblerInspectChosen".Translate(chosenKindName, SpawnedPawnsPoints, Props.maxSpawnedPawnsPoints);
+                text = "RimSpawners_VanometricFabricatorInspectChosen".Translate(chosenKindName, SpawnedPawnsPoints, Props.maxSpawnedPawnsPoints);
 
                 if (!Paused && !Dormant)
                 {
                     int ticksToNextSpawn = nextPawnSpawnTick - Find.TickManager.TicksGame;
-                    text += "RimSpawners_UniversalAssemblerInspectNextSpawn".Translate(ticksToNextSpawn.ToStringSecondsFromTicks());
+                    text += "RimSpawners_VanometricFabricatorInspectNextSpawn".Translate(ticksToNextSpawn.ToStringSecondsFromTicks());
                 }
             }
             else
             {
-                text = "RimSpawners_UniversalAssemblerInspectLimit".Translate(chosenKindName, Props.maxSpawnedPawnsPoints);
+                text = "RimSpawners_VanometricFabricatorInspectLimit".Translate(chosenKindName, Props.maxSpawnedPawnsPoints);
             }
 
             if (Paused)
             {
-                text += "RimSpawners_UniversalAssemblerInspectPaused".Translate();
+                text += "RimSpawners_VanometricFabricatorInspectPaused".Translate();
             }
             else if (Dormant)
             {
-                text += "RimSpawners_UniversalAssemblerInspectDormant".Translate();
+                text += "RimSpawners_VanometricFabricatorInspectDormant".Translate();
             }
             return text;
         }

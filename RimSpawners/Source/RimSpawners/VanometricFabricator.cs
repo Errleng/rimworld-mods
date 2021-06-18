@@ -6,13 +6,13 @@ using Verse;
 
 namespace RimSpawners
 {
-    class UniversalSpawner : Building
+    class VanometricFabricator : Building
     {
         static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
         static readonly int THREAT_CHECK_TICKS = GenTicks.SecondsToTicks(10);
         static readonly int THREAT_OVER_DESTROY_PAWNS_TICKS = GenTicks.SecondsToTicks(300);
 
-        private CompUniversalSpawnerPawn cusp;
+        private CompVanometricFabricatorPawn cusp;
 
         public bool ThreatActive { get; set; }
 
@@ -20,8 +20,8 @@ namespace RimSpawners
         {
             base.SpawnSetup(map, respawningAfterLoad);
 
-            cusp = GetComp<CompUniversalSpawnerPawn>();
-            Log.Message($"CompUniversalSpawnerPawn is {cusp.ToStringNullable()}");
+            cusp = GetComp<CompVanometricFabricatorPawn>();
+            Log.Message($"CompVanometricFabricatorPawn is {cusp.ToStringNullable()}");
         }
 
         public override void Tick()
@@ -120,8 +120,8 @@ namespace RimSpawners
                     TargetingParameters targetParams = TargetingParameters.ForDropPodsDestination();
                     Find.Targeter.BeginTargeting(targetParams, delegate (LocalTargetInfo target)
                     {
-                        List<UniversalSpawner> spawners = Find.Selector.SelectedObjects.OfType<UniversalSpawner>().ToList();
-                        foreach (UniversalSpawner spawner in spawners)
+                        List<VanometricFabricator> spawners = Find.Selector.SelectedObjects.OfType<VanometricFabricator>().ToList();
+                        foreach (VanometricFabricator spawner in spawners)
                         {
                             spawner.cusp.dropSpot = target.Cell;
                         }
@@ -159,7 +159,7 @@ namespace RimSpawners
 
         //public List<PawnKindDef> GetPawnKindsToSpawn()
         //{
-        //    CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
+        //    CompProperties_VanometricFabricatorPawn comp = def.GetCompProperties<CompProperties_VanometricFabricatorPawn>();
         //    if (comp.spawnablePawnKinds == null)
         //    {
         //        return new List<PawnKindDef>();
@@ -172,7 +172,7 @@ namespace RimSpawners
 
         //public void SetPawnKindsToSpawn(List<PawnKindDef> newPawnKindsToSpawn)
         //{
-        //    CompProperties_UniversalSpawnerPawn comp = def.GetCompProperties<CompProperties_UniversalSpawnerPawn>();
+        //    CompProperties_VanometricFabricatorPawn comp = def.GetCompProperties<CompProperties_VanometricFabricatorPawn>();
         //    comp.spawnablePawnKinds = newPawnKindsToSpawn;
         //    Log.Message($"Set spawner pawn kinds to {string.Join(", ", comp.spawnablePawnKinds)}");
         //}

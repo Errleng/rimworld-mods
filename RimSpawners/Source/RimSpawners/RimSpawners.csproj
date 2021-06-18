@@ -70,7 +70,7 @@
     <Compile Include="RimSpawnersWorldComp.cs" />
     <Compile Include="SpawnTimeSetting.cs" />
     <Compile Include="Texture2DExtensions.cs" />
-    <Compile Include="UniversalSpawner.cs" />
+    <Compile Include="VanometricFabricator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
