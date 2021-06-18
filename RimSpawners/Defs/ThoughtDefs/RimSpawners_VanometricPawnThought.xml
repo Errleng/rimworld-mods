@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
     <ThoughtDef>
-        <defName>RimSpawnersPawnThought</defName>
+        <defName>RimSpawners_VanometricPawnThought</defName>
         <workerClass>ThoughtWorker_Hediff</workerClass>
-        <hediff>RimSpawnersPawnHediff</hediff>
+        <hediff>RimSpawners_VanometricPawnHediff</hediff>
         <validWhileDespawned>true</validWhileDespawned>
         <stages>
             <li>

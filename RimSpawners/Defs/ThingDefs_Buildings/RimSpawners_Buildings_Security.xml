@@ -43,9 +43,9 @@
       <li>VanometricFabrication</li>
     </researchPrerequisites>
     <graphicData>
-      <texPath>Things/Building/Vanometric_Fabricator</texPath>
+      <texPath>Things/Building/Security/MechAssembler</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <drawSize>(1.75, 1.75)</drawSize>
+      <drawSize>(2, 2)</drawSize>
       <shadowData>
         <volume>(1.5, 1.0, 0.2)</volume>
         <offset>(0.0, 0.0, 0.0)</offset>
