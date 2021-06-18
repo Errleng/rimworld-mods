@@ -58,6 +58,7 @@
     <Compile Include="MakeNewBillPatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RimMisc.cs" />
+    <Compile Include="RimMiscWorldComponent.cs" />
     <Compile Include="RimMiscSettings.cs" />
   </ItemGroup>
   <ItemGroup>

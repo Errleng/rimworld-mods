@@ -14,8 +14,7 @@ namespace RimMisc
     {
         static void Postfix(ref Bill __result)
         {
-            RimMiscSettings settings = LoadedModManager.GetMod<RimMisc>().GetSettings<RimMiscSettings>();
-            if (settings.defaultDoUntil)
+            if (RimMisc.Settings.defaultDoUntil)
             {
                 if (__result is Bill_Production billProduction && billProduction.recipe.WorkerCounter.CanCountProducts(billProduction))
                 {

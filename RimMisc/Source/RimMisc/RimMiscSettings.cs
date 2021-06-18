@@ -5,13 +5,17 @@ using Verse;
 
 namespace RimMisc
 {
-    class RimMiscSettings : ModSettings
+    public class RimMiscSettings : ModSettings
     {
         public bool defaultDoUntil;
+        public bool autoCloseLetters;
+        public float autoCloseLettersSeconds;
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref defaultDoUntil, "defaultDoUntil");
+            Scribe_Values.Look(ref autoCloseLetters, "autoCloseLetters");
+            Scribe_Values.Look(ref autoCloseLettersSeconds, "autoCloseLettersSeconds");
             base.ExposeData();
         }
     }

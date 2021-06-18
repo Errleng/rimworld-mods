@@ -7,10 +7,10 @@ namespace RimMisc
 {
     public class RimMisc : Mod
     {
-        private RimMiscSettings settings;
+        public static RimMiscSettings Settings;
         public RimMisc(ModContentPack content) : base(content)
         {
-            settings = GetSettings<RimMiscSettings>();
+            Settings = GetSettings<RimMiscSettings>();
             Harmony harmony = new Harmony("com.rimmisc.rimworld.mod");
             harmony.PatchAll();
         }
@@ -20,7 +20,11 @@ namespace RimMisc
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
 
-            listingStandard.CheckboxLabeled("DefaultDoUntil".Translate(), ref settings.defaultDoUntil);
+            listingStandard.CheckboxLabeled("DefaultDoUntil".Translate(), ref Settings.defaultDoUntil);
+            listingStandard.CheckboxLabeled("AutoCloseLetters".Translate(), ref Settings.autoCloseLetters);
+
+            listingStandard.Label("AutoCloseLettersSeconds".Translate(Settings.autoCloseLettersSeconds));
+            Settings.autoCloseLettersSeconds = listingStandard.Slider(Settings.autoCloseLettersSeconds, 1, 600);
 
             listingStandard.End();
             base.DoSettingsWindowContents(inRect);
