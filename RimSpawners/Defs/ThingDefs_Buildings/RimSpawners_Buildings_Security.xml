@@ -5,7 +5,7 @@
       <li>BuildingsSecurity</li>
     </thingCategories>
     <tickerType>Normal</tickerType>
-    <size>(2, 2)</size>
+    <size>(3, 3)</size>
     <fillPercent>1.0</fillPercent>
     <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
     <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
@@ -45,7 +45,7 @@
     <graphicData>
       <texPath>Things/Building/Security/MechAssembler</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <drawSize>(2, 2)</drawSize>
+      <drawSize>(3, 3)</drawSize>
       <shadowData>
         <volume>(1.5, 1.0, 0.2)</volume>
         <offset>(0.0, 0.0, 0.0)</offset>

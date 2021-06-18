@@ -19,6 +19,7 @@ namespace RimMisc
                 if (__result is Bill_Production billProduction && billProduction.recipe.WorkerCounter.CanCountProducts(billProduction))
                 {
                     billProduction.repeatMode = BillRepeatModeDefOf.TargetCount;
+                    billProduction.targetCount = 1;
                 }
             }
         }

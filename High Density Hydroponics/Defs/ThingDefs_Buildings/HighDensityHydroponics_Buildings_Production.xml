@@ -16,8 +16,8 @@
     <canOverlapZones>false</canOverlapZones>
     <constructionSkillPrerequisite>4</constructionSkillPrerequisite>
     <statBases>
-      <WorkToBuild>2800</WorkToBuild>
-      <MaxHitPoints>180</MaxHitPoints>
+      <WorkToBuild>3000</WorkToBuild>
+      <MaxHitPoints>500</MaxHitPoints>
       <Flammability>0.5</Flammability>
       <Cleanliness>-3</Cleanliness>
       <Mass>80</Mass>
@@ -57,7 +57,7 @@
       <li Class="CompProperties_Forbiddable" />
       <li Class="CompProperties_Power">
         <compClass>CompPowerTrader</compClass>
-        <basePowerConsumption>1400</basePowerConsumption>
+        <basePowerConsumption>1500</basePowerConsumption>
       </li>
       <li Class="CompProperties_Flickable" />
     </comps>
@@ -88,12 +88,6 @@
     </graphicData>
     <size>(2,6)</size>
     <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
-    <statBases>
-      <WorkToBuild>3800</WorkToBuild>
-      <MaxHitPoints>180</MaxHitPoints>
-      <Flammability>0.5</Flammability>
-      <Cleanliness>-6</Cleanliness>
-    </statBases>
     <costList>
       <Steel>360</Steel>
       <Plasteel>20</Plasteel>
@@ -103,7 +97,7 @@
       <li Class="CompProperties_Forbiddable" />
       <li Class="CompProperties_Power">
         <compClass>CompPowerTrader</compClass>
-        <basePowerConsumption>2880</basePowerConsumption>
+        <basePowerConsumption>3000</basePowerConsumption>
       </li>
       <li Class="CompProperties_Flickable" />
     </comps>
@@ -140,7 +134,7 @@
       <li Class="CompProperties_Forbiddable" />
       <li Class="CompProperties_Power">
         <compClass>CompPowerTrader</compClass>
-        <basePowerConsumption>425</basePowerConsumption>
+        <basePowerConsumption>500</basePowerConsumption>
       </li>
       <li Class="CompProperties_Flickable" />
     </comps>
