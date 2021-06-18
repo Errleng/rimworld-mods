@@ -3,7 +3,7 @@
   <ThingDef ParentName="BuildingBase">
     <defName>VanometricCondenser</defName>
     <label>vanometric condenser</label>
-    <description>Archotec machine that converts energy into mass. Requires high level thought patterns from intelligent beings to make any noticeable progress.</description>
+    <description>Archotech machine that converts energy into mass. Requires high level thought patterns from intelligent beings to make any noticeable progress.</description>
 		<thingClass>Building_WorkTable</thingClass>
     <graphicData>
       <graphicClass>Graphic_Single</graphicClass>

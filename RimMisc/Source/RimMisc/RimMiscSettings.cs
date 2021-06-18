@@ -10,12 +10,14 @@ namespace RimMisc
         public bool defaultDoUntil;
         public bool autoCloseLetters;
         public float autoCloseLettersSeconds;
+        public List<CondenserItem> condenserItems;
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref defaultDoUntil, "defaultDoUntil");
             Scribe_Values.Look(ref autoCloseLetters, "autoCloseLetters");
             Scribe_Values.Look(ref autoCloseLettersSeconds, "autoCloseLettersSeconds");
+            Scribe_Collections.Look(ref condenserItems, "condenserItems", LookMode.Deep);
             base.ExposeData();
         }
     }
