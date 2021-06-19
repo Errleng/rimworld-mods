@@ -31,8 +31,9 @@ namespace RimMisc
                 {
                     List<Letter> letters = Find.LetterStack.LettersListForReading;
 
-                    foreach (Letter letter in letters)
+                    for (int i = letters.Count - 1; i >= 0; i--)
                     {
+                        Letter letter = letters[i];
                         if (!letterStartTimes.ContainsKey(letter))
                         {
                             letterStartTimes.Add(letter, currentTicks);

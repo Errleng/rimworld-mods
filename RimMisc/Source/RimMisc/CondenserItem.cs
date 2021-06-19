@@ -48,8 +48,8 @@ namespace RimMisc
                 recipe = new RecipeDef
                 {
                     defName = recipeDefName,
-                    label = $"RimMisc_RecipeCondense".Translate(thing.label),
-                    jobString = "RimMisc_CondenseJobString".Translate(thing.label),
+                    label = $"RimMisc_RecipeCondense".Translate(thingDefName),
+                    jobString = "RimMisc_CondenseJobString".Translate(thingDefName),
                     ingredients = new List<IngredientCount>(),
                     defaultIngredientFilter = new ThingFilter(),
                     effectWorking = DefDatabase<EffecterDef>.GetNamed("Research"),

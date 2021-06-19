@@ -26,6 +26,7 @@ namespace RimMisc
         private static readonly float SCROLLBAR_WIDTH = 20;
         private static readonly int MIN_WORK = 1;
         private static readonly int MAX_WORK = 10000;
+        private static readonly int DEFAULT_WORK = 6000;
         private static readonly int MIN_YIELD = 1;
         private static readonly int MAX_YIELD = 1000;
 
@@ -89,14 +90,18 @@ namespace RimMisc
         private void DrawSelectedCondenserItems(Rect scrollSectionRect)
         {
             GUI.BeginGroup(scrollSectionRect);
-            Rect labelRect = new Rect(0, 0, scrollSectionRect.width, SEARCH_RESULT_ROW_HEIGHT);
-            Widgets.Label(labelRect, "RimMisc_CondenserItemsSection".Translate());
+            Rect sectionLabelRect = new Rect(0, 0, CONDENSER_ITEM_LABEL_WIDTH, SEARCH_RESULT_ROW_HEIGHT);
+            Rect workLabelRect = new Rect(CONDENSER_ITEM_ICON_WIDTH + CONDENSER_ITEM_LABEL_WIDTH, 0, CONDENSER_ITEM_FIELD_WIDTH, SEARCH_RESULT_ROW_HEIGHT);
+            Rect yieldLabelRect = new Rect(workLabelRect.x + workLabelRect.width, 0, CONDENSER_ITEM_FIELD_WIDTH, SEARCH_RESULT_ROW_HEIGHT);
+            Widgets.Label(sectionLabelRect, "RimMisc_CondenserItemsSection".Translate());
+            Widgets.Label(workLabelRect, "RimMisc_WorkColumn".Translate());
+            Widgets.Label(yieldLabelRect, "RimMisc_YieldColumn".Translate());
 
             Settings.condenserItems = Settings.condenserItems.Where(item => item != null).ToList();
 
-            Rect outRect = new Rect(0, labelRect.height, scrollSectionRect.width, scrollSectionRect.height);
+            Rect outRect = new Rect(0, workLabelRect.height, scrollSectionRect.width, scrollSectionRect.height);
             outRect.height -= outRect.y;
-            Rect viewRect = new Rect(0, labelRect.height, scrollSectionRect.width - SCROLLBAR_WIDTH, condenserItemScrollHeight);
+            Rect viewRect = new Rect(0, workLabelRect.height, scrollSectionRect.width - SCROLLBAR_WIDTH, condenserItemScrollHeight);
             Widgets.BeginScrollView(outRect, ref condenserItemScrollPos, viewRect);
 
             // draw each entry
@@ -197,7 +202,7 @@ namespace RimMisc
             Rect addButtonRect = new Rect(sectionRect.width - BUTTON_WIDTH - SCROLLBAR_WIDTH, currentY, BUTTON_WIDTH, SEARCH_RESULT_ROW_HEIGHT);
             if (Widgets.ButtonText(addButtonRect, "RimMisc_CondenserItemAddButton".Translate()))
             {
-                Settings.condenserItems.Add(new CondenserItem(thing.defName, MIN_WORK, MIN_YIELD));
+                Settings.condenserItems.Add(new CondenserItem(thing.defName, DEFAULT_WORK, MIN_YIELD));
             }
         }
     }

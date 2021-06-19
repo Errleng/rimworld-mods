@@ -10,4 +10,6 @@
   <RimMisc_CondenserItemRemoveButton>Remove</RimMisc_CondenserItemRemoveButton>
   <RimMisc_RecipeCondense>Condense {0}</RimMisc_RecipeCondense>
   <RimMisc_CondenseJobString>Condensing {0}...</RimMisc_CondenseJobString>
+  <RimMisc_WorkColumn>Work</RimMisc_WorkColumn>
+  <RimMisc_YieldColumn>Yield</RimMisc_YieldColumn>
 </LanguageData>

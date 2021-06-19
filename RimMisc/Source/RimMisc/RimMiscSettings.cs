@@ -29,6 +29,13 @@ namespace RimMisc
             if (condenserDef != null)
             {
                 condenserDef.recipes = RimMisc.Settings.condenserItems.Select(item => item.CreateRecipe()).ToList();
+                condenserDef.recipes.ForEach(recipe =>
+                {
+                    if (DefDatabase<RecipeDef>.GetNamed(recipe.defName, false) == null)
+                    {
+                        DefDatabase<RecipeDef>.Add(recipe);
+                    }
+                });
                 AccessTools.FieldRefAccess<ThingDef, List<RecipeDef>>(condenserDef, "allRecipesCached") = null;
             }
         }

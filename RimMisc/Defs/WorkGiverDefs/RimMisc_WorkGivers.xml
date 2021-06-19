@@ -8,12 +8,9 @@
     <workType>Research</workType>
     <priorityInType>50</priorityInType>
     <verb>condense</verb>
-    <fixedBillGiverDefs>
-      <li>RimMisc_VanometricCondenser</li>
-    </fixedBillGiverDefs>
     <gerund>condensing</gerund>
-    <requiredCapacities>
-      <li>Manipulation</li>
-    </requiredCapacities>
+    <fixedBillGiverDefs>
+      <li>VanometricCondenser</li>
+    </fixedBillGiverDefs>
   </WorkGiverDef>
 </Defs>

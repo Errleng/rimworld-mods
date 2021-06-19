@@ -70,7 +70,7 @@
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../Assemblies"
 copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc\Assemblies"
-RD /S /Q "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc\Defs"
-robocopy /S "$(SolutionDir)../Defs" "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc/Defs"</PostBuildEvent>
+robocopy /mir "$(SolutionDir)../Defs" "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc/Defs"
+robocopy /mir "$(SolutionDir)../Languages" "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc/Languages"</PostBuildEvent>
   </PropertyGroup>
 </Project>
