@@ -38,7 +38,7 @@ namespace RimMisc
                 {
                     text += "\n";
                 }
-                text += "VentClosed".Translate();
+                text += "RimMisc_VentClosed".Translate();
             }
 
             return text;

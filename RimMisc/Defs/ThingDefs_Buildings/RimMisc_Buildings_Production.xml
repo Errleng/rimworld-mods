@@ -4,7 +4,7 @@
     <defName>VanometricCondenser</defName>
     <label>vanometric condenser</label>
     <description>Archotech machine that converts energy into mass. Requires high level thought patterns from intelligent beings to make any noticeable progress.</description>
-		<thingClass>Building_WorkTable</thingClass>
+    <thingClass>Building_WorkTable</thingClass>
     <graphicData>
       <graphicClass>Graphic_Single</graphicClass>
       <texPath>Things/Building/Production/Defoliator</texPath>
@@ -15,10 +15,10 @@
     <passability>Impassable</passability>
     <fillPercent>0.5</fillPercent>
     <hasInteractionCell>true</hasInteractionCell>
-    <interactionCellOffset>(0,0,-3)</interactionCellOffset>
+    <interactionCellOffset>(0,0,-2)</interactionCellOffset>
     <inspectorTabs>
-			<li>ITab_Bills</li>
-		</inspectorTabs>
+      <li>ITab_Bills</li>
+    </inspectorTabs>
     <designationCategory>Production</designationCategory>
     <rotatable>true</rotatable>
     <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>

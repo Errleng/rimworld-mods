@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+  <WorkGiverDef>
+    <defName>DoBillsVanometricCondenser</defName>
+    <label>condense energy into matter</label>
+    <giverClass>WorkGiver_DoBill</giverClass>
+    <workType>Research</workType>
+    <priorityInType>50</priorityInType>
+    <verb>condense</verb>
+    <fixedBillGiverDefs>
+      <li>RimMisc_VanometricCondenser</li>
+    </fixedBillGiverDefs>
+    <gerund>condensing</gerund>
+    <requiredCapacities>
+      <li>Manipulation</li>
+    </requiredCapacities>
+  </WorkGiverDef>
+</Defs>

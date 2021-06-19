@@ -62,7 +62,6 @@
     <Compile Include="RimMisc.cs" />
     <Compile Include="RimMiscWorldComponent.cs" />
     <Compile Include="RimMiscSettings.cs" />
-    <Compile Include="VanometricCondenser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -70,6 +69,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../Assemblies"
-copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc\Assemblies"</PostBuildEvent>
+copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc\Assemblies"
+RD /S /Q "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc\Defs"
+robocopy /S "$(SolutionDir)../Defs" "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc/Defs"</PostBuildEvent>
   </PropertyGroup>
 </Project>

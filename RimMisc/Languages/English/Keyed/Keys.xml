@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <VentClosed>Closed</VentClosed>
-  <DefaultDoUntil>Use "Do Until X" as default setting for bills</DefaultDoUntil>
-  <AutoCloseLetters>Automatically close letters after a set time</AutoCloseLetters>
-  <AutoCloseLettersSeconds>How many seconds before a letter is closed: {0}</AutoCloseLettersSeconds>
+  <RimMisc_VentClosed>Closed</RimMisc_VentClosed>
+  <RimMisc_DefaultDoUntil>Use "Do Until X" as default setting for bills</RimMisc_DefaultDoUntil>
+  <RimMisc_AutoCloseLetters>Automatically close letters after a set time</RimMisc_AutoCloseLetters>
+  <RimMisc_AutoCloseLettersSeconds>How many seconds before a letter is closed: {0}</RimMisc_AutoCloseLettersSeconds>
+  <RimMisc_CondenserItemsSection>Condenser Items</RimMisc_CondenserItemsSection>
+  <RimMisc_CondenserItemsSelectSection>Add Condenser Items</RimMisc_CondenserItemsSelectSection>
+  <RimMisc_CondenserItemAddButton>Add</RimMisc_CondenserItemAddButton>
+  <RimMisc_CondenserItemRemoveButton>Remove</RimMisc_CondenserItemRemoveButton>
+  <RimMisc_RecipeCondense>Condense {0}</RimMisc_RecipeCondense>
+  <RimMisc_CondenseJobString>Condensing {0}...</RimMisc_CondenseJobString>
 </LanguageData>

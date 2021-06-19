@@ -17,6 +17,7 @@ namespace RimMisc
 
         public RimMiscWorldComponent(World world) : base(world)
         {
+            RimMisc.Settings.ApplySettings();
         }
 
         public override void WorldComponentTick()

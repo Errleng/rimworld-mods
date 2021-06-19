@@ -75,13 +75,8 @@
     <coversFloor>false</coversFloor>
     <blockLight>false</blockLight>
     <staticSunShadowHeight>.6</staticSunShadowHeight>
-    <building>
-      <canPlaceOverWall>false</canPlaceOverWall>
-      <isEdifice>false</isEdifice>
-    </building>
     <castEdgeShadows>true</castEdgeShadows>
     <canOverlapZones>false</canOverlapZones>
-    <staticSunShadowHeight>1.0</staticSunShadowHeight>
     <statBases>
       <WorkToBuild>400</WorkToBuild>
       <MaxHitPoints>100</MaxHitPoints>
