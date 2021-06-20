@@ -6,7 +6,7 @@
     <label>condense energy into matter</label>
     <giverClass>WorkGiver_DoBill</giverClass>
     <workType>Research</workType>
-    <priorityInType>50</priorityInType>
+    <priorityInType>150</priorityInType>
     <verb>condense</verb>
     <gerund>condensing</gerund>
     <fixedBillGiverDefs>

@@ -10,7 +10,7 @@
     <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
     <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
     <passability>PassThroughOnly</passability>
-    <rotatable>false</rotatable>
+    <rotatable>true</rotatable>
     <canOverlapZones>false</canOverlapZones>
     <minifiedDef>MinifiedThing</minifiedDef>
     <tradeTags>
