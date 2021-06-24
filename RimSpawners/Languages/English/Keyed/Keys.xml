@@ -28,6 +28,8 @@
   <RimSpawners_DropPodToggleDesc>Call in drop pods to deliver creatures instead of fabricating</RimSpawners_DropPodToggleDesc>
   <RimSpawners_DropSpotSelect>Select Drop Spot</RimSpawners_DropSpotSelect>
   <RimSpawners_DropSpotSelectDesc>Select drop pod location</RimSpawners_DropSpotSelectDesc>
+  <RimSpawners_SpawnAllAtOnce>Burst spawn</RimSpawners_SpawnAllAtOnce>
+  <RimSpawners_SpawnAllAtOnceDesc>Burst fabricate creatures until the control point limit is reached. The time necessary to cool down will increase accordingly.</RimSpawners_SpawnAllAtOnceDesc>
   <RimSpawners_KillSwitch>Activate kill switch</RimSpawners_KillSwitch>
   <RimSpawners_KillSwitchDesc>Destroys all fabricated creatures</RimSpawners_KillSwitchDesc>
   <RimSpawners_Reset>Reset</RimSpawners_Reset>

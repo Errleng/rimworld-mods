@@ -19,6 +19,7 @@ namespace RimSpawners
         public bool Dormant { get => dormant; set => dormant = value; }
         public bool Paused { get => paused; set => paused = value; }
         public bool SpawnInDropPods { get => spawnInDropPods; set => spawnInDropPods = value; }
+        public bool SpawnAllAtOnce { get => spawnAllAtOnce; set => spawnAllAtOnce = value; }
         public IntVec3 dropSpot = IntVec3.Invalid;
 
         public PawnKindDef ChosenKind
@@ -211,6 +212,12 @@ namespace RimSpawners
             //    nextPawnSpawnTick = Find.TickManager.TicksGame + (int)(delayTicks / (existingPawnSlowdown * Find.Storyteller.difficultyValues.enemyReproductionRateFactor));
             //    return;
             //}
+
+            if (SpawnAllAtOnce)
+            {
+                int remainingSpawns = (int)Math.Ceiling(Props.maxSpawnedPawnsPoints / chosenKind.combatPower);
+                delayTicks *= remainingSpawns;
+            }
 
             delayTicks /= spawnUntilFullSpeedMultiplier;
 
@@ -575,7 +582,11 @@ namespace RimSpawners
 
                     Pawn pawn;
 
-                    if ((Props.maxSpawnedPawnsPoints < 0f || SpawnedPawnsPoints < Props.maxSpawnedPawnsPoints) && Find.Storyteller.difficultyValues.enemyReproductionRateFactor > 0f && TrySpawnPawn(out pawn) && pawn.caller != null)
+                    if (SpawnAllAtOnce)
+                    {
+                        SpawnPawnsUntilPoints(Props.maxSpawnedPawnsPoints);
+                    }
+                    else if ((Props.maxSpawnedPawnsPoints < 0f || SpawnedPawnsPoints < Props.maxSpawnedPawnsPoints) && TrySpawnPawn(out pawn) && pawn.caller != null)
                     {
                         pawn.caller.DoCall();
                     }
@@ -684,6 +695,7 @@ namespace RimSpawners
         private bool dormant;
         private bool paused;
         private bool spawnInDropPods;
+        private bool spawnAllAtOnce;
 
         private PawnKindDef chosenKind;
 
