@@ -22,8 +22,11 @@ namespace RimMisc
         private static readonly float CONDENSER_ITEM_ICON_WIDTH = 30f;
         private static readonly float CONDENSER_ITEM_LABEL_WIDTH = 200f;
         private static readonly float CONDENSER_ITEM_FIELD_WIDTH = 100f;
+        private static readonly float ITEM_PADDING = 10f;
         private static readonly float BUTTON_WIDTH = 60f;
         private static readonly float SCROLLBAR_WIDTH = 20;
+        private static readonly float MIN_AUTOCLOSE_SECONDS = RimMiscWorldComponent.AUTO_CLOSE_LETTERS_CHECK_TICKS.TicksToSeconds();
+        private static readonly float MAX_AUTOCLOSE_SECONDS = 600;
         private static readonly int MIN_WORK = 1;
         private static readonly int MAX_WORK = 10000;
         private static readonly int DEFAULT_WORK = 6000;
@@ -69,7 +72,7 @@ namespace RimMisc
             settingsSection.CheckboxLabeled("RimMisc_AutoCloseLetters".Translate(), ref Settings.autoCloseLetters);
 
             settingsSection.Label("RimMisc_AutoCloseLettersSeconds".Translate(Settings.autoCloseLettersSeconds));
-            Settings.autoCloseLettersSeconds = settingsSection.Slider(Settings.autoCloseLettersSeconds, 10, 600);
+            Settings.autoCloseLettersSeconds = settingsSection.Slider(Settings.autoCloseLettersSeconds, MIN_AUTOCLOSE_SECONDS, MAX_AUTOCLOSE_SECONDS);
 
             settingsSection.EndSection(settingsSection);
             listingStandard.End();
@@ -126,7 +129,7 @@ namespace RimMisc
             Rect iconRect = new Rect(0, currentY, CONDENSER_ITEM_ICON_WIDTH, SEARCH_RESULT_ROW_HEIGHT);
             Rect labelRect = new Rect(iconRect.width, currentY, CONDENSER_ITEM_LABEL_WIDTH, SEARCH_RESULT_ROW_HEIGHT);
             Rect fieldRect1 = new Rect(labelRect.x + labelRect.width, currentY, CONDENSER_ITEM_FIELD_WIDTH, SEARCH_RESULT_ROW_HEIGHT);
-            Rect fieldRect2 = new Rect(fieldRect1.x + fieldRect1.width, currentY, CONDENSER_ITEM_FIELD_WIDTH, SEARCH_RESULT_ROW_HEIGHT);
+            Rect fieldRect2 = new Rect(fieldRect1.x + fieldRect1.width + ITEM_PADDING, currentY, CONDENSER_ITEM_FIELD_WIDTH, SEARCH_RESULT_ROW_HEIGHT);
 
             Widgets.ThingIcon(iconRect, item.ThingDef);
             Widgets.Label(labelRect, item.ThingDef.label);
@@ -137,6 +140,11 @@ namespace RimMisc
             if (Widgets.ButtonText(removeButtonRect, "RimMisc_CondenserItemRemoveButton".Translate()))
             {
                 Settings.condenserItems.Remove(item);
+            }
+            Rect calculateWorkButtonRect = new Rect(removeButtonRect.x - BUTTON_WIDTH - ITEM_PADDING, currentY, BUTTON_WIDTH * 2, SEARCH_RESULT_ROW_HEIGHT);
+            if (Widgets.ButtonText(calculateWorkButtonRect, "RimMisc_CondenserItemCalculateWorkButton".Translate()))
+            {
+                item.CalculateWorkAmount();
             }
         }
 
@@ -202,7 +210,8 @@ namespace RimMisc
             Rect addButtonRect = new Rect(sectionRect.width - BUTTON_WIDTH - SCROLLBAR_WIDTH, currentY, BUTTON_WIDTH, SEARCH_RESULT_ROW_HEIGHT);
             if (Widgets.ButtonText(addButtonRect, "RimMisc_CondenserItemAddButton".Translate()))
             {
-                Settings.condenserItems.Add(new CondenserItem(thing.defName, DEFAULT_WORK, MIN_YIELD));
+                int initialWork = (int)thing.BaseMarketValue;
+                Settings.condenserItems.Add(new CondenserItem(thing.defName, initialWork, MIN_YIELD));
             }
         }
     }

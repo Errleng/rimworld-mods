@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
 
@@ -14,22 +10,18 @@ namespace RimMisc
         public int work;
         public int yield;
 
-        public ThingDef ThingDef
-        {
-            get => DefDatabase<ThingDef>.GetNamed(thingDefName);
-        }
-
         public CondenserItem()
         {
-
         }
 
-        public CondenserItem(string thingDefName, int work, int @yield)
+        public CondenserItem(string thingDefName, int work, int yield)
         {
             this.thingDefName = thingDefName;
             this.work = work;
             this.yield = yield;
         }
+
+        public ThingDef ThingDef => DefDatabase<ThingDef>.GetNamed(thingDefName);
 
         public void ExposeData()
         {
@@ -40,9 +32,9 @@ namespace RimMisc
 
         public RecipeDef CreateRecipe()
         {
-            ThingDef thing = ThingDef;
-            string recipeDefName = $"Condense_{thing.defName}";
-            RecipeDef recipe = DefDatabase<RecipeDef>.GetNamed(recipeDefName, false);
+            var thing = ThingDef;
+            var recipeDefName = $"Condense_{thing.defName}";
+            var recipe = DefDatabase<RecipeDef>.GetNamed(recipeDefName, false);
             if (recipe == null)
             {
                 recipe = new RecipeDef
@@ -66,7 +58,13 @@ namespace RimMisc
                 recipe.workAmount = work;
                 recipe.products = new List<ThingDefCountClass> { new ThingDefCountClass(thing, yield) };
             }
+
             return recipe;
+        }
+
+        public void CalculateWorkAmount()
+        {
+            work = (int)(ThingDef.BaseMarketValue * yield);
         }
     }
 }

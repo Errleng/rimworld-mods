@@ -11,9 +11,9 @@ namespace RimMisc
 {
     class RimMiscWorldComponent : WorldComponent
     {
-        private static readonly int AUTO_CLOSE_LETTERS_CHECK_TICKS = GenTicks.SecondsToTicks(10);
+        public static readonly int AUTO_CLOSE_LETTERS_CHECK_TICKS = GenTicks.SecondsToTicks(10);
 
-        private static Dictionary<Letter, int> letterStartTimes = new Dictionary<Letter, int>();
+        private static readonly Dictionary<Letter, int> letterStartTimes = new Dictionary<Letter, int>();
 
         public RimMiscWorldComponent(World world) : base(world)
         {
