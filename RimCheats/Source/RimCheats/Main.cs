@@ -24,8 +24,9 @@ namespace RimCheats
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
             listingStandard.CheckboxLabeled("Enable pathing", ref settings.enablePathing, "Paths and moves in one tick");
-            listingStandard.CheckboxLabeled("Enable pathing for non-humans", ref settings.enablePathingNonHuman, "Paths and moves in one tick");
+            listingStandard.CheckboxLabeled("Enable pathing for non-humans", ref settings.enablePathingNonHuman, "Colony non-humans path and moves in one tick");
             listingStandard.CheckboxLabeled("Enable ignore terrain cost", ref settings.disableTerrainCost, "Colonists ignore terrain movement penalties");
+            listingStandard.CheckboxLabeled("Enable ignore terrain cost for non-humans", ref settings.disableTerrainCostNonHuman, "Colony non-humans ignore terrain movement penalties");
             listingStandard.CheckboxLabeled("Enable working", ref settings.enableWorking, "Global work speed multiplied by amount");
             listingStandard.CheckboxLabeled("Enable learning", ref settings.enableLearning, "Global learning speed multiplied by amount");
             listingStandard.CheckboxLabeled("Enable carrying capacity", ref settings.enableCarryingCapacity, "Carrying capacity multiplied by amount");
@@ -56,6 +57,7 @@ namespace RimCheats
         public bool enableWorking;
         public bool enableLearning;
         public bool disableTerrainCost;
+        public bool disableTerrainCostNonHuman;
         public bool enableCarryingCapacity;
         public bool enableCarryingCapacityMass;
         public bool enableFasterProgressBars;
@@ -71,6 +73,7 @@ namespace RimCheats
             Scribe_Values.Look(ref enableWorking, "enableWorking");
             Scribe_Values.Look(ref enableLearning, "enableLearning");
             Scribe_Values.Look(ref disableTerrainCost, "disableTerrainCost");
+            Scribe_Values.Look(ref disableTerrainCostNonHuman, "disableTerrainCostNonHuman");
             Scribe_Values.Look(ref enableCarryingCapacity, "enableCarryingCapacity");
             Scribe_Values.Look(ref enableCarryingCapacityMass, "enableCarryingCapacityMass");
             Scribe_Values.Look(ref enableFasterProgressBars, "enableFasterProgressBars");
@@ -110,7 +113,7 @@ namespace RimCheats
                 }
                 if (settings.enablePathingNonHuman && !___pawn.IsColonistPlayerControlled)
                 {
-                    appliesToPawn = (___pawn.Faction != null) && ___pawn.Faction.IsPlayer;
+                    appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.IsPlayer;
                 }
                 if (appliesToPawn && __instance.Moving)
                 {
@@ -145,8 +148,16 @@ namespace RimCheats
 
             static void Postfix(Pawn_PathFollower __instance, Pawn pawn, IntVec3 c, ref int __result)
             {
-                bool disableTerrainCost = settings.disableTerrainCost;
-                if (pawn.IsColonistPlayerControlled && disableTerrainCost)
+                bool appliesToPawn = false;
+                if (settings.disableTerrainCost)
+                {
+                    appliesToPawn = pawn.IsColonistPlayerControlled;
+                }
+                if (settings.disableTerrainCostNonHuman && !pawn.IsColonistPlayerControlled)
+                {
+                    appliesToPawn = pawn.Faction != null && pawn.Faction.IsPlayer;
+                }
+                if (appliesToPawn)
                 {
                     // based off floating pawn code from Alpha Animals
                     int cost = __result;
