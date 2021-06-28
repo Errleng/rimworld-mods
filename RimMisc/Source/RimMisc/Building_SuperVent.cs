@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 
 namespace RimMisc
 {
-    class Building_SuperVent : Building_TempControl
+    internal class Building_SuperVent : Building_TempControl
     {
         private static readonly float ORIGINAL_VENT_RATE = 14f;
         private static readonly float VENT_RATE_MULTIPLIER = 100f;
@@ -23,21 +20,15 @@ namespace RimMisc
 
         public override void TickRare()
         {
-            if (FlickUtility.WantsToBeOn(this))
-            {
-                GenTemperature.EqualizeTemperaturesThroughBuilding(this, ORIGINAL_VENT_RATE * VENT_RATE_MULTIPLIER, true);
-            }
+            if (FlickUtility.WantsToBeOn(this)) GenTemperature.EqualizeTemperaturesThroughBuilding(this, ORIGINAL_VENT_RATE * VENT_RATE_MULTIPLIER, true);
         }
 
         public override string GetInspectString()
         {
-            string text = base.GetInspectString();
+            var text = base.GetInspectString();
             if (!FlickUtility.WantsToBeOn(this))
             {
-                if (!text.NullOrEmpty())
-                {
-                    text += "\n";
-                }
+                if (!text.NullOrEmpty()) text += "\n";
                 text += "RimMisc_VentClosed".Translate();
             }
 

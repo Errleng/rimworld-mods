@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using HarmonyLib;
 using Verse;
 
@@ -9,10 +7,10 @@ namespace RimMisc
 {
     public class RimMiscSettings : ModSettings
     {
-        public bool defaultDoUntil;
         public bool autoCloseLetters;
         public float autoCloseLettersSeconds;
         public List<CondenserItem> condenserItems = new List<CondenserItem>();
+        public bool defaultDoUntil;
 
         public override void ExposeData()
         {
@@ -25,16 +23,20 @@ namespace RimMisc
 
         public void ApplySettings()
         {
-            ThingDef condenserDef = DefDatabase<ThingDef>.GetNamed("VanometricCondenser");
+            foreach (var item in condenserItems.ToList())
+                if (item.ThingDef == null)
+                {
+                    condenserItems.Remove(item);
+                    Log.Warning("RimMisc_ItemDoesNotExist".Translate(item.thingDefName));
+                }
+
+            var condenserDef = DefDatabase<ThingDef>.GetNamed("VanometricCondenser");
             if (condenserDef != null)
             {
                 condenserDef.recipes = RimMisc.Settings.condenserItems.Select(item => item.CreateRecipe()).ToList();
                 condenserDef.recipes.ForEach(recipe =>
                 {
-                    if (DefDatabase<RecipeDef>.GetNamed(recipe.defName, false) == null)
-                    {
-                        DefDatabase<RecipeDef>.Add(recipe);
-                    }
+                    if (DefDatabase<RecipeDef>.GetNamed(recipe.defName, false) == null) DefDatabase<RecipeDef>.Add(recipe);
                 });
                 AccessTools.FieldRefAccess<ThingDef, List<RecipeDef>>(condenserDef, "allRecipesCached") = null;
             }

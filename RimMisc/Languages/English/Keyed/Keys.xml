@@ -13,4 +13,5 @@
   <RimMisc_CondenseJobString>Condensing {0}...</RimMisc_CondenseJobString>
   <RimMisc_WorkColumn>Work</RimMisc_WorkColumn>
   <RimMisc_YieldColumn>Yield</RimMisc_YieldColumn>
+  <RimMisc_ItemDoesNotExist>Removing condenser item {0} because it does not exist</RimMisc_ItemDoesNotExist>
 </LanguageData>

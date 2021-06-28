@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using RimWorld.Planet;
 using Verse;
-using Verse.AI;
 
 namespace RimMisc
 {
-    class RimMiscWorldComponent : WorldComponent
+    internal class RimMiscWorldComponent : WorldComponent
     {
         public static readonly int AUTO_CLOSE_LETTERS_CHECK_TICKS = GenTicks.SecondsToTicks(10);
 
@@ -26,14 +21,14 @@ namespace RimMisc
 
             if (RimMisc.Settings.autoCloseLetters)
             {
-                int currentTicks = Find.TickManager.TicksGame;
+                var currentTicks = Find.TickManager.TicksGame;
                 if (currentTicks % AUTO_CLOSE_LETTERS_CHECK_TICKS == 0)
                 {
-                    List<Letter> letters = Find.LetterStack.LettersListForReading;
+                    var letters = Find.LetterStack.LettersListForReading;
 
-                    for (int i = letters.Count - 1; i >= 0; i--)
+                    for (var i = letters.Count - 1; i >= 0; i--)
                     {
-                        Letter letter = letters[i];
+                        var letter = letters[i];
                         if (!letterStartTimes.ContainsKey(letter))
                         {
                             letterStartTimes.Add(letter, currentTicks);

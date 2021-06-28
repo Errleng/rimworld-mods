@@ -7,14 +7,14 @@ namespace RimMisc
     public class CondenserItem : IExposable
     {
         public string thingDefName;
-        public int work;
+        public float work;
         public int yield;
 
         public CondenserItem()
         {
         }
 
-        public CondenserItem(string thingDefName, int work, int yield)
+        public CondenserItem(string thingDefName, float work, int yield)
         {
             this.thingDefName = thingDefName;
             this.work = work;
@@ -64,7 +64,7 @@ namespace RimMisc
 
         public void CalculateWorkAmount()
         {
-            work = (int)(ThingDef.BaseMarketValue * yield);
+            work = ThingDef.BaseMarketValue * yield * GenTicks.TicksPerRealSecond;
         }
     }
 }

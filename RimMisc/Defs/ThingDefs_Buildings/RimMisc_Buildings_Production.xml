@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-  <ThingDef ParentName="BuildingBase">
+  <ThingDef ParentName="BenchBase">
     <defName>VanometricCondenser</defName>
     <label>vanometric condenser</label>
     <description>Archotech machine that converts energy into mass. Requires high level thought patterns from intelligent beings to make any noticeable progress.</description>
@@ -32,9 +32,6 @@
       </buildingTags>
       <destroySound>BuildingDestroyed_Metal_Big</destroySound>
     </building>
-    <thingCategories>
-      <li>BuildingsProduction</li>
-    </thingCategories>
     <costList>
       <Steel>5000</Steel>
       <ComponentIndustrial>50</ComponentIndustrial>
@@ -52,7 +49,7 @@
       <MaxHitPoints>1000</MaxHitPoints>
       <WorkToBuild>50000</WorkToBuild>
       <Flammability>0</Flammability>
-      <Beauty>-25</Beauty>
+      <Beauty>0</Beauty>
       <Mass>200</Mass>
     </statBases>
     <comps>
