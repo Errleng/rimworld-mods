@@ -42,6 +42,7 @@
   <RimSpawners_VanometricFabricatorInspectNextSpawn>\nFabrication complete in {0}.</RimSpawners_VanometricFabricatorInspectNextSpawn>
   <RimSpawners_VanometricFabricatorInspectDormant>\nAssembler is dormant until a threat is detected.</RimSpawners_VanometricFabricatorInspectDormant>
   <RimSpawners_VanometricFabricatorInspectPaused>\nAssembler is paused.</RimSpawners_VanometricFabricatorInspectPaused>
+  <RimSpawners_VanometricFabricatorInspectDebug>\nDEBUG: {0} ticks until the next spawn.</RimSpawners_VanometricFabricatorInspectDebug>
 
   <!-- VANOMETRIC FABRICATOR NOTIFICATIONS AND MESSAGES -->
   <RimSpawners_VanometricFabricatorSpawnMessage>{0} fabricated</RimSpawners_VanometricFabricatorSpawnMessage>

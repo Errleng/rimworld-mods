@@ -154,11 +154,11 @@ namespace RimSpawners
                 num++;
             }
             SpawnPawnsUntilPoints(Props.initialPawnsPoints);
-            CalculateNextPawnSpawnTick();
         }
 
         public void SpawnPawnsUntilPoints(float points)
         {
+            CalculateNextPawnSpawnTick();
             int num = 0;
             while (SpawnedPawnsPoints < points)
             {
@@ -174,7 +174,6 @@ namespace RimSpawners
                     break;
                 }
             }
-            CalculateNextPawnSpawnTick();
         }
 
         public void CalculateNextPawnSpawnTick()
@@ -206,17 +205,13 @@ namespace RimSpawners
 
         public void CalculateNextPawnSpawnTick(float delayTicks)
         {
-            //float existingPawnSlowdown = GenMath.LerpDouble(0f, 5f, 1f, 0.5f, (float)spawnedPawns.Count);
-            //if (Find.Storyteller.difficultyValues.enemyReproductionRateFactor > 0f)
-            //{
-            //    nextPawnSpawnTick = Find.TickManager.TicksGame + (int)(delayTicks / (existingPawnSlowdown * Find.Storyteller.difficultyValues.enemyReproductionRateFactor));
-            //    return;
-            //}
-
             if (SpawnAllAtOnce)
             {
-                int remainingSpawns = (int)Math.Ceiling(Props.maxSpawnedPawnsPoints / chosenKind.combatPower);
-                delayTicks *= remainingSpawns;
+                if (SpawnedPawnsPoints < Props.maxSpawnedPawnsPoints)
+                {
+                    int remainingSpawns = (int)Math.Ceiling((Props.maxSpawnedPawnsPoints - SpawnedPawnsPoints) / chosenKind.combatPower);
+                    delayTicks *= remainingSpawns;
+                }
             }
 
             delayTicks /= spawnUntilFullSpeedMultiplier;
@@ -572,7 +567,7 @@ namespace RimSpawners
             }
             if (parent.Spawned)
             {
-                if (Active && Find.TickManager.TicksGame >= nextPawnSpawnTick)
+                if (Active && Find.TickManager.TicksGame >= nextPawnSpawnTick && SpawnedPawnsPoints < Props.maxSpawnedPawnsPoints)
                 {
                     FilterOutUnspawnedPawns();
                     if (SpawnedPawnsPoints >= Props.maxSpawnedPawnsPoints)
@@ -586,12 +581,14 @@ namespace RimSpawners
                     {
                         SpawnPawnsUntilPoints(Props.maxSpawnedPawnsPoints);
                     }
-                    else if ((Props.maxSpawnedPawnsPoints < 0f || SpawnedPawnsPoints < Props.maxSpawnedPawnsPoints) && TrySpawnPawn(out pawn) && pawn.caller != null)
+                    else
                     {
-                        pawn.caller.DoCall();
+                        if ((Props.maxSpawnedPawnsPoints < 0f || SpawnedPawnsPoints < Props.maxSpawnedPawnsPoints) && TrySpawnPawn(out pawn) && pawn.caller != null)
+                        {
+                            pawn.caller.DoCall();
+                        }
+                        CalculateNextPawnSpawnTick();
                     }
-
-                    CalculateNextPawnSpawnTick();
                 }
             }
         }
@@ -655,6 +652,12 @@ namespace RimSpawners
             else if (Dormant)
             {
                 text += "RimSpawners_VanometricFabricatorInspectDormant".Translate();
+            }
+
+            if (Prefs.DevMode)
+            {
+                int ticksToNextSpawn = nextPawnSpawnTick - Find.TickManager.TicksGame;
+                text += "RimSpawners_VanometricFabricatorInspectDebug".Translate(ticksToNextSpawn);
             }
             return text;
         }
