@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 
 namespace RimSpawners
@@ -61,6 +62,15 @@ namespace RimSpawners
         public static string ToStringNullable(this object value)
         {
             return (value ?? "Null").ToString();
+        }
+
+        public static string ToStringNullable(this List<string> stringList)
+        {
+            if (stringList != null)
+            {
+                return string.Join(", ", stringList);
+            }
+            return "Null";
         }
     }
 }

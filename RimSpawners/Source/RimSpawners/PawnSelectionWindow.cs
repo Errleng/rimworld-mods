@@ -121,6 +121,16 @@ namespace RimSpawners
             }
             Widgets.Label(labelRect, "RimSpawners_PawnSelectionListEntry".Translate(label, pawnKind.combatPower));
 
+            TipSignal tip = new TipSignal("RimSpawners_PawnSelectionToolTip".Translate(
+                pawnKind.apparelTags.ToStringNullable(),
+                (pawnKind.apparelRequired?.Select(thing => thing.LabelCap.ToString()).ToList()).ToStringNullable(),
+                pawnKind.apparelDisallowTags.ToStringNullable(),
+                pawnKind.weaponTags.ToStringNullable(),
+                pawnKind.techHediffsTags.ToStringNullable()));
+            tip.delay = 0.1f;
+
+            TooltipHandler.TipRegion(labelRect, tip);
+
             // button for selecting a new pawn kind
             Rect selectButtonRect = new Rect(350, currentY, 100, PAWN_ROW_HEIGHT);
             if (Widgets.ButtonText(selectButtonRect, "RimSpawners_PawnSelectionButtonUnselected".Translate()))
