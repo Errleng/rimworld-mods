@@ -8,6 +8,7 @@ using System.Linq;
 using UnityEngine;
 using System;
 using System.Text;
+using RimWorld.QuestGen;
 
 namespace RimCheats
 {
@@ -32,6 +33,7 @@ namespace RimCheats
             listingStandard.CheckboxLabeled("Enable carrying capacity", ref settings.enableCarryingCapacity, "Carrying capacity multiplied by amount");
             listingStandard.CheckboxLabeled("Carrying capacity affects mass capacity?", ref settings.enableCarryingCapacityMass, "Mass capacity is multiplied by carrying capacity");
             listingStandard.CheckboxLabeled("Enable faster progress bar toils", ref settings.enableFasterProgressBars, "Multiply the speed that toils with progress bars are completed");
+            listingStandard.CheckboxLabeled("Instant cleaning", ref settings.instantCleaning, "All pawns clean filth instantly");
             listingStandard.Label($"Work multplier: {settings.workMultiplier}");
             settings.workMultiplier = listingStandard.Slider(settings.workMultiplier, 0f, 100f);
             listingStandard.Label($"Learning multplier: {settings.learnMultiplier}");
@@ -61,6 +63,7 @@ namespace RimCheats
         public bool enableCarryingCapacity;
         public bool enableCarryingCapacityMass;
         public bool enableFasterProgressBars;
+        public bool instantCleaning;
         public float workMultiplier;
         public float learnMultiplier;
         public float carryingCapacityMultiplier;
@@ -77,6 +80,7 @@ namespace RimCheats
             Scribe_Values.Look(ref enableCarryingCapacity, "enableCarryingCapacity");
             Scribe_Values.Look(ref enableCarryingCapacityMass, "enableCarryingCapacityMass");
             Scribe_Values.Look(ref enableFasterProgressBars, "enableFasterProgressBars");
+            Scribe_Values.Look(ref instantCleaning, "enableFasterProgressBars");
             Scribe_Values.Look(ref workMultiplier, "workMultiplier", 1f);
             Scribe_Values.Look(ref learnMultiplier, "learnMultiplier", 1f);
             Scribe_Values.Look(ref carryingCapacityMultiplier, "carryingCapacityMultiplier", 1f);
@@ -234,30 +238,50 @@ namespace RimCheats
             }
         }
 
-        [HarmonyPatch(typeof(Toils_General), "Wait")]
-        class Patch_Toils_General_Wait
+        //[HarmonyPatch(typeof(Toils_General), "Wait")]
+        //class Patch_Toils_General_Wait
+        //{
+        //    static void Postfix(ref Toil __result)
+        //    {
+        //        bool enableFasterProgressBars = settings.enableFasterProgressBars;
+        //        if (enableFasterProgressBars)
+        //        {
+        //            Toil toil = __result;
+        //            __result.initAction = delegate ()
+        //            {
+        //                if (toil.actor.IsColonistPlayerControlled)
+        //                {
+        //                    float progressBarSpeedMultiplier = settings.progressBarSpeedMultiplier;
+
+        //                    float oldDefaultDuration = toil.defaultDuration;
+        //                    float oldTicksLeftThisToil = toil.actor.jobs.curDriver.ticksLeftThisToil;
+        //                    toil.defaultDuration = (int)(toil.defaultDuration / progressBarSpeedMultiplier);
+        //                    //Log.Message($"Toil defaultDuration: {oldDefaultDuration} -> {toil.defaultDuration}");
+        //                    toil.actor.jobs.curDriver.ticksLeftThisToil = (int)(toil.actor.jobs.curDriver.ticksLeftThisToil / progressBarSpeedMultiplier);
+        //                    //Log.Message($"CurDriver ticksLeftThisToil: {oldTicksLeftThisToil} -> {toil.actor.jobs.curDriver.ticksLeftThisToil}");
+        //                }
+        //                toil.actor.pather.StopDead();
+        //            };
+        //        }
+        //    }
+        //}
+
+        [HarmonyPatch(typeof(Pawn_JobTracker), "JobTrackerTick")]
+        class Patch_Pawn_JobTracker_JobTrackerTick
         {
-            static void Postfix(ref Toil __result)
+            static void Postfix(Pawn_JobTracker __instance)
             {
                 bool enableFasterProgressBars = settings.enableFasterProgressBars;
                 if (enableFasterProgressBars)
                 {
-                    Toil toil = __result;
-                    __result.initAction = delegate ()
+                    if (__instance.curDriver != null)
                     {
-                        if (toil.actor.IsColonistPlayerControlled)
+                        int multiplier = Convert.ToInt32(settings.progressBarSpeedMultiplier);
+                        for (int i = 0; i < multiplier; i++)
                         {
-                            float progressBarSpeedMultiplier = settings.progressBarSpeedMultiplier;
-
-                            float oldDefaultDuration = toil.defaultDuration;
-                            float oldTicksLeftThisToil = toil.actor.jobs.curDriver.ticksLeftThisToil;
-                            toil.defaultDuration = (int)(toil.defaultDuration / progressBarSpeedMultiplier);
-                            //Log.Message($"Toil defaultDuration: {oldDefaultDuration} -> {toil.defaultDuration}");
-                            toil.actor.jobs.curDriver.ticksLeftThisToil = (int)(toil.actor.jobs.curDriver.ticksLeftThisToil / progressBarSpeedMultiplier);
-                            //Log.Message($"CurDriver ticksLeftThisToil: {oldTicksLeftThisToil} -> {toil.actor.jobs.curDriver.ticksLeftThisToil}");
+                            __instance.curDriver.DriverTick();
                         }
-                        toil.actor.pather.StopDead();
-                    };
+                    }
                 }
             }
         }
@@ -294,6 +318,25 @@ namespace RimCheats
             }
         }
 
+        [HarmonyPatch(typeof(JobDriver_CleanFilth), "Filth", MethodType.Getter)]
+        class PatchJobDriver_CleanFilthFilth
+        {
+            static void Postfix(JobDriver_CleanFilth __instance, ref Filth __result)
+            {
+                if (settings.instantCleaning)
+                {
+                    if (__result.thickness < 0)
+                    {
+                        __result.Destroy();
+                    }
+                    else
+                    {
+                        __result.thickness = 0;
+                    }
+                }
+            }
+        }
+
         // faster job speed
         //[HarmonyPatch(typeof(JobDriver), "DriverTick")]
         //class PatchJobDriverDriverTick
@@ -320,18 +363,6 @@ namespace RimCheats
         //                    __instance.ticksLeftThisToil = 0;
         //                }
         //            }
-        //        }
-        //    }
-        //}
-
-        //[HarmonyPatch(typeof(JobDriver_CleanFilth), "Filth", MethodType.Getter)]
-        //class PatchJobDriver_CleanFilthFilth
-        //{
-        //    static void Postfix(ref Filth __result)
-        //    {
-        //        if (!__result.Destroyed)
-        //        {
-        //            __result.Destroy(DestroyMode.Vanish);
         //        }
         //    }
         //}
