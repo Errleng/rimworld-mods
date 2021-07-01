@@ -185,10 +185,15 @@ namespace HighDensityHydroCustom
         public override string GetInspectString()
         {
             string text = base.GetInspectString();
-            text += $"\n{"HDHPlantCount".Translate()}: {innerContainer.Count}";
+            text += $"\n{"HDHPlantCount".Translate(innerContainer.Count)}";
             if (innerContainer.Count > 0)
             {
-                text += $"\n{"HDHHighestGrowth".Translate()}: {highestGrowth * 100}%";
+                Plant firstPlant = innerContainer[0] as Plant;
+                float fertilitySensitivity = firstPlant.def.plant.fertilitySensitivity;
+                float fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
+                float growthPerDay = 1f / (60000f * firstPlant.def.plant.growDays);
+                float growthPerDayAdjusted = fertilityGrowthRateFactor * growthPerDay * GenDate.TicksPerDay;
+                text += $"\n{"HDHHighestGrowth".Translate(highestGrowth * 100, (1 - highestGrowth) / growthPerDayAdjusted)}";
             }
             return text;
         }
