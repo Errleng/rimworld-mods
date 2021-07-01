@@ -122,10 +122,10 @@ namespace RimSpawners
             Widgets.Label(labelRect, "RimSpawners_PawnSelectionListEntry".Translate(label, pawnKind.combatPower));
 
             TipSignal tip = new TipSignal("RimSpawners_PawnSelectionToolTip".Translate(
+                pawnKind.weaponTags.ToStringNullable(),
                 pawnKind.apparelTags.ToStringNullable(),
                 (pawnKind.apparelRequired?.Select(thing => thing.LabelCap.ToString()).ToList()).ToStringNullable(),
                 pawnKind.apparelDisallowTags.ToStringNullable(),
-                pawnKind.weaponTags.ToStringNullable(),
                 pawnKind.techHediffsTags.ToStringNullable()));
             tip.delay = 0.1f;
 
