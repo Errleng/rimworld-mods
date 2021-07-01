@@ -80,7 +80,7 @@ namespace RimCheats
             Scribe_Values.Look(ref enableCarryingCapacity, "enableCarryingCapacity");
             Scribe_Values.Look(ref enableCarryingCapacityMass, "enableCarryingCapacityMass");
             Scribe_Values.Look(ref enableFasterProgressBars, "enableFasterProgressBars");
-            Scribe_Values.Look(ref instantCleaning, "enableFasterProgressBars");
+            Scribe_Values.Look(ref instantCleaning, "instantCleaning");
             Scribe_Values.Look(ref workMultiplier, "workMultiplier", 1f);
             Scribe_Values.Look(ref learnMultiplier, "learnMultiplier", 1f);
             Scribe_Values.Look(ref carryingCapacityMultiplier, "carryingCapacityMultiplier", 1f);
@@ -319,9 +319,9 @@ namespace RimCheats
         }
 
         [HarmonyPatch(typeof(JobDriver_CleanFilth), "Filth", MethodType.Getter)]
-        class PatchJobDriver_CleanFilthFilth
+        class Patch_JobDriver_CleanFilth_Filth
         {
-            static void Postfix(JobDriver_CleanFilth __instance, ref Filth __result)
+            static void Postfix(ref Filth __result)
             {
                 if (settings.instantCleaning)
                 {
