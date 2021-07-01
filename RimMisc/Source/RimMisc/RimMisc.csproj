@@ -62,6 +62,7 @@
     <Compile Include="RimMisc.cs" />
     <Compile Include="RimMiscWorldComponent.cs" />
     <Compile Include="RimMiscSettings.cs" />
+    <Compile Include="MainTabWindow_WealthTab.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
