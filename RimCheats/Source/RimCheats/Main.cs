@@ -48,7 +48,7 @@ namespace RimCheats
 
         public override string SettingsCategory()
         {
-            return "RimCheats".Translate();
+            return "RimCheats";
         }
     }
 

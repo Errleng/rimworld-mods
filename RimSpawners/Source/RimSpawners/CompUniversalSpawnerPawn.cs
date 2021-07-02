@@ -567,13 +567,13 @@ namespace RimSpawners
             }
             if (parent.Spawned)
             {
+                if (SpawnedPawnsPoints >= Props.maxSpawnedPawnsPoints)
+                {
+                    spawnUntilFullSpeedMultiplier = 1f;
+                }
                 if (Active && Find.TickManager.TicksGame >= nextPawnSpawnTick && SpawnedPawnsPoints < Props.maxSpawnedPawnsPoints)
                 {
                     FilterOutUnspawnedPawns();
-                    if (SpawnedPawnsPoints >= Props.maxSpawnedPawnsPoints)
-                    {
-                        spawnUntilFullSpeedMultiplier = 1f;
-                    }
 
                     Pawn pawn;
 
@@ -673,6 +673,7 @@ namespace RimSpawners
             Scribe_Values.Look(ref dormant, "dormant", false, false);
             Scribe_Values.Look(ref paused, "paused", false, false);
             Scribe_Values.Look(ref spawnInDropPods, "spawnInDropPods", false, false);
+            Scribe_Values.Look(ref spawnAllAtOnce, "spawnAllAtOnce", false, false);
             Scribe_Defs.Look(ref chosenKind, "chosenKind");
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {

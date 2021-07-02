@@ -53,7 +53,7 @@ namespace RimSpawners
 
         public override string SettingsCategory()
         {
-            return "RimSpawners".Translate();
+            return "RimSpawners";
         }
     }
 
