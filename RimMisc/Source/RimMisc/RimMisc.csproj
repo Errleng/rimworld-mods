@@ -70,8 +70,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../Assemblies"
-copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc\Assemblies"
-robocopy /mir "$(SolutionDir)../Defs" "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc/Defs"
-robocopy /mir "$(SolutionDir)../Languages" "C:\Program Files (x86)\Steam\steamapps\workshop\content\294100\RimMisc/Languages"</PostBuildEvent>
+copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RimMisc/Assemblies"
+robocopy /mir "$(SolutionDir)../Defs" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RimMisc/Defs"
+robocopy /mir "$(SolutionDir)../Languages" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RimMisc/Languages"</PostBuildEvent>
   </PropertyGroup>
 </Project>

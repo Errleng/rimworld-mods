@@ -89,7 +89,7 @@ namespace RimMisc
 
         public override string SettingsCategory()
         {
-            return "RimMisc".Translate();
+            return "RimMisc";
         }
 
         private void DrawSelectedCondenserItems(Rect scrollSectionRect)
