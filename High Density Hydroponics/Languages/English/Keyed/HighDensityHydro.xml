@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
+  <HDHFertility>Fertility: {0}%</HDHFertility>
   <HDHPlantCount>Occupied Plant Bays: {0}</HDHPlantCount>
   <HDHHighestGrowth>Growth: {0}%, ETA: {1} days</HDHHighestGrowth>
+  <HDHSettings_FertilityColumn>Fertility</HDHSettings_FertilityColumn>
+  <HDHSettings_CapacityColumn>Capacity</HDHSettings_CapacityColumn>
+  <HDHSettings_SmallBay>Small hydroponics bay</HDHSettings_SmallBay>
+  <HDHSettings_MediumBay>Medium hydroponics bay</HDHSettings_MediumBay>
+  <HDHSettings_LargeBay>Large hydroponics bay</HDHSettings_LargeBay>
 </LanguageData>
