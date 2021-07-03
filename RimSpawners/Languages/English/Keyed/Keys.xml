@@ -8,6 +8,7 @@
   <RimSpawners_SettingsFixedSpawnTimeSeconds>Fixed spawn interval seconds per spawn: {0}</RimSpawners_SettingsFixedSpawnTimeSeconds>
   <RimSpawners_SettingsCachePawns>Cache spawned pawns for each spawner until chosen pawn kind changes</RimSpawners_SettingsCachePawns>
   <RimSpawners_SettingsUseAllyFaction>Assign spawned pawns to a custom ally faction instead of the player faction</RimSpawners_SettingsUseAllyFaction>
+  <RimSpawners_SettingsMaxSkills>Spawned pawns have maxed skills</RimSpawners_SettingsMaxSkills>
   <RimSpawners_SettingsDisableNeeds>Disable spawned pawn needs</RimSpawners_SettingsDisableNeeds>
   <RimSpawners_SettingsDisableCorpses>Disable spawned pawn corpses and dropped items</RimSpawners_SettingsDisableCorpses>
   <RimSpawners_SettingsSpawnOnThreats>Spawn pawns only when threats are detected</RimSpawners_SettingsSpawnOnThreats>

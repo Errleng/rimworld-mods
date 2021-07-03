@@ -276,9 +276,24 @@ namespace RimSpawners
             pawn = GenerateNewPawn();
 
             bool spawningHumanlike = chosenKind.RaceProps.Humanlike;
-            if (spawningHumanlike && pawn.Faction.IsPlayer)
+            if (spawningHumanlike)
             {
-                pawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
+                if (pawn.Faction.IsPlayer)
+                {
+                    pawn.playerSettings.hostilityResponse = HostilityResponseMode.Attack;
+                }
+
+                if (Settings.maxSkills)
+                {
+                    foreach (var skillRecord in pawn.skills.skills)
+                    {
+                        if (!skillRecord.TotallyDisabled)
+                        {
+                            skillRecord.Level = SkillRecord.MaxLevel;
+                            skillRecord.passion = Passion.Major;
+                        }
+                    }
+                }
             }
 
             AddCustomCompToPawn(pawn);
@@ -309,7 +324,7 @@ namespace RimSpawners
                     dropCenter = DropCellFinder.RandomDropSpot(parent.Map);
                 }
 
-                DropPodUtility.DropThingsNear(dropCenter, parent.Map, Gen.YieldSingle<Thing>(pawn), 250,
+                DropPodUtility.DropThingsNear(dropCenter, parent.Map, Gen.YieldSingle<Thing>(pawn), 60,
                     false, false, false);
                 dropPodSuccess = true;
             }

@@ -45,6 +45,10 @@ namespace RimSpawners
                         {
                             //cusp.SpawnPawnsUntilPoints(Settings.maxSpawnerPoints);
                             cusp.SpawnUntilFullSpeedMultiplier = Settings.spawnOnThreatSpeedMultiplier;
+                            if (cusp.nextPawnSpawnTick > Find.TickManager.TicksGame)
+                            {
+                                cusp.CalculateNextPawnSpawnTick();
+                            }
                         }
                         ThreatActive = true;
                         cusp.Dormant = false;
