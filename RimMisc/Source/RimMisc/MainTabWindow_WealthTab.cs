@@ -263,7 +263,7 @@ namespace RimMisc
 
                 GUI.BeginGroup(inRect);
 
-                var rowRect = new Rect(MARGIN_SIZE, MARGIN_SIZE, WINDOW_WIDTH, LABEL_HEIGHT);
+                var rowRect = new Rect(MARGIN_SIZE, MARGIN_SIZE, WINDOW_WIDTH - MARGIN_SIZE, LABEL_HEIGHT);
                 Text.Font = GameFont.Medium;
                 Widgets.Label(rowRect, "RimMisc_WealthTab_Title".Translate(wealthWatcher.WealthItems, wealthWatcher.WealthBuildings, wealthWatcher.WealthFloorsOnly, wealthWatcher.WealthPawns, wealthWatcher.WealthTotal));
                 rowRect.y += LABEL_HEIGHT;
@@ -289,8 +289,8 @@ namespace RimMisc
                     lastUpdateTick = Find.TickManager.TicksGame;
                 }
 
-                var outRect = new Rect(0, rowRect.y, inRect.width, inRect.height - rowRect.y);
-                var viewRect = new Rect(0, 0, inRect.width, scrollHeight);
+                var outRect = new Rect(0, rowRect.y, inRect.width - MARGIN_SIZE, inRect.height - rowRect.y);
+                var viewRect = new Rect(0, 0, inRect.width - MARGIN_SIZE, scrollHeight);
                 Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
 
                 Text.Font = GameFont.Small;

@@ -15,6 +15,6 @@
   <RimMisc_YieldColumn>Yield</RimMisc_YieldColumn>
   <RimMisc_ItemDoesNotExist>Removing condenser item {0} because it does not exist</RimMisc_ItemDoesNotExist>
   <RimMisc_WealthTab_Title>{0} (Items) + {1} (Buildings, {2} Floors) + {3} (Creatures) = {4}</RimMisc_WealthTab_Title>
-  <RimMisc_WealthTab_ItemRow>{0}: {1} x ${2} = {3}</RimMisc_WealthTab_ItemRow>
+  <RimMisc_WealthTab_ItemRow>{0}: {1} x ${2} = ${3}</RimMisc_WealthTab_ItemRow>
   <RimMisc_WealthTab_WealthTypeButton>Displaying wealth for {0}</RimMisc_WealthTab_WealthTypeButton>
 </LanguageData>
