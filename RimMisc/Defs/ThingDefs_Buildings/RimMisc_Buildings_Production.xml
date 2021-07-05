@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <ThingDef ParentName="BenchBase">
     <defName>VanometricCondenser</defName>
@@ -7,7 +7,7 @@
     <thingClass>Building_WorkTable</thingClass>
     <graphicData>
       <graphicClass>Graphic_Single</graphicClass>
-      <texPath>Things/Building/Production/Defoliator</texPath>
+      <texPath>Things/Building/Production/VanometricCondenser</texPath>
       <drawSize>(3,3)</drawSize>
     </graphicData>
     <size>(3,3)</size>
@@ -53,8 +53,8 @@
       <Mass>200</Mass>
     </statBases>
     <comps>
-      <li Class="CompProperties_Forbiddable"/>
-      <li Class="CompProperties_Flickable"/>
+      <li Class="CompProperties_Forbiddable" />
+      <li Class="CompProperties_Flickable" />
       <li Class="CompProperties_Power">
         <compClass>CompPowerTrader</compClass>
         <basePowerConsumption>5000</basePowerConsumption>

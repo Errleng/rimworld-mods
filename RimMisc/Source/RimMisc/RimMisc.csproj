@@ -57,9 +57,14 @@
     <Compile Include="Building_SuperVent.cs" />
     <Compile Include="Building_TempChanger.cs" />
     <Compile Include="CondenserItem.cs" />
-    <Compile Include="MakeNewBillPatch.cs" />
+    <Compile Include="Designator_MeleeAttack.cs" />
+    <Compile Include="CompMeleeAttackable.cs" />
+    <Compile Include="Patch_MakeNewBill.cs" />
+    <Compile Include="Patch_JobDriver_TakeInventory_MakeNewToils.cs" />
+    <Compile Include="Patch_Toils_Construct_UninstallIfMinifiable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RimMisc.cs" />
+    <Compile Include="RimMiscDefOf.cs" />
     <Compile Include="RimMiscWorldComponent.cs" />
     <Compile Include="RimMiscSettings.cs" />
     <Compile Include="MainTabWindow_WealthTab.cs" />
@@ -70,8 +75,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../Assemblies"
-copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RimMisc/Assemblies"
-robocopy /mir "$(SolutionDir)../Defs" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RimMisc/Defs"
-robocopy /mir "$(SolutionDir)../Languages" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RimMisc/Languages"</PostBuildEvent>
+(robocopy /mir "$(SolutionDir)../" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RimMisc" /xd "source") ^&amp; IF %25ERRORLEVEL%25 LEQ 1 exit 0</PostBuildEvent>
   </PropertyGroup>
 </Project>

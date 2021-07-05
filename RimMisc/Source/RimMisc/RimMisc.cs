@@ -13,6 +13,16 @@ namespace RimMisc
         static Loader()
         {
             RimMisc.Settings.ApplySettings();
+            AddComps();
+        }
+
+        public static void AddComps()
+        {
+            var thingsWithComps = DefDatabase<ThingDef>.AllDefs.Where(def => typeof(ThingWithComps).IsAssignableFrom(def.thingClass) && def.destroyable).ToList();
+            foreach (var thingDef in thingsWithComps)
+            {
+                thingDef.comps.Add(new CompProperties(typeof(CompMeleeAttackable)));
+            }
         }
     }
 
@@ -29,7 +39,7 @@ namespace RimMisc
         private static readonly float MIN_AUTOCLOSE_SECONDS = RimMiscWorldComponent.AUTO_CLOSE_LETTERS_CHECK_TICKS.TicksToSeconds();
         private static readonly float MAX_AUTOCLOSE_SECONDS = 600;
         private static readonly int MIN_WORK = 1;
-        private static readonly int MAX_WORK = 10000;
+        private static readonly int MAX_WORK = 1000000;
         private static readonly int DEFAULT_WORK = 6000;
         private static readonly int MIN_YIELD = 1;
         private static readonly int MAX_YIELD = 1000;
@@ -72,6 +82,7 @@ namespace RimMisc
 
             settingsSection.CheckboxLabeled("RimMisc_DefaultDoUntil".Translate(), ref Settings.defaultDoUntil);
             settingsSection.CheckboxLabeled("RimMisc_AutoCloseLetters".Translate(), ref Settings.autoCloseLetters);
+            settingsSection.CheckboxLabeled("RimMisc_DisableEnemyUninstall".Translate(), ref Settings.disableEnemyUninstall);
 
             settingsSection.Label("RimMisc_AutoCloseLettersSeconds".Translate(Settings.autoCloseLettersSeconds));
             Settings.autoCloseLettersSeconds = settingsSection.Slider(Settings.autoCloseLettersSeconds, MIN_AUTOCLOSE_SECONDS, MAX_AUTOCLOSE_SECONDS);

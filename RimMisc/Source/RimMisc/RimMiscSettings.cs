@@ -9,14 +9,16 @@ namespace RimMisc
     {
         public bool autoCloseLetters;
         public float autoCloseLettersSeconds;
-        public List<CondenserItem> condenserItems = new List<CondenserItem>();
         public bool defaultDoUntil;
+        public bool disableEnemyUninstall;
+        public List<CondenserItem> condenserItems = new List<CondenserItem>();
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref defaultDoUntil, "defaultDoUntil");
             Scribe_Values.Look(ref autoCloseLetters, "autoCloseLetters");
             Scribe_Values.Look(ref autoCloseLettersSeconds, "autoCloseLettersSeconds", 10f);
+            Scribe_Values.Look(ref disableEnemyUninstall, "disableEnemyUninstall", false);
             Scribe_Collections.Look(ref condenserItems, "condenserItems", LookMode.Deep);
             base.ExposeData();
         }

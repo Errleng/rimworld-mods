@@ -4,7 +4,7 @@ using RimWorld;
 namespace RimMisc
 {
     [HarmonyPatch(typeof(BillUtility), "MakeNewBill")]
-    internal class MakeNewBillPatch
+    class Patch_MakeNewBill
     {
         private static void Postfix(ref Bill __result)
         {

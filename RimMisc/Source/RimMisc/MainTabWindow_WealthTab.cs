@@ -7,7 +7,6 @@ using Verse;
 
 namespace RimMisc
 {
-    //[StaticConstructorOnStartup]
     internal class MainTabWindow_WealthTab : MainTabWindow
     {
         private static readonly double FLOATING_POINT_TOLERANCE = 0.01;

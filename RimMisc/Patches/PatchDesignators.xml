@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	<Operation Class="PatchOperationSequence">
+		<operations>
+			<!-- 
+			Inserts the Allow Tool designators into the Orders category after the stock Designator_Claim
+			(or whatever designator is found in the 13th position).
+			We could append them at the end, but people expect their Allow Tool buttons to be in a certain position.
+			Items must be specified in reverse order.
+			-->
+			<li Class="PatchOperationInsert">
+				<order>Append</order>
+				<xpath>/Defs/DesignationCategoryDef[defName="Orders"]/specialDesignatorClasses/li</xpath>
+				<value>
+					<li>RimMisc.Designator_MeleeAttack</li>
+				</value>
+			</li>
+		</operations>
+	</Operation>
+</Patch>
