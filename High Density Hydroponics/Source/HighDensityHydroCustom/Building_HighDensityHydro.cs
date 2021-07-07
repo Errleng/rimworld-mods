@@ -112,7 +112,7 @@ namespace HighDensityHydroCustom
                     var firstPlant = innerContainer[0] as Plant;
                     var fertilitySensitivity = firstPlant.def.plant.fertilitySensitivity;
                     var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
-                    var growthPerDay = 1f / (60000f * firstPlant.def.plant.growDays);
+                    var growthPerDay = 1f / (GenDate.TicksPerDay * firstPlant.def.plant.growDays);
                     var growthAmount = fertilityGrowthRateFactor * growthPerDay * updateInterval;
                     firstPlant.Growth += growthAmount;
                     highestGrowth = firstPlant.Growth;
@@ -121,6 +121,7 @@ namespace HighDensityHydroCustom
 
                 if (bayStage == BayStage.Harvest)
                 {
+                    highestGrowth = 1;
                     var numCells = this.OccupiedRect().Width * this.OccupiedRect().Height;
                     foreach (var thing in innerContainer)
                     {
@@ -186,16 +187,17 @@ namespace HighDensityHydroCustom
         public override string GetInspectString()
         {
             var text = base.GetInspectString();
-            text += $"\n{"HDHPlantCount".Translate(innerContainer.Count)}";
             text += $"\n{"HDHFertility".Translate(Math.Round(fertility * 100), 2)}";
             if (innerContainer.Count > 0)
             {
                 var firstPlant = innerContainer[0] as Plant;
                 var fertilitySensitivity = firstPlant.def.plant.fertilitySensitivity;
                 var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
-                var growthPerDay = 1f / (60000f * firstPlant.def.plant.growDays);
+                var growthPerDay = 1f / (GenDate.TicksPerDay * firstPlant.def.plant.growDays);
                 var growthPerDayAdjusted = fertilityGrowthRateFactor * growthPerDay * GenDate.TicksPerDay;
-                text += $"\n{"HDHHighestGrowth".Translate(Math.Round(highestGrowth * 100, 2), Math.Round((1 - highestGrowth) / growthPerDayAdjusted), 2)}";
+                var daysToMature = (1 - highestGrowth) / growthPerDayAdjusted;
+                text += $"\n{"HDHPlantCount".Translate(innerContainer.Count, capacity)}";
+                text += $"\n{"HDHHighestGrowth".Translate(Math.Round(highestGrowth * 100, 2), Math.Round(daysToMature, 2))}";
             }
 
             return text;
@@ -257,6 +259,8 @@ namespace HighDensityHydroCustom
             {
                 capacity = modExtension.capacity;
                 fertility = modExtension.fertility;
+                PowerComp.Props.basePowerConsumption = modExtension.power;
+                PowerComp.SetUpPowerVars();
             }
         }
 

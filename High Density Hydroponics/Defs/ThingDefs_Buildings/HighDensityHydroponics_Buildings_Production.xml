@@ -56,7 +56,6 @@
       <li Class="CompProperties_Forbiddable" />
       <li Class="CompProperties_Power">
         <compClass>CompPowerTrader</compClass>
-        <basePowerConsumption>500</basePowerConsumption>
       </li>
       <li Class="CompProperties_Flickable" />
     </comps>
@@ -64,6 +63,7 @@
       <li Class="HighDensityHydroCustom.HydroStatsExtension">
         <fertility>1.0</fertility>
         <capacity>32</capacity>
+        <power>280</power>
       </li>
     </modExtensions>
   </ThingDef>
@@ -91,14 +91,13 @@
       <li Class="CompProperties_Forbiddable" />
       <li Class="CompProperties_Power">
         <compClass>CompPowerTrader</compClass>
-        <basePowerConsumption>1500</basePowerConsumption>
       </li>
       <li Class="CompProperties_Flickable" />
     </comps>
     <modExtensions>
       <li Class="HighDensityHydroCustom.HydroStatsExtension">
         <fertility>1.0</fertility>
-        <capacity>128</capacity>
+        <capacity>1120</capacity>
       </li>
     </modExtensions>
     <researchPrerequisites>
@@ -131,14 +130,13 @@
       <li Class="CompProperties_Forbiddable" />
       <li Class="CompProperties_Power">
         <compClass>CompPowerTrader</compClass>
-        <basePowerConsumption>3000</basePowerConsumption>
       </li>
       <li Class="CompProperties_Flickable" />
     </comps>
     <modExtensions>
       <li Class="HighDensityHydroCustom.HydroStatsExtension">
         <fertility>1.0</fertility>
-        <capacity>256</capacity>
+        <capacity>4480</capacity>
       </li>
     </modExtensions>
     <researchPrerequisites>
