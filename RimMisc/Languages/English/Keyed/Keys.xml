@@ -2,6 +2,7 @@
 <LanguageData>
   <RimMisc_VentClosed>Closed</RimMisc_VentClosed>
   <RimMisc_DefaultDoUntil>Use "Do Until X" as default setting for bills</RimMisc_DefaultDoUntil>
+  <RimMisc_DefaultIngredientRadius>Set default ingredient radius to: {0}</RimMisc_DefaultIngredientRadius>
   <RimMisc_AutoCloseLetters>Automatically close letters after a set time</RimMisc_AutoCloseLetters>
   <RimMisc_AutoCloseLettersSeconds>How many seconds before a letter is closed: {0}</RimMisc_AutoCloseLettersSeconds>
   <RimMisc_DisableEnemyUninstall>Prevent enemy from uninstalling buildings</RimMisc_DisableEnemyUninstall>

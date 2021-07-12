@@ -8,12 +8,19 @@ namespace RimMisc
     {
         private static void Postfix(ref Bill __result)
         {
-            if (RimMisc.Settings.defaultDoUntil)
-                if (__result is Bill_Production billProduction && billProduction.recipe.WorkerCounter.CanCountProducts(billProduction))
+            if (__result is Bill_Production billProduction)
+            {
+                if (RimMisc.Settings.defaultDoUntil && billProduction.recipe.WorkerCounter.CanCountProducts(billProduction))
                 {
                     billProduction.repeatMode = BillRepeatModeDefOf.TargetCount;
                     billProduction.targetCount = 1;
                 }
+
+                if (RimMisc.Settings.defaultIngredientRadius > 0)
+                {
+                    billProduction.ingredientSearchRadius = RimMisc.Settings.defaultIngredientRadius;
+                }
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -62,7 +63,7 @@ namespace RimMisc
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            var settingsRect = inRect.TopPart(0.25f).Rounded();
+            var settingsRect = inRect.TopPart(0.3f).Rounded();
             var condenserItemsRect = inRect.BottomPart(0.5f).Rounded();
             var condenserItemsSelectRect = inRect.BottomPart(0.3f).Rounded();
             var condenserItemsScrollRect = new Rect(condenserItemsRect)
@@ -86,6 +87,8 @@ namespace RimMisc
 
             settingsSection.Label("RimMisc_AutoCloseLettersSeconds".Translate(Settings.autoCloseLettersSeconds));
             Settings.autoCloseLettersSeconds = settingsSection.Slider(Settings.autoCloseLettersSeconds, MIN_AUTOCLOSE_SECONDS, MAX_AUTOCLOSE_SECONDS);
+            settingsSection.Label("RimMisc_DefaultIngredientRadius".Translate(Settings.defaultIngredientRadius));
+            Settings.defaultIngredientRadius = settingsSection.Slider(Settings.defaultIngredientRadius, 0, Bill.MaxIngredientSearchRadius);
 
             settingsSection.EndSection(settingsSection);
             listingStandard.End();

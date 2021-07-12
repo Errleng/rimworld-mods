@@ -11,11 +11,13 @@ namespace RimMisc
         public float autoCloseLettersSeconds;
         public bool defaultDoUntil;
         public bool disableEnemyUninstall;
+        public float defaultIngredientRadius;
         public List<CondenserItem> condenserItems = new List<CondenserItem>();
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref defaultDoUntil, "defaultDoUntil");
+            Scribe_Values.Look(ref defaultIngredientRadius, "defaultIngredientRadius");
             Scribe_Values.Look(ref autoCloseLetters, "autoCloseLetters");
             Scribe_Values.Look(ref autoCloseLettersSeconds, "autoCloseLettersSeconds", 10f);
             Scribe_Values.Look(ref disableEnemyUninstall, "disableEnemyUninstall", false);

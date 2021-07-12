@@ -92,7 +92,7 @@
     </placeWorkers>
     <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
     <building>
-      <canPlaceOverWall>false</canPlaceOverWall>
+      <canPlaceOverWall>true</canPlaceOverWall>
       <isEdifice>false</isEdifice>
     </building>
     <researchPrerequisites>
