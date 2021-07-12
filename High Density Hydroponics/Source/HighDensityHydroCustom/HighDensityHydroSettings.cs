@@ -70,17 +70,19 @@ namespace HighDensityHydroCustom
             }
 
             var maps = Find.Maps;
-            foreach (var map in maps)
+            if (maps != null)
             {
-                var buildings = map.listerThings.ThingsInGroup(ThingRequestGroup.BuildingArtificial);
-                foreach (var building in buildings)
+                foreach (var map in maps)
                 {
-                    if (building.def.thingClass == typeof(Building_HighDensityHydro))
+                    var buildings = map.listerThings.ThingsInGroup(ThingRequestGroup.BuildingArtificial);
+                    foreach (var building in buildings)
                     {
-                        var hydroBay = building as Building_HighDensityHydro;
-                        if (hydroBay != null)
+                        if (building.def.thingClass == typeof(Building_HighDensityHydro))
                         {
-                            hydroBay.loadConfig();
+                            if (building is Building_HighDensityHydro hydroBay)
+                            {
+                                hydroBay.loadConfig();
+                            }
                         }
                     }
                 }

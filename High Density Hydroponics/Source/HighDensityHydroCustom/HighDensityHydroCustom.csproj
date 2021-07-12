@@ -62,8 +62,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../Assemblies"
-copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\HighDensityHydroCustom/Assemblies"
-robocopy /mir "$(SolutionDir)../Defs" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\HighDensityHydroCustom/Defs"
-robocopy /mir "$(SolutionDir)../Languages" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\HighDensityHydroCustom/Languages"</PostBuildEvent>
+(robocopy /mir "$(SolutionDir)../" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\HighDensityHydroCustom" /xd "source") ^&amp; IF %25ERRORLEVEL%25 LEQ 1 exit 0</PostBuildEvent>
   </PropertyGroup>
 </Project>

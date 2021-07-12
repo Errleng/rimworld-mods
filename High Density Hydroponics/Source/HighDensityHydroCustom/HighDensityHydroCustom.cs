@@ -8,6 +8,15 @@ using Verse;
 
 namespace HighDensityHydroCustom
 {
+    [StaticConstructorOnStartup]
+    class Loader
+    {
+        static Loader()
+        {
+            HighDensityHydroCustom.Settings.ApplySettings();
+        }
+    }
+
     class HighDensityHydroCustom : Mod
     {
         private static readonly float RECT_WIDTH_MARGIN = 10f;
@@ -16,7 +25,7 @@ namespace HighDensityHydroCustom
         private static readonly float LABEL_WIDTH = 200f;
         private static readonly float TEXT_FIELD_WIDTH = 60f;
 
-        public readonly HighDensityHydroSettings Settings;
+        public static HighDensityHydroSettings Settings;
 
         public HighDensityHydroCustom(ModContentPack content) : base(content)
         {
