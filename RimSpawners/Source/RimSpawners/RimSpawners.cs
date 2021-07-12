@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace RimSpawners
 {
-    class RimSpawners : Mod
+    internal class RimSpawners : Mod
     {
         private readonly RimSpawnersSettings settings;
+        public static FactionDef spawnedPawnFactionDef;
+        public static Faction spawnedPawnFaction;
+
         public RimSpawners(ModContentPack content) : base(content)
         {
             settings = GetSettings<RimSpawnersSettings>();
@@ -14,7 +18,7 @@ namespace RimSpawners
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            Listing_Standard listingStandard = new Listing_Standard();
+            var listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
 
             listingStandard.Label("RimSpawners_SettingsMaximumPoints".Translate(settings.maxSpawnerPoints));
@@ -25,10 +29,12 @@ namespace RimSpawners
             {
                 settings.spawnTime = SpawnTimeSetting.Scaled;
             }
+
             if (listingStandard.RadioButton_NewTemp("RimSpawners_SettingsFixedSpawnTimeButton".Translate(), settings.spawnTime.Equals(SpawnTimeSetting.Fixed)))
             {
                 settings.spawnTime = SpawnTimeSetting.Fixed;
             }
+
             listingStandard.GapLine();
 
             listingStandard.Label("RimSpawners_SettingsScaledSpawnTimePointsPerSecond".Translate(settings.spawnTimePointsPerSecond));
@@ -41,6 +47,7 @@ namespace RimSpawners
             listingStandard.CheckboxLabeled("RimSpawners_SettingsMaxSkills".Translate(), ref settings.maxSkills);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDisableNeeds".Translate(), ref settings.disableNeeds);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDisableCorpses".Translate(), ref settings.disableCorpses);
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsDoNotAttackFleeing".Translate(), ref settings.doNotAttackFleeing);
 
             listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnOnThreats".Translate(), ref settings.spawnOnlyOnThreat);
             listingStandard.Label("RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier".Translate(settings.spawnOnThreatSpeedMultiplier));
@@ -71,6 +78,7 @@ namespace RimSpawners
             {
                 return string.Join(", ", stringList);
             }
+
             return "Null";
         }
     }

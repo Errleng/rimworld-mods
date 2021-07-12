@@ -6,11 +6,11 @@ using Verse;
 
 namespace RimSpawners
 {
-    class VanometricFabricator : Building
+    internal class VanometricFabricator : Building
     {
-        static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
-        static readonly int THREAT_CHECK_TICKS = GenTicks.SecondsToTicks(10);
-        static readonly int THREAT_OVER_DESTROY_PAWNS_TICKS = GenTicks.SecondsToTicks(300);
+        private static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
+        private static readonly int THREAT_CHECK_TICKS = GenTicks.SecondsToTicks(5);
+        private static readonly int THREAT_OVER_DESTROY_PAWNS_TICKS = GenTicks.SecondsToTicks(300);
 
         private CompVanometricFabricatorPawn cusp;
 
@@ -32,8 +32,8 @@ namespace RimSpawners
             {
                 if (Settings.spawnOnlyOnThreat)
                 {
-                    bool isThreatOnMap = ParentHolder is Map &&
-                        GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction)
+                    var isThreatOnMap = ParentHolder is Map &&
+                                        GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction)
                         //|| Map.listerThings.ThingsOfDef(ThingDefOf.Tornado).Any()
                         //|| Map.listerThings.ThingsOfDef(ThingDefOf.DropPodIncoming).Any()
                         ;
@@ -50,6 +50,7 @@ namespace RimSpawners
                                 cusp.CalculateNextPawnSpawnTick();
                             }
                         }
+
                         ThreatActive = true;
                         cusp.Dormant = false;
                     }
@@ -64,7 +65,6 @@ namespace RimSpawners
                     ThreatActive = false;
                     cusp.Dormant = false;
                 }
-
             }
 
             if (this.IsHashIntervalTick(THREAT_OVER_DESTROY_PAWNS_TICKS))
@@ -84,22 +84,20 @@ namespace RimSpawners
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
-            foreach (Gizmo baseGizmo in base.GetGizmos())
+            foreach (var baseGizmo in base.GetGizmos())
             {
                 yield return baseGizmo;
             }
-            yield return new Command_Toggle()
+
+            yield return new Command_Toggle
             {
                 defaultLabel = "RimSpawners_Pause".Translate(),
                 defaultDesc = "RimSpawners_PauseDesc".Translate(),
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/Halt"),
                 isActive = () => cusp.Paused,
-                toggleAction = () =>
-                {
-                    cusp.Paused = !cusp.Paused;
-                }
+                toggleAction = () => { cusp.Paused = !cusp.Paused; }
             };
-            yield return new Command_Toggle()
+            yield return new Command_Toggle
             {
                 defaultLabel = "RimSpawners_DropPodToggle".Translate(),
                 defaultDesc = "RimSpawners_DropPodToggleDesc".Translate(),
@@ -114,51 +112,45 @@ namespace RimSpawners
                     }
                 }
             };
-            yield return new Command_Action()
+            yield return new Command_Action
             {
                 defaultLabel = "RimSpawners_DropSpotSelect".Translate(),
                 defaultDesc = "RimSpawners_DropSpotSelectDesc".Translate(),
                 icon = ContentFinder<Texture2D>.Get("Things/Special/DropPod"),
                 action = () =>
                 {
-                    TargetingParameters targetParams = TargetingParameters.ForDropPodsDestination();
+                    var targetParams = TargetingParameters.ForDropPodsDestination();
                     Find.Targeter.BeginTargeting(targetParams, delegate (LocalTargetInfo target)
                     {
-                        List<VanometricFabricator> spawners = Find.Selector.SelectedObjects.OfType<VanometricFabricator>().ToList();
-                        foreach (VanometricFabricator spawner in spawners)
+                        var spawners = Find.Selector.SelectedObjects.OfType<VanometricFabricator>().ToList();
+                        foreach (var spawner in spawners)
                         {
                             spawner.cusp.dropSpot = target.Cell;
                         }
                     });
                 }
             };
-            yield return new Command_Toggle()
+            yield return new Command_Toggle
             {
                 defaultLabel = "RimSpawners_SpawnAllAtOnce".Translate(),
                 defaultDesc = "RimSpawners_SpawnAllAtOnceDesc".Translate(),
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/Attack"),
                 isActive = () => cusp.SpawnAllAtOnce,
-                toggleAction = () =>
-                {
-                    cusp.SpawnAllAtOnce = !cusp.SpawnAllAtOnce;
-                }
+                toggleAction = () => { cusp.SpawnAllAtOnce = !cusp.SpawnAllAtOnce; }
             };
-            yield return new Command_Action()
+            yield return new Command_Action
             {
                 defaultLabel = "RimSpawners_KillSwitch".Translate(),
                 defaultDesc = "RimSpawners_KillSwitchDesc".Translate(),
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/Detonate"),
                 action = RemoveAllSpawnedPawns
             };
-            yield return new Command_Action()
+            yield return new Command_Action
             {
                 defaultLabel = "RimSpawners_Reset".Translate(),
                 defaultDesc = "RimSpawners_ResetDesc".Translate(),
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/TryReconnect"),
-                action = () =>
-                {
-                    SetChosenKind(null);
-                }
+                action = () => { SetChosenKind(null); }
             };
         }
 
@@ -167,7 +159,7 @@ namespace RimSpawners
             base.DrawExtraSelectionOverlays();
             if (cusp.dropSpot != IntVec3.Invalid)
             {
-                Vector3 vector = cusp.dropSpot.ToVector3ShiftedWithAltitude(AltitudeLayer.MetaOverlays);
+                var vector = cusp.dropSpot.ToVector3ShiftedWithAltitude(AltitudeLayer.MetaOverlays);
                 Graphics.DrawMesh(MeshPool.plane10, vector, Quaternion.identity, GenDraw.InteractionCellMaterial, 0);
             }
         }

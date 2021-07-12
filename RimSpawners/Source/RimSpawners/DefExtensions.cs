@@ -1,21 +1,23 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace RimSpawners
 {
-    static class DefExtensions
+    internal static class DefExtensions
     {
         /// <summary>
-        /// hold a cached list of icons per def
+        ///     hold a cached list of icons per def
         /// </summary>
-        private static Dictionary<Def, Texture2D> _cachedDefIcons = new Dictionary<Def, Texture2D>();
-        private static Dictionary<Def, Color> _cachedIconColors = new Dictionary<Def, Color>();
+        private static readonly Dictionary<Def, Texture2D> _cachedDefIcons = new Dictionary<Def, Texture2D>();
+
+        private static readonly Dictionary<Def, Color> _cachedIconColors = new Dictionary<Def, Color>();
 
         /// <summary>
-        /// Get the label, capitalized and given appropriate styling ( bold if def has a helpdef, italic if def has no helpdef but does have description. )
+        ///     Get the label, capitalized and given appropriate styling ( bold if def has a helpdef, italic if def has no helpdef
+        ///     but does have description. )
         /// </summary>
         /// <param name="def"></param>
         /// <returns></returns>
@@ -25,10 +27,12 @@ namespace RimSpawners
             {
                 return string.Empty;
             }
+
             if (!def.description.NullOrEmpty())
             {
                 return "<i>" + def.LabelCap + "</i>";
             }
+
             return def.LabelCap;
         }
 
@@ -40,8 +44,8 @@ namespace RimSpawners
         }
 
         /// <summary>
-        /// Gets an appropriate drawColor for this def. 
-        /// Will use a default stuff or DrawColor, if defined.
+        ///     Gets an appropriate drawColor for this def.
+        ///     Will use a default stuff or DrawColor, if defined.
         /// </summary>
         /// <param name="def"></param>
         /// <returns></returns>
@@ -85,8 +89,8 @@ namespace RimSpawners
 
             // built def != listed def
             if (
-                (tdef != null) &&
-                (tdef.entityDefToBuild != null)
+                tdef != null &&
+                tdef.entityDefToBuild != null
             )
             {
                 _cachedIconColors.Add(def, tdef.entityDefToBuild.IconColor());
@@ -102,11 +106,11 @@ namespace RimSpawners
 
             // stuff used?
             if (
-                (tdef != null) &&
-                (tdef.MadeFromStuff)
+                tdef != null &&
+                tdef.MadeFromStuff
             )
             {
-                ThingDef stuff = GenStuff.DefaultStuffFor(tdef);
+                var stuff = GenStuff.DefaultStuffFor(tdef);
                 _cachedIconColors.Add(def, stuff.stuffProps.color);
                 return _cachedIconColors[def];
             }
@@ -117,7 +121,7 @@ namespace RimSpawners
         }
 
         /// <summary>
-        /// Get a texture for the def, where defined. 
+        ///     Get a texture for the def, where defined.
         /// </summary>
         /// <param name="def"></param>
         /// <returns></returns>
@@ -137,8 +141,8 @@ namespace RimSpawners
 
             // recipes will be passed icon of first product, if defined.
             if (
-                (rdef != null) &&
-                (!rdef.products.NullOrEmpty())
+                rdef != null &&
+                !rdef.products.NullOrEmpty()
             )
             {
                 _cachedDefIcons.Add(def, rdef.products.First().thingDef.IconTexture());
@@ -167,7 +171,7 @@ namespace RimSpawners
 
             // if def built != def listed.
             if (
-                (tdef != null)
+                tdef != null
             )
             {
                 if (tdef.entityDefToBuild != null)
@@ -175,12 +179,12 @@ namespace RimSpawners
                     _cachedDefIcons.Add(def, tdef.entityDefToBuild.IconTexture().Crop());
                     return _cachedDefIcons[def];
                 }
+
                 // corpses don't have icon
                 if (tdef.IsCorpse)
                 {
                     return null;
                 }
-
             }
 
             _cachedDefIcons.Add(def, bdef.uiIcon.Crop());
@@ -191,7 +195,7 @@ namespace RimSpawners
         {
             var WW = Text.WordWrap;
             Text.WordWrap = false;
-            float width = Text.CalcSize(def.LabelStyled()).x + (def.IconTexture() == null ? 0 : 20);
+            var width = Text.CalcSize(def.LabelStyled()).x + (def.IconTexture() == null ? 0 : 20);
             Text.WordWrap = WW;
             return width;
         }

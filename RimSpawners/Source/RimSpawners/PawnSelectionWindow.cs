@@ -1,20 +1,20 @@
-﻿using RimWorld;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace RimSpawners
 {
-    class PawnSelectionWindow : Window
+    internal class PawnSelectionWindow : Window
     {
         private static readonly Vector2 WINDOW_SIZE = new Vector2(500f, 500f);
         private static readonly float PAWN_ROW_HEIGHT = 30f;
-        private float scrollViewHeight;
-        private Vector2 scrollPos;
+        private static string searchKeyword;
+        private static float scrollViewHeight;
+        private static Vector2 scrollPos;
         private List<VanometricFabricator> spawners;
-        private string searchKeyword;
 
         public PawnSelectionWindow()
         {
@@ -36,7 +36,7 @@ namespace RimSpawners
 
         public override void DoWindowContents(Rect inRect)
         {
-            Listing_Standard list = new Listing_Standard();
+            var list = new Listing_Standard();
             list.Begin(inRect);
 
             // get all selected sapwners
@@ -48,31 +48,33 @@ namespace RimSpawners
             }
 
             // search bar
-            Rect searchBarRect = list.GetRect(PAWN_ROW_HEIGHT);
+            var searchBarRect = list.GetRect(PAWN_ROW_HEIGHT);
             searchKeyword = Widgets.TextField(searchBarRect, searchKeyword);
 
             list.GapLine();
-            int yOffset = 10;
+            var yOffset = 10;
 
-            // setup scrolling menu
-            Rect outRect = new Rect(5f, PAWN_ROW_HEIGHT + yOffset + 5f, WINDOW_SIZE.x - 30, WINDOW_SIZE.y - yOffset - 30f);
-            Rect viewRect = new Rect(0f, 0f, outRect.width - 16f, scrollViewHeight);
+            // setup scrolling menu!
+            var outRect = new Rect(5f, PAWN_ROW_HEIGHT + yOffset + 5f, WINDOW_SIZE.x - 30, WINDOW_SIZE.y - yOffset - 30f);
+            var viewRect = new Rect(0f, 0f, outRect.width - 16f, scrollViewHeight);
             Widgets.BeginScrollView(outRect, ref scrollPos, viewRect);
 
             // draw each entry
             float currY = 0;
-            foreach (PawnKindDef pawnKind in DefDatabase<PawnKindDef>.AllDefsListForReading)
+            foreach (var pawnKind in DefDatabase<PawnKindDef>.AllDefsListForReading)
             {
-                string textToSearch = pawnKind.label ?? pawnKind.defName;
+                var textToSearch = pawnKind.label ?? pawnKind.defName;
                 if (searchKeyword.NullOrEmpty() || textToSearch.IndexOf(searchKeyword, StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
                     if (ShouldDrawPawnRow(currY, scrollPos.y, outRect.height))
                     {
                         DrawPawnRow(pawnKind, currY, viewRect.width);
                     }
+
                     currY += PAWN_ROW_HEIGHT;
                 }
             }
+
             if (Event.current.type == EventType.Layout)
             {
                 scrollViewHeight = currY + PAWN_ROW_HEIGHT;
@@ -85,14 +87,12 @@ namespace RimSpawners
 
         private bool ShouldDrawPawnRow(float currentY, float scrollY, float viewHeight)
         {
-            if ((currentY + PAWN_ROW_HEIGHT - scrollY < 0) || (currentY - PAWN_ROW_HEIGHT - scrollY - viewHeight > 0))
+            if (currentY + PAWN_ROW_HEIGHT - scrollY < 0 || currentY - PAWN_ROW_HEIGHT - scrollY - viewHeight > 0)
             {
                 return false;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
 
         private void DrawPawnRow(PawnKindDef pawnKind, float currentY, float width)
@@ -107,21 +107,22 @@ namespace RimSpawners
             // pawn kind image
             if (pawnKind.IconTexture() != null)
             {
-                Rect iconRect = new Rect(0, currentY, 30, PAWN_ROW_HEIGHT);
+                var iconRect = new Rect(0, currentY, 30, PAWN_ROW_HEIGHT);
                 pawnKind.DrawColouredIcon(iconRect);
             }
 
             // pawn kind name and point cost
-            Rect labelRect = new Rect(60, currentY, width, PAWN_ROW_HEIGHT);
+            var labelRect = new Rect(60, currentY, width, PAWN_ROW_HEIGHT);
 
             string label = pawnKind.LabelCap;
             if (label == null)
             {
                 label = pawnKind.defName;
             }
+
             Widgets.Label(labelRect, "RimSpawners_PawnSelectionListEntry".Translate(label, pawnKind.combatPower));
 
-            TipSignal tip = new TipSignal("RimSpawners_PawnSelectionToolTip".Translate(
+            var tip = new TipSignal("RimSpawners_PawnSelectionToolTip".Translate(
                 pawnKind.weaponTags.ToStringNullable(),
                 pawnKind.apparelTags.ToStringNullable(),
                 (pawnKind.apparelRequired?.Select(thing => thing.LabelCap.ToString()).ToList()).ToStringNullable(),
@@ -132,12 +133,12 @@ namespace RimSpawners
             TooltipHandler.TipRegion(labelRect, tip);
 
             // button for selecting a new pawn kind
-            Rect selectButtonRect = new Rect(350, currentY, 100, PAWN_ROW_HEIGHT);
+            var selectButtonRect = new Rect(350, currentY, 100, PAWN_ROW_HEIGHT);
             if (Widgets.ButtonText(selectButtonRect, "RimSpawners_PawnSelectionButtonUnselected".Translate()))
             {
                 if (spawners != null)
                 {
-                    foreach (VanometricFabricator spawner in spawners)
+                    foreach (var spawner in spawners)
                     {
                         spawner.SetChosenKind(pawnKind);
                         Close();

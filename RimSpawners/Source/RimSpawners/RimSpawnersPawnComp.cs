@@ -3,9 +3,9 @@ using Verse;
 
 namespace RimSpawners
 {
-    class RimSpawnersPawnComp : ThingComp
+    internal class RimSpawnersPawnComp : ThingComp
     {
-        static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
+        private static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
 
         public CompProperties_RimSpawnersPawn Props => (CompProperties_RimSpawnersPawn)props;
 
@@ -27,19 +27,19 @@ namespace RimSpawners
             if (parent is Pawn parentPawn)
             {
                 // add hediff to remove pawn needs
-                HediffDef rimSpawnersPawnHediffDef = DefDatabase<HediffDef>.GetNamed("RimSpawners_VanometricPawnHediff");
+                var rimSpawnersPawnHediffDef = DefDatabase<HediffDef>.GetNamed("RimSpawners_VanometricPawnHediff");
                 if (!parentPawn.health.hediffSet.HasHediff(rimSpawnersPawnHediffDef))
                 {
-                    Hediff rimSpawnersPawnHediff = HediffMaker.MakeHediff(rimSpawnersPawnHediffDef, parentPawn);
+                    var rimSpawnersPawnHediff = HediffMaker.MakeHediff(rimSpawnersPawnHediffDef, parentPawn);
                     parentPawn.health.AddHediff(rimSpawnersPawnHediff);
                 }
 
                 if (Settings.disableNeeds)
                 {
-                    HediffDef disableNeedHediffDef = DefDatabase<HediffDef>.GetNamed("RimSpawners_NoNeedsHediff");
+                    var disableNeedHediffDef = DefDatabase<HediffDef>.GetNamed("RimSpawners_NoNeedsHediff");
                     if (!parentPawn.health.hediffSet.HasHediff(disableNeedHediffDef))
                     {
-                        Hediff disableNeedHediff = HediffMaker.MakeHediff(disableNeedHediffDef, parentPawn);
+                        var disableNeedHediff = HediffMaker.MakeHediff(disableNeedHediffDef, parentPawn);
                         parentPawn.health.AddHediff(disableNeedHediff);
                     }
                 }
@@ -47,21 +47,19 @@ namespace RimSpawners
         }
     }
 
-    class CompProperties_RimSpawnersPawn : CompProperties
+    internal class CompProperties_RimSpawnersPawn : CompProperties
     {
-        private readonly CompVanometricFabricatorPawn spawnerComp;
-
-        public CompVanometricFabricatorPawn SpawnerComp { get => spawnerComp; }
-
         public CompProperties_RimSpawnersPawn(CompVanometricFabricatorPawn cusp)
         {
             compClass = typeof(RimSpawnersPawnComp);
-            spawnerComp = cusp;
+            SpawnerComp = cusp;
         }
 
         public CompProperties_RimSpawnersPawn(Type compClass) : base(compClass)
         {
             this.compClass = compClass;
         }
+
+        public CompVanometricFabricatorPawn SpawnerComp { get; }
     }
 }

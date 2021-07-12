@@ -16,21 +16,23 @@ namespace RimSpawners
 
         public static void DrawFittedIn(this Texture2D tex, Rect rect)
         {
-            float rectProportion = (float)rect.width / (float)rect.height;
-            float texProportion = (float)tex.width / (float)tex.height;
+            var rectProportion = rect.width / rect.height;
+            var texProportion = tex.width / (float) tex.height;
 
             if (texProportion > rectProportion)
             {
-                Rect wider = new Rect(rect.xMin, 0f, rect.width, rect.width / texProportion).CenteredOnYIn(rect).CenteredOnXIn(rect);
+                var wider = new Rect(rect.xMin, 0f, rect.width, rect.width / texProportion).CenteredOnYIn(rect).CenteredOnXIn(rect);
                 GUI.DrawTexture(wider, tex);
                 return;
             }
-            else if (texProportion < rectProportion)
+
+            if (texProportion < rectProportion)
             {
-                Rect taller = new Rect(0f, rect.yMin, rect.height * texProportion, rect.height).CenteredOnXIn(rect).CenteredOnXIn(rect);
+                var taller = new Rect(0f, rect.yMin, rect.height * texProportion, rect.height).CenteredOnXIn(rect).CenteredOnXIn(rect);
                 GUI.DrawTexture(taller, tex);
                 return;
             }
+
             GUI.DrawTexture(rect, tex);
         }
     }

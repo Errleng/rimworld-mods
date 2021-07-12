@@ -4,18 +4,25 @@ using Verse;
 
 namespace RimSpawners
 {
-    class CompProperties_VanometricFabricatorPawn : CompProperties
+    internal class CompProperties_VanometricFabricatorPawn : CompProperties
     {
-        public CompProperties_VanometricFabricatorPawn()
-        {
-            compClass = typeof(CompVanometricFabricatorPawn);
-        }
+        public bool chooseSingleTypeToSpawn;
 
-        public List<PawnKindDef> spawnablePawnKinds;
+        public float defendRadius = 21f;
 
-        public SoundDef spawnSound;
+        public int initialPawnsCount;
 
-        public string spawnMessageKey;
+        public float initialPawnsPoints;
+
+        public Type lordJob;
+
+        public IntRange maxPawnsToSpawn = IntRange.zero;
+
+        public float maxSpawnedPawnsPoints = -1f;
+
+        public float pawnSpawnIntervalSeconds;
+
+        public int pawnSpawnRadius = 2;
 
         //public string noPawnsLeftToSpawnKey;
 
@@ -25,22 +32,15 @@ namespace RimSpawners
 
         public bool shouldJoinParentLord;
 
-        public Type lordJob;
+        public List<PawnKindDef> spawnablePawnKinds;
 
-        public float defendRadius = 21f;
+        public string spawnMessageKey;
 
-        public int initialPawnsCount;
+        public SoundDef spawnSound;
 
-        public float initialPawnsPoints;
-
-        public float maxSpawnedPawnsPoints = -1f;
-
-        public float pawnSpawnIntervalSeconds;
-
-        public int pawnSpawnRadius = 2;
-
-        public IntRange maxPawnsToSpawn = IntRange.zero;
-
-        public bool chooseSingleTypeToSpawn;
+        public CompProperties_VanometricFabricatorPawn()
+        {
+            compClass = typeof(CompVanometricFabricatorPawn);
+        }
     }
 }
