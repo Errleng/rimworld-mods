@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <MainButtonDef>
+        <defName>WealthTab</defName>
+        <label>Wealth List</label>
+        <description>Shows a list of what makes up the colony's wealth.</description>
+        <tabWindowClass>RimMisc.MainTabWindow_WealthTab</tabWindowClass>
+        <order>400</order>
+    </MainButtonDef>
+</Defs>

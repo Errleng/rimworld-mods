@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <!-- MOD SETTINGS -->
+  <RimSpawners_SettingsMaximumPoints>Maximum points: {0}</RimSpawners_SettingsMaximumPoints>
+  <RimSpawners_SettingsScaledSpawnTimeButton>Scale spawn time to pawn combat power</RimSpawners_SettingsScaledSpawnTimeButton>
+  <RimSpawners_SettingsFixedSpawnTimeButton>Fix spawn time to certain amount</RimSpawners_SettingsFixedSpawnTimeButton>
+  <RimSpawners_SettingsScaledSpawnTimePointsPerSecond>Scaled spawn interval points per second: {0}</RimSpawners_SettingsScaledSpawnTimePointsPerSecond>
+  <RimSpawners_SettingsFixedSpawnTimeSeconds>Fixed spawn interval seconds per spawn: {0}</RimSpawners_SettingsFixedSpawnTimeSeconds>
+  <RimSpawners_SettingsCachePawns>Cache spawned pawns for each spawner until chosen pawn kind changes</RimSpawners_SettingsCachePawns>
+  <RimSpawners_SettingsUseAllyFaction>Assign spawned pawns to a custom ally faction instead of the player faction</RimSpawners_SettingsUseAllyFaction>
+  <RimSpawners_SettingsMaxSkills>Spawned pawns have maxed skills</RimSpawners_SettingsMaxSkills>
+  <RimSpawners_SettingsDisableNeeds>Disable spawned pawn needs</RimSpawners_SettingsDisableNeeds>
+  <RimSpawners_SettingsDisableCorpses>Disable spawned pawn corpses and dropped items</RimSpawners_SettingsDisableCorpses>
+  <RimSpawners_SettingsDoNotAttackFleeing>Do not attack fleeing enemies</RimSpawners_SettingsDoNotAttackFleeing>
+  <RimSpawners_SettingsSpawnOnThreats>Spawn pawns only when threats are detected</RimSpawners_SettingsSpawnOnThreats>
+  <RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier>Spawning speed multiplier when initially spawning in reaction to threats: {0}</RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier>
+
+  <!-- PAWN SELECTION -->
+  <RimSpawners_PawnSelection>Select creature to spawn</RimSpawners_PawnSelection>
+  <RimSpawners_PawnSelectionDesc>Select the type of creature to spawn</RimSpawners_PawnSelectionDesc>
+  <RimSpawners_PawnSelectionTabName>Creatures</RimSpawners_PawnSelectionTabName>
+  <RimSpawners_PawnSelectionButtonUnselected>Select</RimSpawners_PawnSelectionButtonUnselected>
+  <RimSpawners_PawnSelectionButtonSelected>Current</RimSpawners_PawnSelectionButtonSelected>
+  <RimSpawners_PawnSelectionListEntry>{0} ({1} points)</RimSpawners_PawnSelectionListEntry>
+  <RimSpawners_PawnSelectionToolTip>Weapons: {0}\nApparel: {1}\nRequired Apparel: {2}\nDisallowed Apparel: {3}\nProsthetics: {4}</RimSpawners_PawnSelectionToolTip>
+
+  <!-- COMPSPAWNERPAWN GIZMOS -->
+  <RimSpawners_Pause>Pause</RimSpawners_Pause>
+  <RimSpawners_PauseDesc>Toggle fabrication on and off</RimSpawners_PauseDesc>
+  <RimSpawners_DropPodToggle>Drop Pods</RimSpawners_DropPodToggle>
+  <RimSpawners_DropPodToggleDesc>Call in drop pods to deliver creatures instead of fabricating</RimSpawners_DropPodToggleDesc>
+  <RimSpawners_DropSpotSelect>Select Drop Spot</RimSpawners_DropSpotSelect>
+  <RimSpawners_DropSpotSelectDesc>Select drop pod location</RimSpawners_DropSpotSelectDesc>
+  <RimSpawners_SpawnAllAtOnce>Burst spawn</RimSpawners_SpawnAllAtOnce>
+  <RimSpawners_SpawnAllAtOnceDesc>Burst fabricate creatures until the control point limit is reached. The time necessary to cool down will increase accordingly.</RimSpawners_SpawnAllAtOnceDesc>
+  <RimSpawners_KillSwitch>Activate kill switch</RimSpawners_KillSwitch>
+  <RimSpawners_KillSwitchDesc>Destroys all fabricated creatures</RimSpawners_KillSwitchDesc>
+  <RimSpawners_Reset>Reset</RimSpawners_Reset>
+  <RimSpawners_ResetDesc>Reset chosen creature to none</RimSpawners_ResetDesc>
+
+  <!-- VANOMETRIC FABRICATOR INSPECT -->
+  <RimSpawners_VanometricFabricatorInspectNoneChosen>Nothing chosen to fabricate.</RimSpawners_VanometricFabricatorInspectNoneChosen>
+  <RimSpawners_VanometricFabricatorInspectChosen>Chosen to fabricate {0}. Current creatures are using {1}/{2} control points.</RimSpawners_VanometricFabricatorInspectChosen>
+  <RimSpawners_VanometricFabricatorInspectLimit>Chosen to fabricate {0}. Current creatures are using up all {1} control points. Fabrication is paused until control points are available.</RimSpawners_VanometricFabricatorInspectLimit>
+  <RimSpawners_VanometricFabricatorInspectNextSpawn>\nFabrication complete in {0}.</RimSpawners_VanometricFabricatorInspectNextSpawn>
+  <RimSpawners_VanometricFabricatorInspectDormant>\nAssembler is dormant until a threat is detected.</RimSpawners_VanometricFabricatorInspectDormant>
+  <RimSpawners_VanometricFabricatorInspectPaused>\nAssembler is paused.</RimSpawners_VanometricFabricatorInspectPaused>
+  <RimSpawners_VanometricFabricatorInspectDebug>\nDEBUG: {0} ticks until the next spawn.</RimSpawners_VanometricFabricatorInspectDebug>
+
+  <!-- VANOMETRIC FABRICATOR NOTIFICATIONS AND MESSAGES -->
+  <RimSpawners_VanometricFabricatorSpawnMessage>{0} fabricated</RimSpawners_VanometricFabricatorSpawnMessage>
+</LanguageData>

@@ -142,7 +142,7 @@ namespace HighDensityHydroCustom
                             {
                                 plant.Growth = 1f;
                                 Thing resultingThing;
-                                innerContainer.TryDrop_NewTmp(plant, cell, Map, ThingPlaceMode.Direct, out resultingThing);
+                                innerContainer.TryDrop(plant, cell, Map, ThingPlaceMode.Direct, out resultingThing);
                                 break;
                             }
 
