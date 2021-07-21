@@ -110,7 +110,10 @@ namespace RimSpawners
             }
         }
 
-        public static Lord FindLordToJoin(Thing spawner, Type lordJobType, bool shouldTryJoinParentLord, Func<Thing, List<Pawn>> spawnedPawnSelector = null)
+        public static Lord FindLordToJoin(Thing spawner,
+            Type lordJobType,
+            bool shouldTryJoinParentLord,
+            Func<Thing, List<Pawn>> spawnedPawnSelector = null)
         {
             if (spawner.Spawned)
             {
@@ -144,28 +147,32 @@ namespace RimSpawners
                     return lord2 != null && lord2.LordJob.GetType() == lordJobType;
                 };
                 Pawn foundPawn = null;
-                RegionTraverser.BreadthFirstTraverse(spawner.GetRegion(), (from, to) => true, delegate (Region r)
-                {
-                    var list = r.ListerThings.ThingsOfDef(spawner.def);
-                    for (var i = 0; i < list.Count; i++)
+                RegionTraverser.BreadthFirstTraverse(spawner.GetRegion(),
+                    (from,
+                        to) => true,
+                    delegate (Region r)
                     {
-                        if (list[i].Faction == spawner.Faction)
+                        var list = r.ListerThings.ThingsOfDef(spawner.def);
+                        for (var i = 0; i < list.Count; i++)
                         {
-                            var list2 = spawnedPawnSelector(list[i]);
-                            if (list2 != null)
+                            if (list[i].Faction == spawner.Faction)
                             {
-                                foundPawn = list2.Find(hasJob);
-                            }
+                                var list2 = spawnedPawnSelector(list[i]);
+                                if (list2 != null)
+                                {
+                                    foundPawn = list2.Find(hasJob);
+                                }
 
-                            if (foundPawn != null)
-                            {
-                                return true;
+                                if (foundPawn != null)
+                                {
+                                    return true;
+                                }
                             }
                         }
-                    }
 
-                    return false;
-                }, 40);
+                        return false;
+                    },
+                    40);
                 if (foundPawn != null)
                 {
                     return foundPawn.GetLord();
@@ -175,7 +182,10 @@ namespace RimSpawners
             return null;
         }
 
-        public static Lord CreateNewLord(Thing byThing, bool aggressive, float defendRadius, Type lordJobType)
+        public static Lord CreateNewLord(Thing byThing,
+            bool aggressive,
+            float defendRadius,
+            Type lordJobType)
         {
             IntVec3 invalid;
             if (!CellFinder.TryFindRandomCellNear(byThing.Position, byThing.Map, 5, c => c.Standable(byThing.Map) && byThing.Map.reachability.CanReach(c, byThing, PathEndMode.Touch, TraverseParms.For(TraverseMode.PassDoors)), out invalid))
@@ -184,13 +194,16 @@ namespace RimSpawners
                 invalid = IntVec3.Invalid;
             }
 
-            return LordMaker.MakeNewLord(byThing.Faction, Activator.CreateInstance(lordJobType, new SpawnedPawnParams
-            {
-                aggressive = aggressive,
-                defendRadius = defendRadius,
-                defSpot = invalid,
-                spawnerThing = byThing
-            }) as LordJob, byThing.Map);
+            return LordMaker.MakeNewLord(byThing.Faction,
+                Activator.CreateInstance(lordJobType,
+                    new SpawnedPawnParams
+                    {
+                        aggressive = aggressive,
+                        defendRadius = defendRadius,
+                        defSpot = invalid,
+                        spawnerThing = byThing
+                    }) as LordJob,
+                byThing.Map);
         }
 
         private void SpawnInitialPawns()
@@ -378,8 +391,13 @@ namespace RimSpawners
                     dropCenter = DropCellFinder.RandomDropSpot(parent.Map);
                 }
 
-                DropPodUtility.DropThingsNear(dropCenter, parent.Map, Gen.YieldSingle<Thing>(pawn), 60,
-                    false, false, false);
+                DropPodUtility.DropThingsNear(dropCenter,
+                    parent.Map,
+                    Gen.YieldSingle<Thing>(pawn),
+                    60,
+                    false,
+                    false,
+                    false);
                 dropPodSuccess = true;
             }
 
@@ -461,11 +479,12 @@ namespace RimSpawners
                 false,
                 true,
                 false,
+                true,
                 false,
                 false,
                 false,
                 false,
-                false,
+                0f,
                 0f,
                 null,
                 1f,

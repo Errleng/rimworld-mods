@@ -25,12 +25,12 @@ namespace RimSpawners
             settings.maxSpawnerPoints = listingStandard.Slider(settings.maxSpawnerPoints, 10f, 2000f);
 
             listingStandard.GapLine();
-            if (listingStandard.RadioButton_NewTemp("RimSpawners_SettingsScaledSpawnTimeButton".Translate(), settings.spawnTime.Equals(SpawnTimeSetting.Scaled)))
+            if (listingStandard.RadioButton("RimSpawners_SettingsScaledSpawnTimeButton".Translate(), settings.spawnTime.Equals(SpawnTimeSetting.Scaled)))
             {
                 settings.spawnTime = SpawnTimeSetting.Scaled;
             }
 
-            if (listingStandard.RadioButton_NewTemp("RimSpawners_SettingsFixedSpawnTimeButton".Translate(), settings.spawnTime.Equals(SpawnTimeSetting.Fixed)))
+            if (listingStandard.RadioButton("RimSpawners_SettingsFixedSpawnTimeButton".Translate(), settings.spawnTime.Equals(SpawnTimeSetting.Fixed)))
             {
                 settings.spawnTime = SpawnTimeSetting.Fixed;
             }

@@ -4,9 +4,6 @@
         <defName>RimSpawnersFriendlyFaction</defName>
         <label>Vanofab Products</label>
         <description>Friendly vanometrically fabricated creatures</description>
-        <colorSpectrum>
-            <li>(1.0, 0.87, 0.96)</li>
-        </colorSpectrum>
         <pawnSingular>vanofab product</pawnSingular>
         <pawnsPlural>vanofab products</pawnsPlural>
         <fixedName>Vanofab Products</fixedName>
@@ -17,12 +14,6 @@
         <maxCountAtGameStart>1</maxCountAtGameStart>
         <geneticVariance>1</geneticVariance>
         <humanlikeFaction>true</humanlikeFaction>
-        <hairTags>
-            <li>Urban</li>
-            <li>Rural</li>
-            <li>Tribal</li>
-            <li>Punk</li>
-        </hairTags>
         <backstoryFilters>
             <li>
                 <categories>
@@ -30,13 +21,14 @@
                 </categories>
             </li>
         </backstoryFilters>
-        <naturalColonyGoodwill>
-            <min>100</min>
-            <max>100</max>
-        </naturalColonyGoodwill>
-        <startingGoodwill>
-            <min>100</min>
-            <max>100</max>
-        </startingGoodwill>
+        <raidLootValueFromPointsCurve>
+            <points>
+                <li>(35,     15)</li>
+                <li>(100,   120)</li>
+                <li>(1000,  500)</li>
+                <li>(2000,  800)</li>
+                <li>(4000, 1000)</li>
+            </points>
+        </raidLootValueFromPointsCurve>
     </FactionDef>
 </Defs>

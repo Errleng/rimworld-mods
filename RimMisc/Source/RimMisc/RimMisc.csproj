@@ -74,7 +74,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../Assemblies"
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../1.3/Assemblies"
 (robocopy /mir "$(SolutionDir)../" "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RimMisc" /xd "source") ^&amp; IF %25ERRORLEVEL%25 LEQ 1 exit 0</PostBuildEvent>
   </PropertyGroup>
 </Project>

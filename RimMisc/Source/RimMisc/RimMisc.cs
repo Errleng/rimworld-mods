@@ -79,7 +79,7 @@ namespace RimMisc
             var listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
 
-            var settingsSection = listingStandard.BeginSection_NewTemp(settingsRect.height);
+            var settingsSection = listingStandard.BeginSection(settingsRect.height);
 
             settingsSection.CheckboxLabeled("RimMisc_DefaultDoUntil".Translate(), ref Settings.defaultDoUntil);
             settingsSection.CheckboxLabeled("RimMisc_AutoCloseLetters".Translate(), ref Settings.autoCloseLetters);

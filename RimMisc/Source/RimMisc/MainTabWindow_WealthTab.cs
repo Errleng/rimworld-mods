@@ -313,8 +313,6 @@ namespace RimMisc
 
                 GUI.EndGroup();
             }
-
-            base.DoWindowContents(inRect);
         }
 
         private enum WealthType

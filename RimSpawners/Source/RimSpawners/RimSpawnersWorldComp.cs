@@ -25,12 +25,11 @@ namespace RimSpawners
                 {
                     // update ally faction relations to owner faction relations
                     var allyFaction = RimSpawners.spawnedPawnFaction;
-                    allyFaction.hostileFromMemberCapture = false;
 
                     var playerFactionRelation = allyFaction.RelationWith(Faction.OfPlayer);
                     if (!playerFactionRelation.kind.Equals(FactionRelationKind.Ally))
                     {
-                        playerFactionRelation.goodwill = 100;
+                        playerFactionRelation.baseGoodwill = 100;
                         playerFactionRelation.kind = FactionRelationKind.Ally;
                     }
 
@@ -39,11 +38,11 @@ namespace RimSpawners
                         if (!otherFaction.IsPlayer && !otherFaction.Equals(allyFaction))
                         {
                             var otherFactionRelation = otherFaction.RelationWith(allyFaction);
-                            otherFactionRelation.goodwill = otherFaction.PlayerGoodwill;
+                            otherFactionRelation.baseGoodwill = otherFaction.PlayerGoodwill;
                             otherFactionRelation.kind = otherFaction.PlayerRelationKind;
 
                             var allyFactionRelation = allyFaction.RelationWith(otherFaction);
-                            allyFactionRelation.goodwill = otherFactionRelation.goodwill;
+                            allyFactionRelation.baseGoodwill = otherFactionRelation.baseGoodwill;
                             allyFactionRelation.kind = otherFactionRelation.kind;
                         }
                     }

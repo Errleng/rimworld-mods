@@ -17,7 +17,7 @@ namespace RimMisc
                 var props = compPowerTrader.Props;
                 if (isChangingTemp)
                 {
-                    this.GetRoomGroup().Temperature += tempChange;
+                    this.GetRoom().Temperature += tempChange;
                     compPowerTrader.PowerOutput = -props.basePowerConsumption;
                 }
                 else
