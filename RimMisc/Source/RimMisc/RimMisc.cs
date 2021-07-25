@@ -44,6 +44,8 @@ namespace RimMisc
         private static readonly int DEFAULT_WORK = 6000;
         private static readonly int MIN_YIELD = 1;
         private static readonly int MAX_YIELD = 1000;
+        public static readonly string UnfinishedCondenserThingDefName = "UnfinishedCondenserThing";
+        public static readonly string CondenserDefName = "VanometricCondenser";
 
         public static RimMiscSettings Settings;
         private float condenserItemScrollHeight;
@@ -154,11 +156,17 @@ namespace RimMisc
             Widgets.TextFieldNumeric(fieldRect2, ref item.yield, ref yieldFieldString, MIN_YIELD, MAX_YIELD);
 
             var removeButtonRect = new Rect(sectionRect.width - BUTTON_WIDTH - SCROLLBAR_WIDTH, currentY, BUTTON_WIDTH, SEARCH_RESULT_ROW_HEIGHT);
-            if (Widgets.ButtonText(removeButtonRect, "RimMisc_CondenserItemRemoveButton".Translate())) Settings.condenserItems.Remove(item);
+            if (Widgets.ButtonText(removeButtonRect, "RimMisc_CondenserItemRemoveButton".Translate()))
+            {
+                Settings.condenserItems.Remove(item);
+            }
 
             var calculateWorkButtonRect = new Rect(removeButtonRect.x - ITEM_PADDING, currentY, BUTTON_WIDTH * 2, SEARCH_RESULT_ROW_HEIGHT);
             calculateWorkButtonRect.x -= calculateWorkButtonRect.width;
-            if (Widgets.ButtonText(calculateWorkButtonRect, "RimMisc_CondenserItemCalculateWorkButton".Translate())) item.CalculateWorkAmount();
+            if (Widgets.ButtonText(calculateWorkButtonRect, "RimMisc_CondenserItemCalculateWorkButton".Translate()))
+            {
+                item.CalculateWorkAmount();
+            }
         }
 
         private void DrawItemSelect(Rect scrollSectionRect)
@@ -183,12 +191,17 @@ namespace RimMisc
             // draw each entry
             var currY = outRect.y;
             foreach (var thing in thingList)
+            {
                 if (searchKeyword.NullOrEmpty() || thing.label.IndexOf(searchKeyword, StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
-                    if (ShouldDrawSearchResultsRow(currY, condenserItemSelectScrollPos.y, outRect.height)) DrawSearchResultsRow(thing, scrollSectionRect, currY);
+                    if (ShouldDrawSearchResultsRow(currY, condenserItemSelectScrollPos.y, outRect.height))
+                    {
+                        DrawSearchResultsRow(thing, scrollSectionRect, currY);
+                    }
 
                     currY += SEARCH_RESULT_ROW_HEIGHT;
                 }
+            }
 
             condenserItemSelectScrollHeight = currY;
 
@@ -198,7 +211,10 @@ namespace RimMisc
 
         private bool ShouldDrawSearchResultsRow(float currentY, float scrollY, float viewHeight)
         {
-            if (currentY + SEARCH_RESULT_ROW_HEIGHT - scrollY < 0 || currentY - SEARCH_RESULT_ROW_HEIGHT - scrollY - viewHeight > 0) return false;
+            if (currentY + SEARCH_RESULT_ROW_HEIGHT - scrollY < 0 || currentY - SEARCH_RESULT_ROW_HEIGHT - scrollY - viewHeight > 0)
+            {
+                return false;
+            }
 
             return true;
         }

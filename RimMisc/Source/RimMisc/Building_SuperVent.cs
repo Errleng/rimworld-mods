@@ -20,7 +20,10 @@ namespace RimMisc
 
         public override void TickRare()
         {
-            if (FlickUtility.WantsToBeOn(this)) GenTemperature.EqualizeTemperaturesThroughBuilding(this, ORIGINAL_VENT_RATE * VENT_RATE_MULTIPLIER, true);
+            if (FlickUtility.WantsToBeOn(this))
+            {
+                GenTemperature.EqualizeTemperaturesThroughBuilding(this, ORIGINAL_VENT_RATE * VENT_RATE_MULTIPLIER, true);
+            }
         }
 
         public override string GetInspectString()
@@ -28,7 +31,11 @@ namespace RimMisc
             var text = base.GetInspectString();
             if (!FlickUtility.WantsToBeOn(this))
             {
-                if (!text.NullOrEmpty()) text += "\n";
+                if (!text.NullOrEmpty())
+                {
+                    text += "\n";
+                }
+
                 text += "RimMisc_VentClosed".Translate();
             }
 

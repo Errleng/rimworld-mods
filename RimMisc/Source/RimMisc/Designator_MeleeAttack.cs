@@ -24,10 +24,22 @@ namespace RimMisc
 
         public override AcceptanceReport CanDesignateCell(IntVec3 c)
         {
-            if (!c.InBounds(Map)) return false;
-            if (!DebugSettings.godMode && c.Fogged(Map)) return false;
+            if (!c.InBounds(Map))
+            {
+                return false;
+            }
+
+            if (!DebugSettings.godMode && c.Fogged(Map))
+            {
+                return false;
+            }
+
             AcceptanceReport result;
-            if (TopDeconstructibleInCell(c, out result) == null) return result;
+            if (TopDeconstructibleInCell(c, out result) == null)
+            {
+                return result;
+            }
+
             return true;
         }
 
@@ -41,8 +53,8 @@ namespace RimMisc
         {
             reportToDisplay = AcceptanceReport.WasRejected;
             foreach (var thing in from t in Map.thingGrid.ThingsAt(loc)
-                                  orderby t.def.altitudeLayer descending
-                                  select t)
+                orderby t.def.altitudeLayer descending
+                select t)
             {
                 var acceptanceReport = CanDesignateThing(thing);
                 if (CanDesignateThing(thing).Accepted)
@@ -51,7 +63,10 @@ namespace RimMisc
                     return thing;
                 }
 
-                if (!acceptanceReport.Reason.NullOrEmpty()) reportToDisplay = acceptanceReport;
+                if (!acceptanceReport.Reason.NullOrEmpty())
+                {
+                    reportToDisplay = acceptanceReport;
+                }
             }
 
             return null;
@@ -71,9 +86,21 @@ namespace RimMisc
 
         public override AcceptanceReport CanDesignateThing(Thing t)
         {
-            if (t.HitPoints <= 0) return false;
-            if (Map.designationManager.DesignationOn(t, Designation) != null) return false;
-            if (Map.designationManager.DesignationOn(t, DesignationDefOf.Uninstall) != null) return false;
+            if (t.HitPoints <= 0)
+            {
+                return false;
+            }
+
+            if (Map.designationManager.DesignationOn(t, Designation) != null)
+            {
+                return false;
+            }
+
+            if (Map.designationManager.DesignationOn(t, DesignationDefOf.Uninstall) != null)
+            {
+                return false;
+            }
+
             return true;
         }
 

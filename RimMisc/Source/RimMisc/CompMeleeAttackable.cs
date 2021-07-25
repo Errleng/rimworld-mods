@@ -9,6 +9,7 @@ namespace RimMisc
         {
             var meleeAttackDesignator = new Designator_MeleeAttack();
             if (meleeAttackDesignator.CanDesignateThing(parent).Accepted)
+            {
                 yield return new Command_Action
                 {
                     defaultLabel = "RimMisc_DesignatorMeleeAttack".Translate(),
@@ -16,6 +17,7 @@ namespace RimMisc
                     icon = meleeAttackDesignator.icon,
                     action = () => meleeAttackDesignator.DesignateThing(parent)
                 };
+            }
         }
     }
 }

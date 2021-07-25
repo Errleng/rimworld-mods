@@ -48,7 +48,10 @@ namespace HighDensityHydroCustom
             if (flag)
             {
                 innerContainer.ClearAndDestroyContents();
-                foreach (var plant in PlantsOnMe) plant.Destroy();
+                foreach (var plant in PlantsOnMe)
+                {
+                    plant.Destroy();
+                }
             }
         }
 
@@ -66,22 +69,37 @@ namespace HighDensityHydroCustom
         {
             base.Tick();
 
-            if (!this.IsHashIntervalTick(updateInterval)) return;
+            if (!this.IsHashIntervalTick(updateInterval))
+            {
+                return;
+            }
 
             if (bayStage == BayStage.Sowing || bayStage == BayStage.Harvest)
+            {
                 updateInterval = FAST_UPDATE_INTERVAL;
-            else if (bayStage == BayStage.Growing) updateInterval = SLOW_UPDATE_INTERVAL;
+            }
+            else if (bayStage == BayStage.Growing)
+            {
+                updateInterval = SLOW_UPDATE_INTERVAL;
+            }
 
             var numSurfacePlants = 0;
             foreach (var plant in PlantsOnMe)
+            {
                 if (plant.LifeStage == PlantLifeStage.Growing)
                 {
                     ++numSurfacePlants;
-                    if (innerContainer.Count >= capacity) plant.Destroy();
+                    if (innerContainer.Count >= capacity)
+                    {
+                        plant.Destroy();
+                    }
                 }
+            }
 
             if (numSurfacePlants >= SURFACE_PLANTS_THRESHOLD)
+            {
                 foreach (var plant in PlantsOnMe)
+                {
                     if (plant.LifeStage == PlantLifeStage.Growing && !plant.Blighted)
                     {
                         plant.DeSpawn();
@@ -93,6 +111,8 @@ namespace HighDensityHydroCustom
                             break;
                         }
                     }
+                }
+            }
 
             if (innerContainer.Count == 0)
             {
@@ -116,7 +136,10 @@ namespace HighDensityHydroCustom
                     var growthAmount = fertilityGrowthRateFactor * growthPerDay * updateInterval;
                     firstPlant.Growth += growthAmount;
                     highestGrowth = firstPlant.Growth;
-                    if (firstPlant.LifeStage == PlantLifeStage.Mature) bayStage = BayStage.Harvest;
+                    if (firstPlant.LifeStage == PlantLifeStage.Mature)
+                    {
+                        bayStage = BayStage.Harvest;
+                    }
                 }
 
                 if (bayStage == BayStage.Harvest)
@@ -132,11 +155,13 @@ namespace HighDensityHydroCustom
                             var thingsAtCell = Map.thingGrid.ThingsListAt(cell);
                             var cellIsFree = true;
                             foreach (var thingAtCell in thingsAtCell)
+                            {
                                 if (thingAtCell is Plant)
                                 {
                                     cellIsFree = false;
                                     break;
                                 }
+                            }
 
                             if (cellIsFree)
                             {
@@ -149,7 +174,10 @@ namespace HighDensityHydroCustom
                             numCellsLooked++;
                         }
 
-                        if (numCellsLooked >= numCells) break;
+                        if (numCellsLooked >= numCells)
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -167,8 +195,7 @@ namespace HighDensityHydroCustom
         public override void Draw()
         {
             base.Draw();
-            var flag = innerContainer.Count >= capacity && base.CanAcceptSowNow();
-            if (flag)
+            if (innerContainer.Count >= capacity && base.CanAcceptSowNow())
             {
                 var r = default(GenDraw.FillableBarRequest);
                 r.center = DrawPos + Vector3.up * 0.1f;
@@ -209,18 +236,14 @@ namespace HighDensityHydroCustom
             {
                 return false;
             }
-            else
+
+            if (thing.holdingOwner != null)
             {
-                if (thing.holdingOwner != null)
-                {
-                    thing.holdingOwner.TryTransferToContainer(thing, innerContainer, thing.stackCount);
-                    return true;
-                }
-                else
-                {
-                    return innerContainer.TryAdd(thing);
-                }
+                thing.holdingOwner.TryTransferToContainer(thing, innerContainer, thing.stackCount);
+                return true;
             }
+
+            return innerContainer.TryAdd(thing);
         }
 
         public override void PostMake()
@@ -286,7 +309,11 @@ namespace HighDensityHydroCustom
         public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
         {
             innerContainer.ClearAndDestroyContents();
-            foreach (var plant in PlantsOnMe) plant.Destroy();
+            foreach (var plant in PlantsOnMe)
+            {
+                plant.Destroy();
+            }
+
             base.DeSpawn(mode);
         }
 

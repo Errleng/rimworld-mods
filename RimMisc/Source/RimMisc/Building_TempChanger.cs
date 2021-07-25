@@ -11,7 +11,9 @@ namespace RimMisc
             if (compPowerTrader.PowerOn)
             {
                 var energyLimit = compTempControl.Props.energyPerSecond;
-                var tempChange = GenTemperature.ControlTemperatureTempChange(Position, Map, energyLimit,
+                var tempChange = GenTemperature.ControlTemperatureTempChange(Position,
+                    Map,
+                    energyLimit,
                     compTempControl.targetTemperature);
                 var isChangingTemp = !Mathf.Approximately(tempChange, 0f);
                 var props = compPowerTrader.Props;

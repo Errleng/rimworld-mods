@@ -44,13 +44,14 @@ namespace RimMisc
                     jobString = "RimMisc_CondenseJobString".Translate(ThingDef.label),
                     ingredients = new List<IngredientCount>(),
                     defaultIngredientFilter = new ThingFilter(),
-                    effectWorking = DefDatabase<EffecterDef>.GetNamed("Research"),
+                    effectWorking = EffecterDefOf.Research,
                     workAmount = work,
-                    workSkill = DefDatabase<SkillDef>.GetNamed("Intellectual"),
-                    workSpeedStat = DefDatabase<StatDef>.GetNamed("ResearchSpeed"),
-                    workSkillLearnFactor = 0.5f,
+                    workSkill = SkillDefOf.Intellectual,
+                    workSpeedStat = StatDefOf.ResearchSpeed,
+                    workSkillLearnFactor = 1f,
                     soundWorking = DefDatabase<SoundDef>.GetNamed("Interact_Research"),
-                    products = new List<ThingDefCountClass> { new ThingDefCountClass(thing, yield) }
+                    products = new List<ThingDefCountClass> { new ThingDefCountClass(thing, yield) },
+                    unfinishedThingDef = DefDatabase<ThingDef>.GetNamed(RimMisc.UnfinishedCondenserThingDefName)
                 };
             }
             else

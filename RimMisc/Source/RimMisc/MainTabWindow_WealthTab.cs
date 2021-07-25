@@ -38,7 +38,11 @@ namespace RimMisc
 
         private bool IsThingItem(IThingHolder thingHolder)
         {
-            if (thingHolder is PassingShip || thingHolder is MapComponent) return false;
+            if (thingHolder is PassingShip || thingHolder is MapComponent)
+            {
+                return false;
+            }
+
             var pawn = thingHolder as Pawn;
             return (pawn == null || pawn.Faction == Faction.OfPlayer) && (pawn == null || !pawn.IsQuestLodger());
         }
@@ -53,6 +57,7 @@ namespace RimMisc
             //Log.Message($"Initial items: {string.Join(",", items.Select(item => item.Label))}");
 
             foreach (var item in items)
+            {
                 if (item.SpawnedOrAnyParentSpawned && item.MarketValue > 0 && !item.PositionHeld.Fogged(map))
                 {
                     if (itemWealths.Count == 0)
@@ -64,10 +69,13 @@ namespace RimMisc
                         var foundRecord = false;
                         foreach (var wealthRecord in itemWealths)
                         {
-                            if (foundRecord) break;
+                            if (foundRecord)
+                            {
+                                break;
+                            }
 
                             var uniqueItem = wealthRecord.things[0];
-                            if ((item.GetCustomLabelNoCount(false) == uniqueItem.GetCustomLabelNoCount(false) && Math.Abs(item.MarketValue - uniqueItem.MarketValue) < FLOATING_POINT_TOLERANCE) || item.CanStackWith(uniqueItem))
+                            if (item.GetCustomLabelNoCount(false) == uniqueItem.GetCustomLabelNoCount(false) && Math.Abs(item.MarketValue - uniqueItem.MarketValue) < FLOATING_POINT_TOLERANCE || item.CanStackWith(uniqueItem))
                             {
                                 //Log.Message($"Check {item.Label}, {uniqueItem.Label}, {item.CanStackWith(uniqueItem)}, {(itemCounts.ContainsKey(uniqueItem.LabelNoCount) ? itemCounts[uniqueItem.LabelNoCount].ToString() : "None")}");
                                 wealthRecord.AddThing(item);
@@ -77,9 +85,12 @@ namespace RimMisc
 
                         if (!foundRecord)
                             //Log.Message($"Add {item.Label}, {itemCounts.ContainsKey(item.LabelNoCount)}");
+                        {
                             itemWealths.Add(new WealthRecord(item));
+                        }
                     }
                 }
+            }
 
             Log.Message($"Total item wealth: {itemWealths.Sum(record => record.totalWealth)}");
         }
@@ -92,6 +103,7 @@ namespace RimMisc
             var buildings = map.listerThings.ThingsInGroup(ThingRequestGroup.BuildingArtificial);
 
             foreach (var building in buildings)
+            {
                 if (building.GetStatValue(StatDefOf.MarketValueIgnoreHp) > 0 && building.Faction == Faction.OfPlayer)
                 {
                     if (buildingWealths.Count == 0)
@@ -103,7 +115,11 @@ namespace RimMisc
                         var foundRecord = false;
                         foreach (var wealthRecord in buildingWealths)
                         {
-                            if (foundRecord) break;
+                            if (foundRecord)
+                            {
+                                break;
+                            }
+
                             var existingBuilding = wealthRecord.things[0];
                             if (building.def == existingBuilding.def)
                             {
@@ -112,9 +128,13 @@ namespace RimMisc
                             }
                         }
 
-                        if (!foundRecord) buildingWealths.Add(new WealthRecord(building));
+                        if (!foundRecord)
+                        {
+                            buildingWealths.Add(new WealthRecord(building));
+                        }
                     }
                 }
+            }
 
             Log.Message($"Total building wealth: {buildingWealths.Sum(record => record.totalWealth)}");
         }
@@ -127,10 +147,16 @@ namespace RimMisc
 
             var maxIndex = -1;
             var allDefsListForReading = DefDatabase<TerrainDef>.AllDefsListForReading;
-            foreach (var terrainDef in allDefsListForReading) maxIndex = Mathf.Max(maxIndex, terrainDef.index);
+            foreach (var terrainDef in allDefsListForReading)
+            {
+                maxIndex = Mathf.Max(maxIndex, terrainDef.index);
+            }
 
             var terrainMarketValue = new float[maxIndex + 1];
-            foreach (var terrainDef in allDefsListForReading) terrainMarketValue[terrainDef.index] = terrainDef.GetStatValueAbstract(StatDefOf.MarketValue);
+            foreach (var terrainDef in allDefsListForReading)
+            {
+                terrainMarketValue[terrainDef.index] = terrainDef.GetStatValueAbstract(StatDefOf.MarketValue);
+            }
 
             var topGrid = map.terrainGrid.topGrid;
             var fogGrid = map.fogGrid.fogGrid;
@@ -138,6 +164,7 @@ namespace RimMisc
             var mapSize = size.x * size.z;
 
             for (var i = 0; i < mapSize; i++)
+            {
                 if (!fogGrid[i])
                 {
                     var terrainDef = topGrid[i];
@@ -155,6 +182,7 @@ namespace RimMisc
                         }
                     }
                 }
+            }
 
             Log.Message($"Total floor wealth: {floorWealths.Sum(terrainWealth => terrainWealth.Value.count * terrainWealth.Value.wealth)}");
         }
@@ -164,7 +192,11 @@ namespace RimMisc
             creatureWealths = new List<WealthRecord>();
 
             var map = Find.CurrentMap;
-            foreach (var pawn in map.mapPawns.PawnsInFaction(Faction.OfPlayer)) creatureWealths.Add(new WealthRecord(pawn));
+            foreach (var pawn in map.mapPawns.PawnsInFaction(Faction.OfPlayer))
+            {
+                creatureWealths.Add(new WealthRecord(pawn));
+            }
+
             Log.Message($"Total pawn wealth: {creatureWealths.Sum(record => record.totalWealth)}");
         }
 
@@ -172,7 +204,7 @@ namespace RimMisc
         {
             float currHeight = 0;
             var sortedItemWealths = itemWealths.OrderByDescending(record => record.totalWealth).ToList();
-            var labelRect = new Rect(rowRect) { y = 0 };
+            var labelRect = new Rect(rowRect) {y = 0};
             foreach (var record in sortedItemWealths)
             {
                 var item = record.things[0];
@@ -188,7 +220,7 @@ namespace RimMisc
         {
             float currHeight = 0;
             var sortedBuildingWealths = buildingWealths.OrderByDescending(record => record.totalWealth).ToList();
-            var labelRect = new Rect(rowRect) { y = 0 };
+            var labelRect = new Rect(rowRect) {y = 0};
             foreach (var record in sortedBuildingWealths)
             {
                 var building = record.things[0];
@@ -204,7 +236,7 @@ namespace RimMisc
         {
             float currHeight = 0;
             var sortedFloorWealths = floorWealths.OrderByDescending(floorWealth => floorWealth.Value.count * floorWealth.Value.wealth).ToList();
-            var labelRect = new Rect(rowRect) { y = 0 };
+            var labelRect = new Rect(rowRect) {y = 0};
             foreach (var floorWealth in sortedFloorWealths)
             {
                 var terrain = floorWealth.Key;
@@ -221,7 +253,7 @@ namespace RimMisc
         {
             float currHeight = 0;
             var sortedCreatureWealths = creatureWealths.OrderByDescending(record => record.totalWealth).ToList();
-            var labelRect = new Rect(rowRect) { y = 0 };
+            var labelRect = new Rect(rowRect) {y = 0};
             foreach (var record in sortedCreatureWealths)
             {
                 var pawn = record.things[0];
@@ -271,12 +303,16 @@ namespace RimMisc
                 {
                     var wealthTypeOptions = new List<FloatMenuOption>();
                     foreach (WealthType wealthType in Enum.GetValues(typeof(WealthType)))
-                        wealthTypeOptions.Add(new FloatMenuOption(wealthType.ToString(), () =>
-                        {
-                            wealthTypeToDraw = wealthType;
-                            CalculateWealthForType(wealthTypeToDraw);
-                            scrollPosition = new Vector2(0, 0);
-                        }));
+                    {
+                        wealthTypeOptions.Add(new FloatMenuOption(wealthType.ToString(),
+                            () =>
+                            {
+                                wealthTypeToDraw = wealthType;
+                                CalculateWealthForType(wealthTypeToDraw);
+                                scrollPosition = new Vector2(0, 0);
+                            }));
+                    }
+
                     Find.WindowStack.Add(new FloatMenu(wealthTypeOptions));
                 }
 
