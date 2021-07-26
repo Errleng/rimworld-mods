@@ -15,7 +15,7 @@
     <scatterableOnMapGen>false</scatterableOnMapGen>
     <selectable>true</selectable>
     <tradeability>None</tradeability>
-    <drawerType>RealtimeOnly</drawerType>
+    <drawerType>MapMeshOnly</drawerType>
     <statBases>
       <MaxHitPoints>50</MaxHitPoints>
       <DeteriorationRate>0</DeteriorationRate>

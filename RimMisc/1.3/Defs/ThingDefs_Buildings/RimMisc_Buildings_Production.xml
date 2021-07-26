@@ -12,7 +12,8 @@
     </graphicData>
     <size>(3,3)</size>
     <altitudeLayer>Building</altitudeLayer>
-    <passability>Impassable</passability>
+    <passability>PassThroughOnly</passability>
+    <pathCost>50</pathCost>
     <fillPercent>0.5</fillPercent>
     <hasInteractionCell>true</hasInteractionCell>
     <interactionCellOffset>(0,0,-2)</interactionCellOffset>
