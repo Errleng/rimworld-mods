@@ -166,7 +166,7 @@
       </li>
       <li Class="CompProperties_Flickable" />
       <li Class="CompProperties_TempControl">
-        <energyPerSecond>10000</energyPerSecond>
+        <energyPerSecond>100000</energyPerSecond>
       </li>
       <li Class="CompProperties_Glower">
         <glowRadius>3</glowRadius>
@@ -240,7 +240,7 @@
       </li>
       <li Class="CompProperties_Flickable" />
       <li Class="CompProperties_TempControl">
-        <energyPerSecond>-10000</energyPerSecond>
+        <energyPerSecond>-100000</energyPerSecond>
       </li>
       <li Class="CompProperties_Glower">
         <glowRadius>3</glowRadius>
