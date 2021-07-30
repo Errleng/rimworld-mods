@@ -22,7 +22,7 @@ namespace RimSpawners
         private PawnKindDef chosenKind;
 
         private bool dormant;
-        public IntVec3 dropSpot = IntVec3.Invalid;
+        public TargetInfo dropSpotTarget;
 
         public int nextPawnSpawnTick = -1;
         private bool paused;
@@ -372,9 +372,9 @@ namespace RimSpawners
             {
                 var dropCenter = IntVec3.Invalid;
 
-                if (dropSpot != IntVec3.Invalid)
+                if (dropSpotTarget.Cell != IntVec3.Invalid)
                 {
-                    DropCellFinder.TryFindDropSpotNear(dropSpot, parent.Map, out dropCenter, true, false);
+                    DropCellFinder.TryFindDropSpotNear(dropSpotTarget.Cell, parent.Map, out dropCenter, true, false);
                 }
                 else
                 {
@@ -775,6 +775,7 @@ namespace RimSpawners
             Scribe_Values.Look(ref spawnInDropPods, "spawnInDropPods");
             Scribe_Values.Look(ref spawnAllAtOnce, "spawnAllAtOnce");
             Scribe_Defs.Look(ref chosenKind, "chosenKind");
+            Scribe_TargetInfo.Look(ref dropSpotTarget, "dropSpotTarget");
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 spawnedPawns.RemoveAll(x => x == null);

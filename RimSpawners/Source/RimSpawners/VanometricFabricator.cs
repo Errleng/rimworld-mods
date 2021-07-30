@@ -108,7 +108,7 @@ namespace RimSpawners
                     cusp.SpawnInDropPods = !cusp.SpawnInDropPods;
                     if (!cusp.SpawnInDropPods)
                     {
-                        cusp.dropSpot = IntVec3.Invalid;
+                        cusp.dropSpotTarget = new TargetInfo(IntVec3.Invalid, null, true);
                     }
                 }
             };
@@ -125,7 +125,7 @@ namespace RimSpawners
                         var spawners = Find.Selector.SelectedObjects.OfType<VanometricFabricator>().ToList();
                         foreach (var spawner in spawners)
                         {
-                            spawner.cusp.dropSpot = target.Cell;
+                            spawner.cusp.dropSpotTarget = new TargetInfo(target.Cell, Map);
                         }
                     });
                 }
@@ -157,9 +157,9 @@ namespace RimSpawners
         public override void DrawExtraSelectionOverlays()
         {
             base.DrawExtraSelectionOverlays();
-            if (cusp.dropSpot != IntVec3.Invalid)
+            if (cusp.dropSpotTarget != IntVec3.Invalid)
             {
-                var vector = cusp.dropSpot.ToVector3ShiftedWithAltitude(AltitudeLayer.MetaOverlays);
+                var vector = cusp.dropSpotTarget.ToVector3ShiftedWithAltitude(AltitudeLayer.MetaOverlays);
                 Graphics.DrawMesh(MeshPool.plane10, vector, Quaternion.identity, GenDraw.InteractionCellMaterial, 0);
             }
         }
