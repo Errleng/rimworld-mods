@@ -157,9 +157,9 @@ namespace RimSpawners
         public override void DrawExtraSelectionOverlays()
         {
             base.DrawExtraSelectionOverlays();
-            if (cusp.dropSpotTarget != IntVec3.Invalid)
+            if (cusp.dropSpotTarget.Cell != IntVec3.Invalid)
             {
-                var vector = cusp.dropSpotTarget.ToVector3ShiftedWithAltitude(AltitudeLayer.MetaOverlays);
+                var vector = cusp.dropSpotTarget.Cell.ToVector3ShiftedWithAltitude(AltitudeLayer.MetaOverlays);
                 Graphics.DrawMesh(MeshPool.plane10, vector, Quaternion.identity, GenDraw.InteractionCellMaterial, 0);
             }
         }
