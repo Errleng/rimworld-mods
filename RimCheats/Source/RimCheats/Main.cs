@@ -20,28 +20,30 @@ namespace RimCheats
             this.settings = GetSettings<RimCheatsSettings>();
         }
 
+        private void TextFieldNumericLabeled(Listing_Standard listingStandard, string label, ref float value, float min = RimCheatsSettings.MIN_VALUE, float max = RimCheatsSettings.MAX_VALUE)
+        {
+            string buffer = null;
+            listingStandard.TextFieldNumericLabeled(label, ref value, ref buffer, min, max);
+        }
+
         public override void DoSettingsWindowContents(Rect inRect)
         {
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
-            listingStandard.CheckboxLabeled("Enable pathing", ref settings.enablePathing, "Paths and moves in one tick");
-            listingStandard.CheckboxLabeled("Enable pathing for non-humans", ref settings.enablePathingNonHuman, "Colony non-humans path and moves in one tick");
-            listingStandard.CheckboxLabeled("Enable ignore terrain cost", ref settings.disableTerrainCost, "Colonists ignore terrain movement penalties");
-            listingStandard.CheckboxLabeled("Enable ignore terrain cost for non-humans", ref settings.disableTerrainCostNonHuman, "Colony non-humans ignore terrain movement penalties");
-            listingStandard.CheckboxLabeled("Enable working", ref settings.enableWorking, "Global work speed multiplied by amount");
-            listingStandard.CheckboxLabeled("Enable learning", ref settings.enableLearning, "Global learning speed multiplied by amount");
-            listingStandard.CheckboxLabeled("Enable carrying capacity", ref settings.enableCarryingCapacity, "Carrying capacity multiplied by amount");
-            listingStandard.CheckboxLabeled("Carrying capacity affects mass capacity?", ref settings.enableCarryingCapacityMass, "Mass capacity is multiplied by carrying capacity");
-            listingStandard.CheckboxLabeled("Enable faster progress bar toils", ref settings.enableFasterProgressBars, "Multiply the speed that toils with progress bars are completed");
-            listingStandard.CheckboxLabeled("Instant cleaning", ref settings.instantCleaning, "All pawns clean filth instantly");
-            listingStandard.Label($"Work multplier: {settings.workMultiplier}");
-            settings.workMultiplier = listingStandard.Slider(settings.workMultiplier, 0f, 100f);
-            listingStandard.Label($"Learning multplier: {settings.learnMultiplier}");
-            settings.learnMultiplier = listingStandard.Slider(settings.learnMultiplier, 0f, 1000f);
-            listingStandard.Label($"Carrying capacity multplier: {settings.carryingCapacityMultiplier}");
-            settings.carryingCapacityMultiplier = listingStandard.Slider(settings.carryingCapacityMultiplier, 0f, 100f);
-            listingStandard.Label($"Progress bar speed multplier: {settings.progressBarSpeedMultiplier}");
-            settings.progressBarSpeedMultiplier = listingStandard.Slider(settings.progressBarSpeedMultiplier, 0f, 100f);
+            listingStandard.CheckboxLabeled("PathingToggleLabel".Translate(), ref settings.enablePathing);
+            listingStandard.CheckboxLabeled("PathingNonHumanToggleLabel".Translate(), ref settings.enablePathingNonHuman);
+            listingStandard.CheckboxLabeled("IgnoreTerrainCostToggleLabel".Translate(), ref settings.disableTerrainCost);
+            listingStandard.CheckboxLabeled("IgnoreTerrainCostNonHumanToggleLabel".Translate(), ref settings.disableTerrainCostNonHuman);
+            listingStandard.CheckboxLabeled("WorkSpeedToggleLabel".Translate(), ref settings.enableWorking);
+            listingStandard.CheckboxLabeled("ToilSpeedToggleLabel".Translate(), ref settings.enableToilSpeed);
+            listingStandard.CheckboxLabeled("LearningSpeedToggleLabel".Translate(), ref settings.enableLearning);
+            listingStandard.CheckboxLabeled("CarryingCapacityToggleLabel".Translate(), ref settings.enableCarryingCapacity);
+            listingStandard.CheckboxLabeled("CarryingCapacityMassToggleLabel".Translate(), ref settings.enableCarryingCapacityMass);
+            listingStandard.CheckboxLabeled("CleaningSpeedToggleLabel".Translate(), ref settings.enableInstantCleaning);
+            TextFieldNumericLabeled(listingStandard, "WorkSpeedMultiplierLabel".Translate(), ref settings.workMultiplier);
+            TextFieldNumericLabeled(listingStandard, "ToilSpeedMultiplierLabel".Translate(), ref settings.toilSpeedMultiplier);
+            TextFieldNumericLabeled(listingStandard, "LearningSpeedMultiplierLabel".Translate(), ref settings.learnMultiplier);
+            TextFieldNumericLabeled(listingStandard, "CarryingCapacityMultiplierLabel".Translate(), ref settings.carryingCapacityMultiplier);
             listingStandard.End();
             base.DoSettingsWindowContents(inRect);
         }
@@ -54,6 +56,8 @@ namespace RimCheats
 
     public class RimCheatsSettings : ModSettings
     {
+        public const float MIN_VALUE = 0;
+        public const float MAX_VALUE = 1000;
         public bool enablePathing;
         public bool enablePathingNonHuman;
         public bool enableWorking;
@@ -62,29 +66,29 @@ namespace RimCheats
         public bool disableTerrainCostNonHuman;
         public bool enableCarryingCapacity;
         public bool enableCarryingCapacityMass;
-        public bool enableFasterProgressBars;
-        public bool instantCleaning;
+        public bool enableToilSpeed;
+        public bool enableInstantCleaning;
         public float workMultiplier;
         public float learnMultiplier;
         public float carryingCapacityMultiplier;
-        public float progressBarSpeedMultiplier;
+        public float toilSpeedMultiplier;
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref enablePathing, "enablePathing");
             Scribe_Values.Look(ref enablePathingNonHuman, "enablePathingNonHuman");
             Scribe_Values.Look(ref enableWorking, "enableWorking");
+            Scribe_Values.Look(ref enableToilSpeed, "enableToilSpeed");
             Scribe_Values.Look(ref enableLearning, "enableLearning");
             Scribe_Values.Look(ref disableTerrainCost, "disableTerrainCost");
             Scribe_Values.Look(ref disableTerrainCostNonHuman, "disableTerrainCostNonHuman");
             Scribe_Values.Look(ref enableCarryingCapacity, "enableCarryingCapacity");
             Scribe_Values.Look(ref enableCarryingCapacityMass, "enableCarryingCapacityMass");
-            Scribe_Values.Look(ref enableFasterProgressBars, "enableFasterProgressBars");
-            Scribe_Values.Look(ref instantCleaning, "instantCleaning");
+            Scribe_Values.Look(ref enableInstantCleaning, "enableInstantCleaning");
             Scribe_Values.Look(ref workMultiplier, "workMultiplier", 1f);
+            Scribe_Values.Look(ref toilSpeedMultiplier, "toilSpeedMultiplier", 1f);
             Scribe_Values.Look(ref learnMultiplier, "learnMultiplier", 1f);
             Scribe_Values.Look(ref carryingCapacityMultiplier, "carryingCapacityMultiplier", 1f);
-            Scribe_Values.Look(ref progressBarSpeedMultiplier, "progressBarSpeedMultiplier", 1f);
             base.ExposeData();
         }
     }
@@ -243,21 +247,21 @@ namespace RimCheats
         //{
         //    static void Postfix(ref Toil __result)
         //    {
-        //        bool enableFasterProgressBars = settings.enableFasterProgressBars;
-        //        if (enableFasterProgressBars)
+        //        bool enableToilSpeed = settings.enableToilSpeed;
+        //        if (enableToilSpeed)
         //        {
         //            Toil toil = __result;
         //            __result.initAction = delegate ()
         //            {
         //                if (toil.actor.IsColonistPlayerControlled)
         //                {
-        //                    float progressBarSpeedMultiplier = settings.progressBarSpeedMultiplier;
+        //                    float toilSpeedMultiplier = settings.toilSpeedMultiplier;
 
         //                    float oldDefaultDuration = toil.defaultDuration;
         //                    float oldTicksLeftThisToil = toil.actor.jobs.curDriver.ticksLeftThisToil;
-        //                    toil.defaultDuration = (int)(toil.defaultDuration / progressBarSpeedMultiplier);
+        //                    toil.defaultDuration = (int)(toil.defaultDuration / toilSpeedMultiplier);
         //                    //Log.Message($"Toil defaultDuration: {oldDefaultDuration} -> {toil.defaultDuration}");
-        //                    toil.actor.jobs.curDriver.ticksLeftThisToil = (int)(toil.actor.jobs.curDriver.ticksLeftThisToil / progressBarSpeedMultiplier);
+        //                    toil.actor.jobs.curDriver.ticksLeftThisToil = (int)(toil.actor.jobs.curDriver.ticksLeftThisToil / toilSpeedMultiplier);
         //                    //Log.Message($"CurDriver ticksLeftThisToil: {oldTicksLeftThisToil} -> {toil.actor.jobs.curDriver.ticksLeftThisToil}");
         //                }
         //                toil.actor.pather.StopDead();
@@ -271,12 +275,11 @@ namespace RimCheats
         {
             static void Postfix(Pawn_JobTracker __instance)
             {
-                bool enableFasterProgressBars = settings.enableFasterProgressBars;
-                if (enableFasterProgressBars)
+                if (settings.enableToilSpeed)
                 {
                     if (__instance.curDriver != null)
                     {
-                        int multiplier = Convert.ToInt32(settings.progressBarSpeedMultiplier);
+                        int multiplier = Convert.ToInt32(settings.toilSpeedMultiplier);
                         for (int i = 0; i < multiplier; i++)
                         {
                             __instance.curDriver.DriverTick();
@@ -323,7 +326,7 @@ namespace RimCheats
         {
             static void Postfix(ref Filth __result)
             {
-                if (settings.instantCleaning)
+                if (settings.enableInstantCleaning)
                 {
                     if (__result.thickness < 0)
                     {

@@ -1,3 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
+  <PathingToggleLabel>Enable instant movement for colonists</PathingToggleLabel>
+  <PathingNonHumanToggleLabel>Enable instant movement for colony non-humans</PathingNonHumanToggleLabel>
+  <IgnoreTerrainCostToggleLabel>Enable colonists to ignore terrain cost</IgnoreTerrainCostToggleLabel>
+  <IgnoreTerrainCostNonHumanToggleLabel>Enable colony non-humans to ignore terrain cost</IgnoreTerrainCostNonHumanToggleLabel>
+  <WorkSpeedToggleLabel>Enable work speed multiplier for colonists</WorkSpeedToggleLabel>
+  <LearningSpeedToggleLabel>Enable learning speed multiplier for colonists</LearningSpeedToggleLabel>
+  <ToilSpeedToggleLabel>Enable general toil speed multiplier for colonists</ToilSpeedToggleLabel>
+  <CarryingCapacityToggleLabel>Enable carrying capacity multiplier for colonists</CarryingCapacityToggleLabel>
+  <CarryingCapacityMassToggleLabel>Enable carrying capacity affecting caravan capacity</CarryingCapacityMassToggleLabel>
+  <CleaningSpeedToggleLabel>Enable instant cleaning for colonists</CleaningSpeedToggleLabel>
+  <WorkSpeedMultiplierLabel>Work speed multiplier</WorkSpeedMultiplierLabel>
+  <WorkSpeedMultiplierDescription></WorkSpeedMultiplierDescription>
+  <LearningSpeedMultiplierLabel>Learning speed multiplier</LearningSpeedMultiplierLabel>
+  <LearningSpeedMultiplierDescription></LearningSpeedMultiplierDescription>
+  <CarryingCapacityMultiplierLabel>Carrying capacity multiplier</CarryingCapacityMultiplierLabel>
+  <CarryingCapacityMultiplierDescription></CarryingCapacityMultiplierDescription>
+  <ToilSpeedMultiplierLabel>General toil speed multiplier</ToilSpeedMultiplierLabel>
+  <ToilSpeedMultiplierDescription></ToilSpeedMultiplierDescription>
 </LanguageData>
