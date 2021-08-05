@@ -4,6 +4,9 @@ namespace RimSpawners
 {
     internal class RimSpawnersSettings : ModSettings
     {
+        public const float MIN_VALUE = 1;
+        public const float MAX_VALUE = 10000;
+
         public bool cachePawns;
         public bool disableCorpses;
         public bool disableNeeds;

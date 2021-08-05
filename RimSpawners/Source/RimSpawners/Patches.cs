@@ -18,6 +18,7 @@ namespace RimSpawners
             var harmony = new Harmony("com.rimspawners.rimworld.mod");
             var assembly = Assembly.GetExecutingAssembly();
             harmony.PatchAll(assembly);
+            Settings.ApplySettings();
             Log.Message("RimSpawners loaded");
         }
 

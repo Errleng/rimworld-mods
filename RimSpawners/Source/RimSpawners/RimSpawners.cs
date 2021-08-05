@@ -16,13 +16,18 @@ namespace RimSpawners
             settings = GetSettings<RimSpawnersSettings>();
         }
 
+        private void TextFieldNumericLabeled(Listing_Standard listingStandard, string label, ref float value, float min = RimSpawnersSettings.MIN_VALUE, float max = RimSpawnersSettings.MAX_VALUE)
+        {
+            string buffer = null;
+            listingStandard.TextFieldNumericLabeled(label, ref value, ref buffer, min, max);
+        }
+
         public override void DoSettingsWindowContents(Rect inRect)
         {
             var listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
 
-            listingStandard.Label("RimSpawners_SettingsMaximumPoints".Translate(settings.maxSpawnerPoints));
-            settings.maxSpawnerPoints = listingStandard.Slider(settings.maxSpawnerPoints, 10f, 2000f);
+            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsMaximumPoints".Translate(), ref settings.maxSpawnerPoints);
 
             listingStandard.GapLine();
             if (listingStandard.RadioButton("RimSpawners_SettingsScaledSpawnTimeButton".Translate(), settings.spawnTime.Equals(SpawnTimeSetting.Scaled)))
@@ -37,10 +42,8 @@ namespace RimSpawners
 
             listingStandard.GapLine();
 
-            listingStandard.Label("RimSpawners_SettingsScaledSpawnTimePointsPerSecond".Translate(settings.spawnTimePointsPerSecond));
-            settings.spawnTimePointsPerSecond = listingStandard.Slider(settings.spawnTimePointsPerSecond, 0.01f, 50f);
-            listingStandard.Label("RimSpawners_SettingsFixedSpawnTimeSeconds".Translate(settings.spawnTimeSecondsPerSpawn));
-            settings.spawnTimeSecondsPerSpawn = listingStandard.Slider(settings.spawnTimeSecondsPerSpawn, 1f, 600f);
+            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsScaledSpawnTimePointsPerSecond".Translate(), ref settings.spawnTimePointsPerSecond);
+            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsFixedSpawnTimeSeconds".Translate(), ref settings.spawnTimeSecondsPerSpawn);
 
             listingStandard.CheckboxLabeled("RimSpawners_SettingsCachePawns".Translate(), ref settings.cachePawns);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsUseAllyFaction".Translate(), ref settings.useAllyFaction);
@@ -50,8 +53,7 @@ namespace RimSpawners
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDoNotAttackFleeing".Translate(), ref settings.doNotAttackFleeing);
 
             listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnOnThreats".Translate(), ref settings.spawnOnlyOnThreat);
-            listingStandard.Label("RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier".Translate(settings.spawnOnThreatSpeedMultiplier));
-            settings.spawnOnThreatSpeedMultiplier = listingStandard.Slider(settings.spawnOnThreatSpeedMultiplier, 0.01f, 10f);
+            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier".Translate(), ref settings.spawnOnThreatSpeedMultiplier);
 
             listingStandard.End();
 
