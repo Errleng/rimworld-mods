@@ -186,7 +186,8 @@ namespace RimMisc
 
             // filter out items already in list
             var condenserItemThingDefNames = Settings.condenserItems.Select(item => item.thingDefName).ToHashSet();
-            var thingList = DefDatabase<ThingDef>.AllDefs.Where(d => !condenserItemThingDefNames.Contains(d.defName) && d.category == ThingCategory.Item);
+            var thingList = DefDatabase<ThingDef>.AllDefs.Where(d => !condenserItemThingDefNames.Contains(d.defName) &&
+            (d.category == ThingCategory.Item || d.category == ThingCategory.Building));
 
             // draw each entry
             var currY = outRect.y;
