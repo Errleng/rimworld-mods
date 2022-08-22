@@ -70,18 +70,23 @@ namespace Rimternet
 
         #region Positioning overrides
 
-        public override MainTabWindowAnchor Anchor {
-            get {
+        public override MainTabWindowAnchor Anchor
+        {
+            get
+            {
                 return MainTabWindowAnchor.Right;
             }
         }
 
-        public override Vector2 RequestedTabSize {
-            get {
-                if (TabDef != null) {
-                    return new Vector2 (TabDef.windowSize.x > MinWidth ? TabDef.windowSize.x : MinWidth, TabDef.windowSize.y > MinHeight ? TabDef.windowSize.y : MinHeight);
+        public override Vector2 RequestedTabSize
+        {
+            get
+            {
+                if (TabDef != null)
+                {
+                    return new Vector2(TabDef.windowSize.x > MinWidth ? TabDef.windowSize.x : MinWidth, TabDef.windowSize.y > MinHeight ? TabDef.windowSize.y : MinHeight);
                 }
-                return new Vector2 (MinWidth, MinHeight);
+                return new Vector2(MinWidth, MinHeight);
             }
         }
 
@@ -211,7 +216,7 @@ namespace Rimternet
             }
             else if (!_filtered)
             {
-                if (_lastFilterTick > 60)
+                if (_lastFilterTick > 60 * 5 && _filterString.Length > 1)
                 {
                     Filter();
                 }
@@ -272,44 +277,54 @@ namespace Rimternet
             float titleWidth = Text.CalcSize(SelectedHelpDef.LabelCap).x;
             var titleRect = new Rect(rect.xMin + WindowMargin, rect.yMin + WindowMargin, titleWidth, 60f);
 
-			if (SelectedHelpDef.keyDef is ResearchProjectDef) {
-				var research = SelectedHelpDef.keyDef as ResearchProjectDef;
-				var researchRect = new Rect (rect.xMin + WindowMargin, rect.yMin + WindowMargin + 5f, 90f, 50f);
+            if (SelectedHelpDef.keyDef is ResearchProjectDef)
+            {
+                var research = SelectedHelpDef.keyDef as ResearchProjectDef;
+                var researchRect = new Rect(rect.xMin + WindowMargin, rect.yMin + WindowMargin + 5f, 90f, 50f);
 
-				Text.Font = GameFont.Small;
-				Text.Anchor = TextAnchor.MiddleCenter;
+                Text.Font = GameFont.Small;
+                Text.Anchor = TextAnchor.MiddleCenter;
 
-				if (research.IsFinished) {
-					Widgets.DrawMenuSection (researchRect);
-					Widgets.Label (researchRect, ResourceBank.String.Finished);
-				} else if (research == Find.ResearchManager.currentProj) {
-					Widgets.DrawMenuSection (researchRect);
-					Widgets.Label (researchRect, ResourceBank.String.InProgress);
-				} else if (!research.CanStartNow) {
-					Widgets.DrawMenuSection (researchRect);
-					Widgets.Label (researchRect, ResourceBank.String.Locked);
-				} else if (Widgets.ButtonText (researchRect, ResourceBank.String.Research, true, false, true)) {
-					SoundDef.Named ("ResearchStart").PlayOneShotOnCamera (null);
-					Find.ResearchManager.currentProj = research;
-					TutorSystem.Notify_Event ("StartResearchProject");
-				}
+                if (research.IsFinished)
+                {
+                    Widgets.DrawMenuSection(researchRect);
+                    Widgets.Label(researchRect, ResourceBank.String.Finished);
+                }
+                else if (research == Find.ResearchManager.currentProj)
+                {
+                    Widgets.DrawMenuSection(researchRect);
+                    Widgets.Label(researchRect, ResourceBank.String.InProgress);
+                }
+                else if (!research.CanStartNow)
+                {
+                    Widgets.DrawMenuSection(researchRect);
+                    Widgets.Label(researchRect, ResourceBank.String.Locked);
+                }
+                else if (Widgets.ButtonText(researchRect, ResourceBank.String.Research, true, false, true))
+                {
+                    SoundDef.Named("ResearchStart").PlayOneShotOnCamera(null);
+                    Find.ResearchManager.currentProj = research;
+                    TutorSystem.Notify_Event("StartResearchProject");
+                }
 
-				titleRect.x += 100f;
-			} else if (
-				(SelectedHelpDef.keyDef != null) &&
-				(SelectedHelpDef.keyDef.IconTexture () != null)
-			) {
-				var iconRect = new Rect (titleRect.xMin + WindowMargin, rect.yMin + WindowMargin, 60f - 2 * WindowMargin, 60f - 2 * WindowMargin);
-				titleRect.x += 60f;
-				SelectedHelpDef.keyDef.DrawColouredIcon (iconRect);
-			}
+                titleRect.x += 100f;
+            }
+            else if (
+                (SelectedHelpDef.keyDef != null) &&
+                (SelectedHelpDef.keyDef.IconTexture() != null)
+            )
+            {
+                var iconRect = new Rect(titleRect.xMin + WindowMargin, rect.yMin + WindowMargin, 60f - 2 * WindowMargin, 60f - 2 * WindowMargin);
+                titleRect.x += 60f;
+                SelectedHelpDef.keyDef.DrawColouredIcon(iconRect);
+            }
 
-			Text.Font = GameFont.Medium;
-			Text.Anchor = TextAnchor.MiddleCenter;
-			Widgets.Label (titleRect, SelectedHelpDef.LabelCap);
-			Text.Font = GameFont.Small;
-			Text.Anchor = TextAnchor.UpperLeft;
-			Text.WordWrap = true;
+            Text.Font = GameFont.Medium;
+            Text.Anchor = TextAnchor.MiddleCenter;
+            Widgets.Label(titleRect, SelectedHelpDef.LabelCap);
+            Text.Font = GameFont.Small;
+            Text.Anchor = TextAnchor.UpperLeft;
+            Text.WordWrap = true;
 
             Rect outRect = rect.ContractedBy(WindowMargin);
             outRect.yMin += 60f;
@@ -505,10 +520,10 @@ namespace Rimternet
             }
         }
 
-		public void JumpTo(Def def)
-		{
-			JumpTo(def.GetHelpDef());
-		}
+        public void JumpTo(Def def)
+        {
+            JumpTo(def.GetHelpDef());
+        }
 
         public void JumpTo(HelpDef helpDef)
         {
