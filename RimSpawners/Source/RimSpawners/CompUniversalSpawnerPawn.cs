@@ -382,7 +382,7 @@ namespace RimSpawners
 
                     if (target != null)
                     {
-                        DropCellFinder.TryFindDropSpotNear(target.Position, parent.Map, out dropCenter, true, false);
+                        TryFindDropSpotNearMinDist(target.Position, parent.Map, out dropCenter, true, false, false, Settings.dropPodMinDist);
                     }
                 }
 
@@ -426,6 +426,71 @@ namespace RimSpawners
 
             SendMessage();
             return true;
+        }
+
+        private bool TryFindDropSpotNearMinDist(IntVec3 center, Map map, out IntVec3 result, bool allowFogged, bool canRoofPunch, bool allowIndoors = true, float minDist = 0, bool mustBeReachableFromCenter = true)
+        {
+            if (DebugViewSettings.drawDestSearch)
+            {
+                map.debugDrawer.FlashCell(center, 1f, "center");
+            }
+
+            Room centerRoom = center.GetRoom(map);
+            Predicate<IntVec3> validator = delegate (IntVec3 c)
+            {
+                if (c.DistanceTo(center) < minDist)
+                {
+                    return false;
+                }
+
+                if (!DropCellFinder.IsGoodDropSpot(c, map, allowFogged, canRoofPunch, allowIndoors))
+                {
+                    return false;
+                }
+
+                return (!mustBeReachableFromCenter || map.reachability.CanReach(center, c, PathEndMode.OnCell, TraverseMode.PassDoors, Danger.Deadly)) ? true : false;
+            };
+            if (allowIndoors && canRoofPunch && centerRoom != null && !centerRoom.PsychologicallyOutdoors)
+            {
+                Predicate<IntVec3> centerValidator = (IntVec3 c) => validator(c) && c.GetRoom(map) == centerRoom;
+                if (TryFindCell(centerValidator, out result))
+                {
+                    return true;
+                }
+
+                Predicate<IntVec3> indoorValidator = delegate (IntVec3 c)
+                {
+                    if (!validator(c))
+                    {
+                        return false;
+                    }
+
+                    Room room = c.GetRoom(map);
+                    return room != null && !room.PsychologicallyOutdoors;
+                };
+                if (TryFindCell(indoorValidator, out result))
+                {
+                    return true;
+                }
+            }
+
+            return TryFindCell(validator, out result);
+            bool TryFindCell(Predicate<IntVec3> v, out IntVec3 r)
+            {
+                int num = 5;
+                do
+                {
+                    if (CellFinder.TryFindRandomCellNear(center, map, num, v, out r))
+                    {
+                        return true;
+                    }
+
+                    num += 3;
+                }
+                while (num <= 16);
+                r = center;
+                return false;
+            }
         }
 
 

@@ -54,6 +54,7 @@ namespace RimSpawners
 
             listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnOnThreats".Translate(), ref settings.spawnOnlyOnThreat);
             TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier".Translate(), ref settings.spawnOnThreatSpeedMultiplier);
+            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsDropPodMinDist".Translate(), ref settings.dropPodMinDist);
 
             listingStandard.End();
 

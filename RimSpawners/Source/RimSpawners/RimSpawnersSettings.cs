@@ -20,6 +20,7 @@ namespace RimSpawners
         public SpawnTimeSetting spawnTime;
         public float spawnTimePointsPerSecond;
         public float spawnTimeSecondsPerSpawn;
+        public float dropPodMinDist;
         public bool useAllyFaction;
 
 
@@ -37,6 +38,7 @@ namespace RimSpawners
             Scribe_Values.Look(ref doNotAttackFleeing, "doNotAttackFleeing");
             Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat");
             Scribe_Values.Look(ref spawnOnThreatSpeedMultiplier, "spawnOnThreatSpeedMultiplier", 2f);
+            Scribe_Values.Look(ref dropPodMinDist, "dropMinDist", 0);
             base.ExposeData();
         }
 
