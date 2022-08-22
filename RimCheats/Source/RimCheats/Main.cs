@@ -32,6 +32,7 @@ namespace RimCheats
             listingStandard.Begin(inRect);
             listingStandard.CheckboxLabeled("PathingToggleLabel".Translate(), ref settings.enablePathing);
             listingStandard.CheckboxLabeled("PathingNonHumanToggleLabel".Translate(), ref settings.enablePathingNonHuman);
+            listingStandard.CheckboxLabeled("PathingAllyToggleLabel".Translate(), ref settings.enablePathingAlly);
             listingStandard.CheckboxLabeled("IgnoreTerrainCostToggleLabel".Translate(), ref settings.disableTerrainCost);
             listingStandard.CheckboxLabeled("IgnoreTerrainCostNonHumanToggleLabel".Translate(), ref settings.disableTerrainCostNonHuman);
             listingStandard.CheckboxLabeled("WorkSpeedToggleLabel".Translate(), ref settings.enableWorking);
@@ -60,6 +61,7 @@ namespace RimCheats
         public const float MAX_VALUE = 1000;
         public bool enablePathing;
         public bool enablePathingNonHuman;
+        public bool enablePathingAlly;
         public bool enableWorking;
         public bool enableLearning;
         public bool disableTerrainCost;
@@ -77,6 +79,7 @@ namespace RimCheats
         {
             Scribe_Values.Look(ref enablePathing, "enablePathing");
             Scribe_Values.Look(ref enablePathingNonHuman, "enablePathingNonHuman");
+            Scribe_Values.Look(ref enablePathingAlly, "enablePathingAlly");
             Scribe_Values.Look(ref enableWorking, "enableWorking");
             Scribe_Values.Look(ref enableToilSpeed, "enableToilSpeed");
             Scribe_Values.Look(ref enableLearning, "enableLearning");
@@ -119,9 +122,13 @@ namespace RimCheats
                 {
                     appliesToPawn = ___pawn.IsColonistPlayerControlled;
                 }
-                if (settings.enablePathingNonHuman && !___pawn.IsColonistPlayerControlled)
+                if (!appliesToPawn && settings.enablePathingNonHuman && !___pawn.IsColonistPlayerControlled)
                 {
                     appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.IsPlayer;
+                }
+                if (!appliesToPawn && settings.enablePathingAlly)
+                {
+                    appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.RelationWith(Faction.OfPlayer).kind == FactionRelationKind.Ally;
                 }
                 if (appliesToPawn && __instance.Moving)
                 {
