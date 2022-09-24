@@ -15,6 +15,8 @@ namespace RimCheats
     public class RimCheats : Mod
     {
         private RimCheatsSettings settings;
+        private Vector2 scrollPos = new Vector2(0, 0);
+
         public RimCheats(ModContentPack content) : base(content)
         {
             this.settings = GetSettings<RimCheatsSettings>();
@@ -28,23 +30,36 @@ namespace RimCheats
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
+
             Listing_Standard listingStandard = new Listing_Standard();
-            listingStandard.Begin(inRect);
+            Rect listingRect = new Rect(inRect.x, inRect.y, inRect.width - 40, inRect.height * 10);
+            listingStandard.Begin(listingRect);
+
+            var outRect = new Rect(0, 0, inRect.width, inRect.height - 20);
+            var viewRect = new Rect(0, 0, inRect.width, listingRect.height);
+            Widgets.BeginScrollView(outRect, ref scrollPos, viewRect);
+
             listingStandard.CheckboxLabeled("PathingToggleLabel".Translate(), ref settings.enablePathing);
             listingStandard.CheckboxLabeled("PathingNonHumanToggleLabel".Translate(), ref settings.enablePathingNonHuman);
             listingStandard.CheckboxLabeled("PathingAllyToggleLabel".Translate(), ref settings.enablePathingAlly);
             listingStandard.CheckboxLabeled("IgnoreTerrainCostToggleLabel".Translate(), ref settings.disableTerrainCost);
             listingStandard.CheckboxLabeled("IgnoreTerrainCostNonHumanToggleLabel".Translate(), ref settings.disableTerrainCostNonHuman);
-            listingStandard.CheckboxLabeled("WorkSpeedToggleLabel".Translate(), ref settings.enableWorking);
             listingStandard.CheckboxLabeled("ToilSpeedToggleLabel".Translate(), ref settings.enableToilSpeed);
-            listingStandard.CheckboxLabeled("LearningSpeedToggleLabel".Translate(), ref settings.enableLearning);
-            listingStandard.CheckboxLabeled("CarryingCapacityToggleLabel".Translate(), ref settings.enableCarryingCapacity);
             listingStandard.CheckboxLabeled("CarryingCapacityMassToggleLabel".Translate(), ref settings.enableCarryingCapacityMass);
             listingStandard.CheckboxLabeled("CleaningSpeedToggleLabel".Translate(), ref settings.enableInstantCleaning);
-            TextFieldNumericLabeled(listingStandard, "WorkSpeedMultiplierLabel".Translate(), ref settings.workMultiplier);
-            TextFieldNumericLabeled(listingStandard, "ToilSpeedMultiplierLabel".Translate(), ref settings.toilSpeedMultiplier);
-            TextFieldNumericLabeled(listingStandard, "LearningSpeedMultiplierLabel".Translate(), ref settings.learnMultiplier);
-            TextFieldNumericLabeled(listingStandard, "CarryingCapacityMultiplierLabel".Translate(), ref settings.carryingCapacityMultiplier);
+
+            listingStandard.GapLine();
+            foreach (var kv in settings.statDefMults)
+            {
+                float multiplier = kv.Value.multiplier;
+                bool enabled = kv.Value.enabled;
+                listingStandard.CheckboxLabeled("StatMultiplierToggleLabel".Translate(kv.Key), ref enabled);
+                TextFieldNumericLabeled(listingStandard, "", ref multiplier, 0, 100000);
+                settings.statDefMults[kv.Key].enabled = enabled;
+                settings.statDefMults[kv.Key].multiplier = multiplier;
+            }
+
+            Widgets.EndScrollView();
             listingStandard.End();
             base.DoSettingsWindowContents(inRect);
         }
@@ -62,36 +77,36 @@ namespace RimCheats
         public bool enablePathing;
         public bool enablePathingNonHuman;
         public bool enablePathingAlly;
-        public bool enableWorking;
-        public bool enableLearning;
         public bool disableTerrainCost;
         public bool disableTerrainCostNonHuman;
-        public bool enableCarryingCapacity;
         public bool enableCarryingCapacityMass;
         public bool enableToilSpeed;
         public bool enableInstantCleaning;
-        public float workMultiplier;
-        public float learnMultiplier;
-        public float carryingCapacityMultiplier;
         public float toilSpeedMultiplier;
+        public Dictionary<string, StatSetting> statDefMults = new Dictionary<string, StatSetting>();
 
         public override void ExposeData()
         {
             Scribe_Values.Look(ref enablePathing, "enablePathing");
             Scribe_Values.Look(ref enablePathingNonHuman, "enablePathingNonHuman");
             Scribe_Values.Look(ref enablePathingAlly, "enablePathingAlly");
-            Scribe_Values.Look(ref enableWorking, "enableWorking");
             Scribe_Values.Look(ref enableToilSpeed, "enableToilSpeed");
-            Scribe_Values.Look(ref enableLearning, "enableLearning");
             Scribe_Values.Look(ref disableTerrainCost, "disableTerrainCost");
             Scribe_Values.Look(ref disableTerrainCostNonHuman, "disableTerrainCostNonHuman");
-            Scribe_Values.Look(ref enableCarryingCapacity, "enableCarryingCapacity");
             Scribe_Values.Look(ref enableCarryingCapacityMass, "enableCarryingCapacityMass");
             Scribe_Values.Look(ref enableInstantCleaning, "enableInstantCleaning");
-            Scribe_Values.Look(ref workMultiplier, "workMultiplier", 1f);
             Scribe_Values.Look(ref toilSpeedMultiplier, "toilSpeedMultiplier", 1f);
-            Scribe_Values.Look(ref learnMultiplier, "learnMultiplier", 1f);
-            Scribe_Values.Look(ref carryingCapacityMultiplier, "carryingCapacityMultiplier", 1f);
+            Scribe_Collections.Look(ref statDefMults, "statMultipliers", LookMode.Value, LookMode.Deep);
+
+            var traverse = new Traverse(typeof(StatDefOf));
+            foreach (var field in traverse.Fields())
+            {
+                if (!statDefMults.ContainsKey(field))
+                {
+                    statDefMults.Add(field, new StatSetting(field));
+                }
+            }
+
             base.ExposeData();
         }
     }
@@ -138,20 +153,22 @@ namespace RimCheats
                         return;
                     }
 
-                    if (__instance.nextCellCostLeft > 0f)
-                    {
-                        __instance.nextCellCostLeft = 0;
-                    }
+                    __instance.nextCellCostLeft = Math.Min(__instance.nextCellCostLeft, 1);
 
-                    if (!___pawn.Position.Equals(lastPos))
-                    {
-                        lastPos = ___pawn.Position;
-                        __instance.PatherTick();
-                    }
-                    else
-                    {
-                        lastPos = ___pawn.Position;
-                    }
+                    //if (__instance.nextCellCostLeft > 0f)
+                    //{
+                    //    __instance.nextCellCostLeft = 0;
+                    //}
+
+                    //if (!___pawn.Position.Equals(lastPos))
+                    //{
+                    //    lastPos = ___pawn.Position;
+                    //    __instance.PatherTick();
+                    //}
+                    //else
+                    //{
+                    //    lastPos = ___pawn.Position;
+                    //}
                 }
             }
         }
@@ -226,24 +243,17 @@ namespace RimCheats
                 Pawn pawn = thing as Pawn;
                 if ((pawn != null) && (pawn.IsColonistPlayerControlled))
                 {
-                    bool enableWorking = settings.enableWorking;
-                    bool enableLearning = settings.enableLearning;
-                    bool enableCarryingCapacity = settings.enableCarryingCapacity;
-
-                    if (enableWorking && stat.Equals(StatDefOf.WorkSpeedGlobal))
+                    string key = stat.defName;
+                    if (!settings.statDefMults.ContainsKey(key))
                     {
-                        float workMultiplier = settings.workMultiplier;
-                        __result *= workMultiplier;
+                        Log.Warning($"No stat setting found for stat {stat.defName} in {String.Join(", ", settings.statDefMults.Keys.ToArray())}");
+                        settings.statDefMults.Add(key, new StatSetting(key));
+                        return;
                     }
-                    else if (enableLearning && stat.Equals(StatDefOf.GlobalLearningFactor))
+                    var statSetting = settings.statDefMults[key];
+                    if (statSetting.enabled)
                     {
-                        float learnMultiplier = settings.learnMultiplier;
-                        __result *= learnMultiplier;
-                    }
-                    else if (enableCarryingCapacity && stat.Equals(StatDefOf.CarryingCapacity))
-                    {
-                        float carryingCapacityMultiplier = settings.carryingCapacityMultiplier;
-                        __result *= carryingCapacityMultiplier;
+                        __result *= (statSetting.multiplier / 100);
                     }
                 }
             }
