@@ -17,6 +17,12 @@
                 <statOffsets>
                     <ImmunityGainSpeed>10</ImmunityGainSpeed>
                 </statOffsets>
+                <capMods>
+                    <li>
+                        <capacity>Moving</capacity>
+                        <offset>5</offset>
+                    </li>
+                </capMods>
             </li>
         </stages>
     </HediffDef>
