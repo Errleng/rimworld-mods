@@ -153,22 +153,17 @@ namespace RimCheats
                         return;
                     }
 
-                    __instance.nextCellCostLeft = Math.Min(__instance.nextCellCostLeft, 1);
+                    __instance.nextCellCostLeft = Math.Min(__instance.nextCellCostLeft, 0);
 
-                    //if (__instance.nextCellCostLeft > 0f)
-                    //{
-                    //    __instance.nextCellCostLeft = 0;
-                    //}
-
-                    //if (!___pawn.Position.Equals(lastPos))
-                    //{
-                    //    lastPos = ___pawn.Position;
-                    //    __instance.PatherTick();
-                    //}
-                    //else
-                    //{
-                    //    lastPos = ___pawn.Position;
-                    //}
+                    if (!___pawn.Position.Equals(lastPos))
+                    {
+                        lastPos = ___pawn.Position;
+                        __instance.PatherTick();
+                    }
+                    else
+                    {
+                        lastPos = ___pawn.Position;
+                    }
                 }
             }
         }

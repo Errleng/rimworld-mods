@@ -29,23 +29,48 @@ namespace HighDensityHydroCustom
 
         private int updateInterval = SLOW_UPDATE_INTERVAL;
 
+        private bool autoFarm;
+        private readonly ResearchProjectDef autoFarmResearch;
+
         public Building_HighDensityHydro()
         {
             innerContainer = new ThingOwner<Thing>(this, false);
+            autoFarmResearch = DefDatabase<ResearchProjectDef>.GetNamed("HDH_Autofarm");
+        }
+
+        public override IEnumerable<Gizmo> GetGizmos()
+        {
+            foreach (var baseGizmo in base.GetGizmos())
+            {
+                yield return baseGizmo;
+            }
+            if (autoFarmResearch.IsFinished)
+            {
+                yield return new Command_Toggle
+                {
+                    defaultLabel = "HDHGizmoAutofarmToggle".Translate(),
+                    defaultDesc = "HDHGizmoAutofarmToggleDesc".Translate(),
+                    icon = ContentFinder<Texture2D>.Get("UI/Designators/Harvest"),
+                    isActive = () => autoFarm,
+                    toggleAction = () =>
+                    {
+                        autoFarm = !autoFarm;
+                    }
+                };
+            }
         }
 
         IEnumerable<IntVec3> IPlantToGrowSettable.Cells => this.OccupiedRect().Cells;
 
         public new bool CanAcceptSowNow()
         {
-            return base.CanAcceptSowNow() && bayStage == BayStage.Sowing;
+            return base.CanAcceptSowNow() && bayStage == BayStage.Sowing && !autoFarm;
         }
 
         public new void SetPlantDefToGrow(ThingDef plantDef)
         {
             base.SetPlantDefToGrow(plantDef);
-            var flag = bayStage == BayStage.Sowing;
-            if (flag)
+            if (bayStage == BayStage.Sowing)
             {
                 innerContainer.ClearAndDestroyContents();
                 foreach (var plant in PlantsOnMe)
@@ -122,60 +147,110 @@ namespace HighDensityHydroCustom
 
             if (base.CanAcceptSowNow())
             {
-                var temperature = Position.GetTemperature(Map);
-                var canGrow = bayStage == BayStage.Growing &&
-                              temperature > Plant.MinOptimalGrowthTemperature &&
-                              temperature < Plant.MaxOptimalGrowthTemperature;
-
-                if (canGrow)
+                if (innerContainer.Count > 0)
                 {
+                    var temperature = Position.GetTemperature(Map);
+                    var canGrow = bayStage == BayStage.Growing &&
+                                  temperature > Plant.MinOptimalGrowthTemperature &&
+                                  temperature < Plant.MaxOptimalGrowthTemperature;
+
                     var firstPlant = innerContainer[0] as Plant;
-                    var fertilitySensitivity = firstPlant.def.plant.fertilitySensitivity;
-                    var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
-                    var growthPerDay = 1f / (GenDate.TicksPerDay * firstPlant.def.plant.growDays);
-                    var growthAmount = fertilityGrowthRateFactor * growthPerDay * updateInterval;
-                    firstPlant.Growth += growthAmount;
-                    highestGrowth = firstPlant.Growth;
-                    if (firstPlant.LifeStage == PlantLifeStage.Mature)
+                    var plantProps = firstPlant.def.plant;
+                    if (canGrow)
                     {
-                        bayStage = BayStage.Harvest;
+                        var fertilitySensitivity = plantProps.fertilitySensitivity;
+                        var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
+                        var growthPerDay = 1f / (GenDate.TicksPerDay * plantProps.growDays);
+                        var growthAmount = fertilityGrowthRateFactor * growthPerDay * updateInterval;
+                        firstPlant.Growth += growthAmount;
+                        highestGrowth = firstPlant.Growth;
+                        if (firstPlant.LifeStage == PlantLifeStage.Mature)
+                        {
+                            bayStage = BayStage.Harvest;
+                        }
+                    }
+
+                    if (bayStage == BayStage.Harvest)
+                    {
+                        highestGrowth = 1;
+
+                        var numCells = this.OccupiedRect().Width * this.OccupiedRect().Height;
+                        var expectedYield = firstPlant.YieldNow();
+
+                        foreach (var thing in innerContainer)
+                        {
+                            var plant = thing as Plant;
+
+                            if (autoFarm)
+                            {
+                                if (plantProps.harvestedThingDef != null)
+                                {
+                                    var harvestResult = ThingMaker.MakeThing(plantProps.harvestedThingDef);
+                                    harvestResult.stackCount = expectedYield;
+                                    harvestResult.SetForbidden(false, true);
+                                    if (harvestResult.stackCount > 0)
+                                    {
+                                        GenPlace.TryPlaceThing(harvestResult, Position, Map, ThingPlaceMode.Near);
+                                        plantProps.soundHarvestFinish.PlayOneShot(new TargetInfo(Position, Map));
+                                    }
+                                    else
+                                    {
+                                        Log.Warning($"HDH {firstPlant.def.LabelCap} harvest yield is 0! Num plants: {innerContainer.Count}, growth: {firstPlant.Growth}, lifestage: {firstPlant.LifeStage}, yield: {expectedYield}");
+                                    }
+                                }
+                                continue;
+                            }
+
+                            var numCellsLooked = 0;
+                            foreach (var cell in this.OccupiedRect())
+                            {
+                                var thingsAtCell = Map.thingGrid.ThingsListAt(cell);
+                                var cellIsFree = true;
+                                foreach (var thingAtCell in thingsAtCell)
+                                {
+                                    if (thingAtCell is Plant)
+                                    {
+                                        cellIsFree = false;
+                                        break;
+                                    }
+                                }
+
+                                if (cellIsFree)
+                                {
+                                    plant.Growth = 1f;
+                                    Thing resultingThing;
+                                    innerContainer.TryDrop(plant, cell, Map, ThingPlaceMode.Direct, out resultingThing);
+                                    break;
+                                }
+
+                                numCellsLooked++;
+                            }
+
+                            if (numCellsLooked >= numCells)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (autoFarm)
+                        {
+                            innerContainer.ClearAndDestroyContents();
+                        }
                     }
                 }
 
-                if (bayStage == BayStage.Harvest)
+                if (bayStage == BayStage.Sowing && autoFarm)
                 {
-                    highestGrowth = 1;
-                    var numCells = this.OccupiedRect().Width * this.OccupiedRect().Height;
-                    foreach (var thing in innerContainer)
+                    for (int i = 0; i < capacity - innerContainer.Count; i++)
                     {
-                        var plant = thing as Plant;
-                        var numCellsLooked = 0;
-                        foreach (var cell in this.OccupiedRect())
+                        Plant plant = (Plant)ThingMaker.MakeThing(GetPlantDefToGrow(), null);
+                        plant.Growth = 0.0001f;
+                        plant.sown = true;
+                        TryAcceptThing(plant);
+                        if (innerContainer.Count >= capacity)
                         {
-                            var thingsAtCell = Map.thingGrid.ThingsListAt(cell);
-                            var cellIsFree = true;
-                            foreach (var thingAtCell in thingsAtCell)
-                            {
-                                if (thingAtCell is Plant)
-                                {
-                                    cellIsFree = false;
-                                    break;
-                                }
-                            }
-
-                            if (cellIsFree)
-                            {
-                                plant.Growth = 1f;
-                                Thing resultingThing;
-                                innerContainer.TryDrop(plant, cell, Map, ThingPlaceMode.Direct, out resultingThing);
-                                break;
-                            }
-
-                            numCellsLooked++;
-                        }
-
-                        if (numCellsLooked >= numCells)
-                        {
+                            bayStage = BayStage.Growing;
+                            SoundDefOf.CryptosleepCasket_Accept.PlayOneShot(new TargetInfo(Position, Map));
                             break;
                         }
                     }
@@ -224,7 +299,7 @@ namespace HighDensityHydroCustom
                 var growthPerDayAdjusted = fertilityGrowthRateFactor * growthPerDay * GenDate.TicksPerDay;
                 var daysToMature = (1 - highestGrowth) / growthPerDayAdjusted;
                 text += $"\n{"HDHPlantCount".Translate(innerContainer.Count, capacity)}";
-                text += $"\n{"HDHHighestGrowth".Translate(Math.Round(highestGrowth * 100, 2), Math.Round(daysToMature, 2))}";
+                text += $"\n{"HDHHighestGrowth".Translate(firstPlant.def.LabelCap, Math.Round(highestGrowth * 100, 2), Math.Round(daysToMature, 2))}";
             }
 
             return text;
@@ -298,6 +373,7 @@ namespace HighDensityHydroCustom
             Scribe_Deep.Look(ref innerContainer, "innerContainer", this);
             Scribe_Values.Look(ref bayStage, "growingStage", BayStage.Growing);
             Scribe_Values.Look(ref highestGrowth, "highestGrowth");
+            Scribe_Values.Look(ref autoFarm, "autoFarm");
         }
 
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)

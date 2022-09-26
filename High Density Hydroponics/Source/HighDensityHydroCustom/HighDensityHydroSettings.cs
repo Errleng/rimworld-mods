@@ -10,9 +10,9 @@ namespace HighDensityHydroCustom
     class HighDensityHydroSettings : ModSettings
     {
         public static readonly float MIN_FERTILITY = 0.0001f;
-        public static readonly float MAX_FERTILITY = 10000;
+        public static readonly float MAX_FERTILITY = 100000;
         public static readonly int MIN_CAPACITY = 1;
-        public static readonly int MAX_CAPACITY = 1000;
+        public static readonly int MAX_CAPACITY = 10000;
         public static readonly int MIN_POWER = 0;
         public static readonly int MAX_POWER = 1000000;
 
