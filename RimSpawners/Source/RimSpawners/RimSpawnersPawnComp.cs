@@ -27,11 +27,10 @@ namespace RimSpawners
             if (parent is Pawn parentPawn)
             {
                 // add hediff to remove pawn needs
-                var rimSpawnersPawnHediffDef = DefDatabase<HediffDef>.GetNamed("RimSpawners_VanometricPawnHediff");
-                if (!parentPawn.health.hediffSet.HasHediff(rimSpawnersPawnHediffDef))
+                if (!parentPawn.health.hediffSet.HasHediff(Settings.spawnedPawnHediff))
                 {
-                    var rimSpawnersPawnHediff = HediffMaker.MakeHediff(rimSpawnersPawnHediffDef, parentPawn);
-                    parentPawn.health.AddHediff(rimSpawnersPawnHediff);
+                    var spawnedPawnHediff = HediffMaker.MakeHediff(Settings.spawnedPawnHediff, parentPawn);
+                    parentPawn.health.AddHediff(spawnedPawnHediff);
                 }
 
                 if (Settings.disableNeeds)

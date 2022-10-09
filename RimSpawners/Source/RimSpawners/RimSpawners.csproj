@@ -57,6 +57,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="models\CapMod.cs" />
     <Compile Include="CompProperties_UniversalSpawnerPawn.cs" />
     <Compile Include="CompUniversalSpawnerPawn.cs" />
     <Compile Include="DefExtensions.cs" />
@@ -68,7 +69,8 @@
     <Compile Include="Patches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RimSpawnersWorldComp.cs" />
-    <Compile Include="SpawnTimeSetting.cs" />
+    <Compile Include="models\SpawnTimeSetting.cs" />
+    <Compile Include="models\StatOffset.cs" />
     <Compile Include="Texture2DExtensions.cs" />
     <Compile Include="VanometricFabricator.cs" />
   </ItemGroup>

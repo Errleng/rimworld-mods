@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -8,6 +9,7 @@ namespace RimSpawners
     internal class RimSpawners : Mod
     {
         private readonly RimSpawnersSettings settings;
+        private Vector2 scrollPos = new Vector2(0, 0);
         public static FactionDef spawnedPawnFactionDef;
         public static Faction spawnedPawnFaction;
 
@@ -25,7 +27,12 @@ namespace RimSpawners
         public override void DoSettingsWindowContents(Rect inRect)
         {
             var listingStandard = new Listing_Standard();
-            listingStandard.Begin(inRect);
+            Rect listingRect = new Rect(inRect.x, inRect.y, inRect.width - 40, inRect.height * 20);
+            listingStandard.Begin(listingRect);
+
+            var outRect = new Rect(0, 0, inRect.width, inRect.height - 20);
+            var viewRect = new Rect(0, 0, inRect.width, listingRect.height);
+            Widgets.BeginScrollView(outRect, ref scrollPos, viewRect);
 
             TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsMaximumPoints".Translate(), ref settings.maxSpawnerPoints);
 
@@ -56,6 +63,33 @@ namespace RimSpawners
             TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier".Translate(), ref settings.spawnOnThreatSpeedMultiplier);
             TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsDropPodMinDist".Translate(), ref settings.dropPodMinDist);
 
+            listingStandard.GapLine();
+
+            foreach (var key in settings.hediffCapMods.Keys.OrderBy(x => x))
+            {
+                var val = settings.hediffCapMods[key];
+                float offset = val.offset;
+                bool enabled = val.enabled;
+                listingStandard.CheckboxLabeled("RimSpawners_SettingsHediffCapMod".Translate(key), ref enabled);
+                TextFieldNumericLabeled(listingStandard, "", ref offset, -10000, 100000);
+                settings.hediffCapMods[key].enabled = enabled;
+                settings.hediffCapMods[key].offset = offset;
+            }
+
+            listingStandard.GapLine();
+
+            foreach (var key in settings.hediffStatOffsets.Keys.OrderBy(x => x))
+            {
+                var val = settings.hediffStatOffsets[key];
+                float offset = val.offset;
+                bool enabled = val.enabled;
+                listingStandard.CheckboxLabeled("RimSpawners_SettingsHediffStatOffset".Translate(key), ref enabled);
+                TextFieldNumericLabeled(listingStandard, "", ref offset, -10000, 100000);
+                settings.hediffStatOffsets[key].enabled = enabled;
+                settings.hediffStatOffsets[key].offset = offset;
+            }
+
+            Widgets.EndScrollView();
             listingStandard.End();
 
             settings.ApplySettings();
