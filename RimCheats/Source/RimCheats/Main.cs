@@ -14,7 +14,7 @@ namespace RimCheats
 {
     public class RimCheats : Mod
     {
-        private RimCheatsSettings settings;
+        private readonly RimCheatsSettings settings;
         private Vector2 scrollPos = new Vector2(0, 0);
 
         public RimCheats(ModContentPack content) : base(content)
@@ -49,14 +49,15 @@ namespace RimCheats
             listingStandard.CheckboxLabeled("CleaningSpeedToggleLabel".Translate(), ref settings.enableInstantCleaning);
 
             listingStandard.GapLine();
-            foreach (var kv in settings.statDefMults)
+            foreach (var key in settings.statDefMults.Keys.OrderBy(x => x))
             {
-                float multiplier = kv.Value.multiplier;
-                bool enabled = kv.Value.enabled;
-                listingStandard.CheckboxLabeled("StatMultiplierToggleLabel".Translate(kv.Key), ref enabled);
+                var stat = settings.statDefMults[key];
+                float multiplier = stat.multiplier;
+                bool enabled = stat.enabled;
+                listingStandard.CheckboxLabeled("StatMultiplierToggleLabel".Translate(key), ref enabled);
                 TextFieldNumericLabeled(listingStandard, "", ref multiplier, 0, 100000);
-                settings.statDefMults[kv.Key].enabled = enabled;
-                settings.statDefMults[kv.Key].multiplier = multiplier;
+                settings.statDefMults[key].enabled = enabled;
+                settings.statDefMults[key].multiplier = multiplier;
             }
 
             Widgets.EndScrollView();
@@ -114,7 +115,7 @@ namespace RimCheats
     [StaticConstructorOnStartup]
     public class Patcher
     {
-        static RimCheatsSettings settings;
+        static readonly RimCheatsSettings settings;
 
         static Patcher()
         {
@@ -125,13 +126,15 @@ namespace RimCheats
             Log.Message("RimCheats loaded");
         }
 
-        [HarmonyPatch(typeof(Pawn_PathFollower), "PatherTick")]
-        class PatchPawn_PathFollowerPatherTick
+        [HarmonyPatch(typeof(Pawn_PathFollower), "TrySetNewPath")]
+        class Patch_Pawn_PathFollower_PatherTick
         {
-            private static IntVec3 lastPos;
-
-            static void Postfix(Pawn_PathFollower __instance, Pawn ___pawn)
+            static void Postfix(Pawn_PathFollower __instance, bool __result, Pawn ___pawn)
             {
+                if (!__result)
+                {
+                    return;
+                }
                 bool appliesToPawn = false;
                 if (settings.enablePathing)
                 {
@@ -152,21 +155,53 @@ namespace RimCheats
                     {
                         return;
                     }
-
-                    __instance.nextCellCostLeft = Math.Min(__instance.nextCellCostLeft, 0);
-
-                    if (!___pawn.Position.Equals(lastPos))
-                    {
-                        lastPos = ___pawn.Position;
-                        __instance.PatherTick();
-                    }
-                    else
-                    {
-                        lastPos = ___pawn.Position;
-                    }
+                    ___pawn.Position = __instance.Destination.Cell;
                 }
             }
         }
+
+        //[HarmonyPatch(typeof(Pawn_PathFollower), "PatherTick")]
+        //class PatchPawn_PathFollowerPatherTick
+        //{
+        //    private static IntVec3 lastPos;
+
+        //    static void Postfix(Pawn_PathFollower __instance, Pawn ___pawn)
+        //    {
+        //        bool appliesToPawn = false;
+        //        if (settings.enablePathing)
+        //        {
+        //            appliesToPawn = ___pawn.IsColonistPlayerControlled;
+        //        }
+        //        if (!appliesToPawn && settings.enablePathingNonHuman && !___pawn.IsColonistPlayerControlled)
+        //        {
+        //            appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.IsPlayer;
+        //        }
+        //        if (!appliesToPawn && settings.enablePathingAlly)
+        //        {
+        //            appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.RelationWith(Faction.OfPlayer).kind == FactionRelationKind.Ally;
+        //        }
+        //        if (appliesToPawn && __instance.Moving)
+        //        {
+        //            // disable speed on wander or waiting for better idle pawn performance
+        //            if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander))
+        //            {
+        //                return;
+        //            }
+
+        //            __instance.nextCellCostLeft = Math.Min(__instance.nextCellCostLeft, 0);
+
+        //            if (!___pawn.Position.Equals(lastPos))
+        //            {
+        //                lastPos = ___pawn.Position;
+        //                __instance.PatherTick();
+        //            }
+        //            else
+        //            {
+        //                lastPos = ___pawn.Position;
+        //            }
+        //        }
+        //    }
+        //}
 
         [HarmonyPatch(typeof(Pawn_PathFollower), "CostToMoveIntoCell", new Type[] { typeof(Pawn), typeof(IntVec3) })]
         class PatchPawn_CostToMoveIntoCell

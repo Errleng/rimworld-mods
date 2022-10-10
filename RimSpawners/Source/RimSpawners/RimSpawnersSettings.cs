@@ -108,7 +108,7 @@ namespace RimSpawners
                         var statMod = new StatModifier();
                         var traverse = Traverse.Create(typeof(StatDefOf));
                         statMod.stat = (StatDef)traverse.Field(offset.Value.statName).GetValue();
-                        statMod.value = offset.Value.offset;
+                        statMod.value = offset.Value.offset / 100;
                         stage.statOffsets.Add(statMod);
                         Log.Message($"Added new stat offset to hediff: {offset.Key} = {offset.Value.offset}");
                     }
@@ -139,7 +139,7 @@ namespace RimSpawners
                         var traverse = Traverse.Create(typeof(PawnCapacityDefOf));
                         var capMod = new PawnCapacityModifier();
                         capMod.capacity = (PawnCapacityDef)traverse.Field(mod.Value.capacityName).GetValue();
-                        capMod.offset = mod.Value.offset;
+                        capMod.offset = mod.Value.offset / 100;
                         stage.capMods.Add(capMod);
                         Log.Message($"Added new capacity mod to hediff: {mod.Key} = {mod.Value}");
                     }
