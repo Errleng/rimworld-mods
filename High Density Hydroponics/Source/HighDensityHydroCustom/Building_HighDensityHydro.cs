@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using HarmonyLib;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -7,23 +8,19 @@ using Verse.Sound;
 
 namespace HighDensityHydroCustom
 {
-    public class Building_HighDensityHydro : Building_PlantGrower, IThingHolder, IPlantToGrowSettable
+    public class Building_HighDensityHydro : Building_PlantGrower, IPlantToGrowSettable
     {
         private static readonly int FAST_UPDATE_INTERVAL = GenTicks.SecondsToTicks(1);
         private static readonly int SLOW_UPDATE_INTERVAL = GenTicks.SecondsToTicks(10);
-        private static readonly int SURFACE_PLANTS_THRESHOLD = 2;
 
         private Vector2 barsize;
-
         private BayStage bayStage = BayStage.Sowing;
+        private int numPlants;
+        private Plant simPlant;
 
         protected int capacity = 52;
 
         protected float fertility = 2.8f;
-
-        private float highestGrowth;
-
-        protected ThingOwner innerContainer;
 
         private float margin;
 
@@ -34,7 +31,6 @@ namespace HighDensityHydroCustom
 
         public Building_HighDensityHydro()
         {
-            innerContainer = new ThingOwner<Thing>(this, false);
             autoFarmResearch = DefDatabase<ResearchProjectDef>.GetNamed("HDH_Autofarm");
         }
 
@@ -50,13 +46,33 @@ namespace HighDensityHydroCustom
                 {
                     defaultLabel = "HDHGizmoAutofarmToggle".Translate(),
                     defaultDesc = "HDHGizmoAutofarmToggleDesc".Translate(),
-                    icon = ContentFinder<Texture2D>.Get("UI/Designators/Harvest"),
+                    icon = ContentFinder<Texture2D>.Get("UI/Designators/Harvest", true),
                     isActive = () => autoFarm,
                     toggleAction = () =>
                     {
                         autoFarm = !autoFarm;
                     }
                 };
+            }
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+
+            if (bayStage == BayStage.Growing)
+            {
+                var r = default(GenDraw.FillableBarRequest);
+                r.center = DrawPos + Vector3.up * 0.1f;
+                r.size = barsize;
+                r.fillPercent = simPlant.Growth;
+                r.filledMat = HDH_Graphics.HDHBarFilledMat;
+                r.unfilledMat = HDH_Graphics.HDHBarUnfilledMat;
+                r.margin = margin;
+                var rotation = Rotation;
+                rotation.Rotate(RotationDirection.Clockwise);
+                r.rotation = rotation;
+                GenDraw.DrawFillableBar(r);
             }
         }
 
@@ -70,24 +86,16 @@ namespace HighDensityHydroCustom
         public new void SetPlantDefToGrow(ThingDef plantDef)
         {
             base.SetPlantDefToGrow(plantDef);
+            simPlant = (Plant)ThingMaker.MakeThing(GetPlantDefToGrow(), null);
+            simPlant.Growth = 0;
             if (bayStage == BayStage.Sowing)
             {
-                innerContainer.ClearAndDestroyContents();
+                numPlants = 0;
                 foreach (var plant in PlantsOnMe)
                 {
                     plant.Destroy();
                 }
             }
-        }
-
-        public void GetChildHolders(List<IThingHolder> outChildren)
-        {
-            ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, GetDirectlyHeldThings());
-        }
-
-        public ThingOwner GetDirectlyHeldThings()
-        {
-            return null;
         }
 
         public override void Tick()
@@ -108,181 +116,115 @@ namespace HighDensityHydroCustom
                 updateInterval = SLOW_UPDATE_INTERVAL;
             }
 
-            var numSurfacePlants = 0;
             foreach (var plant in PlantsOnMe)
             {
                 if (plant.LifeStage == PlantLifeStage.Growing)
                 {
-                    ++numSurfacePlants;
-                    if (innerContainer.Count >= capacity)
+                    plant.Destroy();
+                    if (numPlants >= capacity)
                     {
-                        plant.Destroy();
+                        bayStage = BayStage.Growing;
+                        SoundDefOf.CryptosleepCasket_Accept.PlayOneShot(new TargetInfo(Position, Map));
+                        break;
                     }
+                    ++numPlants;
                 }
-            }
-
-            if (numSurfacePlants >= SURFACE_PLANTS_THRESHOLD)
-            {
-                foreach (var plant in PlantsOnMe)
-                {
-                    if (plant.LifeStage == PlantLifeStage.Growing && !plant.Blighted)
-                    {
-                        plant.DeSpawn();
-                        TryAcceptThing(plant);
-                        if (innerContainer.Count >= capacity)
-                        {
-                            bayStage = BayStage.Growing;
-                            SoundDefOf.CryptosleepCasket_Accept.PlayOneShot(new TargetInfo(Position, Map));
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (innerContainer.Count == 0)
-            {
-                bayStage = BayStage.Sowing;
-                highestGrowth = 0f;
             }
 
             if (base.CanAcceptSowNow())
             {
-                if (innerContainer.Count > 0)
+                var temperature = Position.GetTemperature(Map);
+                var canGrow = bayStage == BayStage.Growing &&
+                              temperature > Plant.MinOptimalGrowthTemperature &&
+                              temperature < Plant.MaxOptimalGrowthTemperature;
+                var plantProps = simPlant.def.plant;
+                if (canGrow)
                 {
-                    var temperature = Position.GetTemperature(Map);
-                    var canGrow = bayStage == BayStage.Growing &&
-                                  temperature > Plant.MinOptimalGrowthTemperature &&
-                                  temperature < Plant.MaxOptimalGrowthTemperature;
-
-                    var firstPlant = innerContainer[0] as Plant;
-                    var plantProps = firstPlant.def.plant;
-                    if (canGrow)
+                    var fertilitySensitivity = plantProps.fertilitySensitivity;
+                    var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
+                    var growthPerDay = 1f / (GenDate.TicksPerDay * plantProps.growDays);
+                    var growthAmount = fertilityGrowthRateFactor * growthPerDay * updateInterval;
+                    simPlant.Growth += growthAmount;
+                    if (simPlant.LifeStage == PlantLifeStage.Mature)
                     {
-                        var fertilitySensitivity = plantProps.fertilitySensitivity;
-                        var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
-                        var growthPerDay = 1f / (GenDate.TicksPerDay * plantProps.growDays);
-                        var growthAmount = fertilityGrowthRateFactor * growthPerDay * updateInterval;
-                        firstPlant.Growth += growthAmount;
-                        highestGrowth = firstPlant.Growth;
-                        if (firstPlant.LifeStage == PlantLifeStage.Mature)
-                        {
-                            bayStage = BayStage.Harvest;
-                        }
+                        bayStage = BayStage.Harvest;
                     }
+                }
 
-                    if (bayStage == BayStage.Harvest)
+                if (bayStage == BayStage.Harvest)
+                {
+                    var numCells = this.OccupiedRect().Width * this.OccupiedRect().Height;
+                    var expectedYield = simPlant.YieldNow();
+
+                    for (int i = 0; i < numPlants; i++)
                     {
-                        highestGrowth = 1;
-
-                        var numCells = this.OccupiedRect().Width * this.OccupiedRect().Height;
-                        var expectedYield = firstPlant.YieldNow();
-
-                        foreach (var thing in innerContainer)
-                        {
-                            var plant = thing as Plant;
-
-                            if (autoFarm)
-                            {
-                                if (plantProps.harvestedThingDef != null)
-                                {
-                                    var harvestResult = ThingMaker.MakeThing(plantProps.harvestedThingDef);
-                                    harvestResult.stackCount = expectedYield;
-                                    harvestResult.SetForbidden(false, true);
-                                    if (harvestResult.stackCount > 0)
-                                    {
-                                        GenPlace.TryPlaceThing(harvestResult, Position, Map, ThingPlaceMode.Near);
-                                        plantProps.soundHarvestFinish.PlayOneShot(new TargetInfo(Position, Map));
-                                    }
-                                    else
-                                    {
-                                        Log.Warning($"HDH {firstPlant.def.LabelCap} harvest yield is 0! Num plants: {innerContainer.Count}, growth: {firstPlant.Growth}, lifestage: {firstPlant.LifeStage}, yield: {expectedYield}");
-                                    }
-                                }
-                                continue;
-                            }
-
-                            var numCellsLooked = 0;
-                            foreach (var cell in this.OccupiedRect())
-                            {
-                                var thingsAtCell = Map.thingGrid.ThingsListAt(cell);
-                                var cellIsFree = true;
-                                foreach (var thingAtCell in thingsAtCell)
-                                {
-                                    if (thingAtCell is Plant)
-                                    {
-                                        cellIsFree = false;
-                                        break;
-                                    }
-                                }
-
-                                if (cellIsFree)
-                                {
-                                    plant.Growth = 1f;
-                                    Thing resultingThing;
-                                    innerContainer.TryDrop(plant, cell, Map, ThingPlaceMode.Direct, out resultingThing);
-                                    break;
-                                }
-
-                                numCellsLooked++;
-                            }
-
-                            if (numCellsLooked >= numCells)
-                            {
-                                break;
-                            }
-                        }
-
                         if (autoFarm)
                         {
-                            innerContainer.ClearAndDestroyContents();
+                            if (plantProps.harvestedThingDef != null)
+                            {
+                                var harvestResult = ThingMaker.MakeThing(plantProps.harvestedThingDef);
+                                harvestResult.stackCount = expectedYield;
+                                harvestResult.SetForbidden(false, true);
+                                if (harvestResult.stackCount > 0)
+                                {
+                                    GenPlace.TryPlaceThing(harvestResult, Position, Map, ThingPlaceMode.Near);
+                                    plantProps.soundHarvestFinish.PlayOneShot(new TargetInfo(Position, Map));
+                                }
+                                else
+                                {
+                                    Log.Warning($"HDH {simPlant.def.LabelCap} harvest yield is 0! Num plants: {numPlants}, growth: {simPlant.Growth}, lifestage: {simPlant.LifeStage}, yield: {expectedYield}");
+                                }
+                            }
+                            continue;
+                        }
+
+                        var numCellsLooked = 0;
+                        foreach (var cell in this.OccupiedRect())
+                        {
+                            var thingsAtCell = Map.thingGrid.ThingsListAt(cell);
+                            var cellIsFree = true;
+                            foreach (var thingAtCell in thingsAtCell)
+                            {
+                                if (thingAtCell is Plant)
+                                {
+                                    cellIsFree = false;
+                                    break;
+                                }
+                            }
+
+                            if (cellIsFree)
+                            {
+                                var plantClone = (Plant)ThingMaker.MakeThing(GetPlantDefToGrow(), null);
+                                plantClone.Growth = 1;
+                                Thing resultingThing;
+                                GenDrop.TryDropSpawn(plantClone, cell, Map, ThingPlaceMode.Direct, out resultingThing, null, null, true);
+                                break;
+                            }
+
+                            numCellsLooked++;
+                        }
+
+                        if (numCellsLooked >= numCells)
+                        {
+                            break;
                         }
                     }
+                    bayStage = BayStage.Sowing;
+                    simPlant.Growth = 0;
+                    numPlants = 0;
                 }
 
                 if (bayStage == BayStage.Sowing && autoFarm)
                 {
-                    for (int i = 0; i < capacity - innerContainer.Count; i++)
-                    {
-                        Plant plant = (Plant)ThingMaker.MakeThing(GetPlantDefToGrow(), null);
-                        plant.Growth = 0.0001f;
-                        plant.sown = true;
-                        TryAcceptThing(plant);
-                        if (innerContainer.Count >= capacity)
-                        {
-                            bayStage = BayStage.Growing;
-                            SoundDefOf.CryptosleepCasket_Accept.PlayOneShot(new TargetInfo(Position, Map));
-                            break;
-                        }
-                    }
+                    numPlants = capacity;
+                    bayStage = BayStage.Growing;
+                    SoundDefOf.CryptosleepCasket_Accept.PlayOneShot(new TargetInfo(Position, Map));
                 }
             }
             else
             {
-                foreach (var thing in innerContainer)
-                {
-                    var plant = thing as Plant;
-                    var dinfo = new DamageInfo(DamageDefOf.Rotting, 1f);
-                    plant.TakeDamage(dinfo);
-                }
-            }
-        }
-
-        public override void Draw()
-        {
-            base.Draw();
-            if (innerContainer.Count >= capacity && base.CanAcceptSowNow())
-            {
-                var r = default(GenDraw.FillableBarRequest);
-                r.center = DrawPos + Vector3.up * 0.1f;
-                r.size = barsize;
-                r.fillPercent = highestGrowth;
-                r.filledMat = HDH_Graphics.HDHBarFilledMat;
-                r.unfilledMat = HDH_Graphics.HDHBarUnfilledMat;
-                r.margin = margin;
-                var rotation = Rotation;
-                rotation.Rotate(RotationDirection.Clockwise);
-                r.rotation = rotation;
-                GenDraw.DrawFillableBar(r);
+                var dinfo = new DamageInfo(DamageDefOf.Rotting, 1f);
+                simPlant.TakeDamage(dinfo);
             }
         }
 
@@ -290,35 +232,15 @@ namespace HighDensityHydroCustom
         {
             var text = base.GetInspectString();
             text += $"\n{"HDHFertility".Translate(Math.Round(fertility * 100), 2)}";
-            if (innerContainer.Count > 0)
-            {
-                var firstPlant = innerContainer[0] as Plant;
-                var fertilitySensitivity = firstPlant.def.plant.fertilitySensitivity;
-                var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
-                var growthPerDay = 1f / (GenDate.TicksPerDay * firstPlant.def.plant.growDays);
-                var growthPerDayAdjusted = fertilityGrowthRateFactor * growthPerDay * GenDate.TicksPerDay;
-                var daysToMature = (1 - highestGrowth) / growthPerDayAdjusted;
-                text += $"\n{"HDHPlantCount".Translate(innerContainer.Count, capacity)}";
-                text += $"\n{"HDHHighestGrowth".Translate(firstPlant.def.LabelCap, Math.Round(highestGrowth * 100, 2), Math.Round(daysToMature, 2))}";
-            }
+            var fertilitySensitivity = simPlant.def.plant.fertilitySensitivity;
+            var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
+            var growthPerDay = 1f / (GenDate.TicksPerDay * simPlant.def.plant.growDays);
+            var growthPerDayAdjusted = fertilityGrowthRateFactor * growthPerDay * GenDate.TicksPerDay;
+            var daysToMature = (1 - simPlant.Growth) / growthPerDayAdjusted;
+            text += $"\n{"HDHCapacity".Translate(numPlants, capacity)}";
+            text += $"\n{"HDHGrowth".Translate(simPlant.def.LabelCap, Math.Round(simPlant.Growth * 100, 2), Math.Round(daysToMature, 2))}";
 
             return text;
-        }
-
-        public virtual bool TryAcceptThing(Thing thing, bool allowSpecialEffects = true)
-        {
-            if (!Accepts(thing))
-            {
-                return false;
-            }
-
-            if (thing.holdingOwner != null)
-            {
-                thing.holdingOwner.TryTransferToContainer(thing, innerContainer, thing.stackCount);
-                return true;
-            }
-
-            return innerContainer.TryAdd(thing);
         }
 
         public override void PostMake()
@@ -348,6 +270,12 @@ namespace HighDensityHydroCustom
 
             var x2 = z - 0.4f;
             barsize = new Vector2(x2, y);
+
+            if (simPlant == null)
+            {
+                simPlant = (Plant)ThingMaker.MakeThing(GetPlantDefToGrow(), null);
+                simPlant.Growth = 0;
+            }
         }
 
         public void loadConfig()
@@ -357,45 +285,18 @@ namespace HighDensityHydroCustom
             {
                 capacity = modExtension.capacity;
                 fertility = modExtension.fertility;
-                PowerComp.Props.basePowerConsumption = modExtension.power;
+                Traverse.Create(PowerComp.Props).Field("basePowerConsumption").SetValue(modExtension.power);
                 PowerComp.SetUpPowerVars();
             }
-        }
-
-        public virtual void EjectContents()
-        {
-            innerContainer.TryDropAll(InteractionCell, Map, ThingPlaceMode.Near);
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Deep.Look(ref innerContainer, "innerContainer", this);
+            Scribe_Deep.Look(ref simPlant, "plant");
+            Scribe_Values.Look(ref numPlants, "numPlants", 0);
             Scribe_Values.Look(ref bayStage, "growingStage", BayStage.Growing);
-            Scribe_Values.Look(ref highestGrowth, "highestGrowth");
             Scribe_Values.Look(ref autoFarm, "autoFarm");
-        }
-
-        public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
-        {
-            innerContainer.ClearAndDestroyContents();
-            base.Destroy(mode);
-        }
-
-        public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
-        {
-            innerContainer.ClearAndDestroyContents();
-            foreach (var plant in PlantsOnMe)
-            {
-                plant.Destroy();
-            }
-
-            base.DeSpawn(mode);
-        }
-
-        public virtual bool Accepts(Thing thing)
-        {
-            return innerContainer.CanAcceptAnyOf(thing);
         }
 
         protected enum BayStage

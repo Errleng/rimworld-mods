@@ -20,11 +20,11 @@ namespace RimMisc
                 if (isChangingTemp)
                 {
                     this.GetRoom().Temperature += tempChange;
-                    compPowerTrader.PowerOutput = -props.basePowerConsumption;
+                    compPowerTrader.PowerOutput = -props.PowerConsumption;
                 }
                 else
                 {
-                    compPowerTrader.PowerOutput = -props.basePowerConsumption * compTempControl.Props.lowPowerConsumptionFactor;
+                    compPowerTrader.PowerOutput = -props.PowerConsumption * compTempControl.Props.lowPowerConsumptionFactor;
                 }
 
                 compTempControl.operatingAtHighPower = isChangingTemp;

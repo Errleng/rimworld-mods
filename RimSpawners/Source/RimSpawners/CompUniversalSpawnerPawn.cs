@@ -493,7 +493,6 @@ namespace RimSpawners
             }
         }
 
-
         private void AddCustomCompToPawn(Pawn pawn)
         {
             var existingSpawnedPawnComp = pawn.GetComp<RimSpawnersPawnComp>();
@@ -538,13 +537,13 @@ namespace RimSpawners
                 false,
                 false,
                 false,
-                false,
                 true,
-                1f,
+                0f,
                 false,
-                true,
                 false,
-                true,
+                false,
+                false,
+                false,
                 false,
                 false,
                 false,
@@ -552,14 +551,34 @@ namespace RimSpawners
                 0f,
                 0f,
                 null,
-                1f,
+                0f,
                 null,
                 null,
                 null,
                 null,
                 null,
-                pawnMinAge,
-                pawnMinAge);
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                false,
+                false,
+                false,
+                false,
+                null,
+                null,
+                null,
+                null,
+                null,
+                0f,
+                DevelopmentalStage.Adult,
+                null,
+                null,
+                null,
+                false);
 
             if (ModLister.RoyaltyInstalled)
             {
@@ -693,7 +712,6 @@ namespace RimSpawners
             }
         }
 
-
         private Pawn FindRandomActiveHostile(Map map)
         {
             Pawn hostilePawn = null;
@@ -719,7 +737,6 @@ namespace RimSpawners
 
             return hostilePawn;
         }
-
 
         public override void CompTick()
         {

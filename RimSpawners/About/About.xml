@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-   <name>RimSpawners</name>
-   <author>Daze</author>
-   <supportedVersions>
-      <li>1.2</li>
-      <li>1.3</li>
-   </supportedVersions>
-   <packageId>com.rimspawners.rimworld.mod</packageId>
-   <description>Adds buildings which passively spawn useful pawns.</description>
+    <name>RimSpawners</name>
+    <author>Daze</author>
+    <supportedVersions>
+        <li>1.2</li>
+        <li>1.3</li>
+        <li>1.4</li>
+    </supportedVersions>
+    <packageId>com.rimspawners.rimworld.mod</packageId>
+    <description>Adds buildings which passively spawn useful pawns.</description>
 </ModMetaData>

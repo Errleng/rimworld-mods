@@ -8,6 +8,7 @@ namespace RimSpawners
 {
     internal class RimSpawners : Mod
     {
+        public static readonly string modName = "RimSpawners";
         private readonly RimSpawnersSettings settings;
         private Vector2 scrollPos = new Vector2(0, 0);
         public static FactionDef spawnedPawnFactionDef;
@@ -16,6 +17,16 @@ namespace RimSpawners
         public RimSpawners(ModContentPack content) : base(content)
         {
             settings = GetSettings<RimSpawnersSettings>();
+        }
+
+        public static void LogMessage(string message)
+        {
+            Log.Message($"[{modName}] {message}");
+        }
+
+        public static void LogError(string message)
+        {
+            Log.Error($"[{modName}] {message}");
         }
 
         private void TextFieldNumericLabeled(Listing_Standard listingStandard, string label, ref float value, float min = RimSpawnersSettings.MIN_VALUE, float max = RimSpawnersSettings.MAX_VALUE)

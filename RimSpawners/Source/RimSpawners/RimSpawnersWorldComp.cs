@@ -25,8 +25,16 @@ namespace RimSpawners
                 {
                     // update ally faction relations to owner faction relations
                     var allyFaction = RimSpawners.spawnedPawnFaction;
+                    if (allyFaction == null)
+                    {
+                        RimSpawners.LogError("Cannot find the custom faction for spawned pawns");
+                    }
 
                     var playerFactionRelation = allyFaction.RelationWith(Faction.OfPlayer);
+                    if (playerFactionRelation == null)
+                    {
+                        RimSpawners.LogError($"Custom faction {allyFaction.Name} has no relationship with player faction");
+                    }
                     if (!playerFactionRelation.kind.Equals(FactionRelationKind.Ally))
                     {
                         playerFactionRelation.baseGoodwill = 100;
@@ -38,6 +46,12 @@ namespace RimSpawners
                         if (!otherFaction.IsPlayer && !otherFaction.Equals(allyFaction))
                         {
                             var otherFactionRelation = otherFaction.RelationWith(allyFaction);
+                            if (playerFactionRelation == null)
+                            {
+                                RimSpawners.LogMessage($"Custom faction {allyFaction.Name} has no relationship with faction {otherFaction.Name}");
+                                continue;
+                            }
+
                             otherFactionRelation.baseGoodwill = otherFaction.PlayerGoodwill;
                             otherFactionRelation.kind = otherFaction.PlayerRelationKind;
 

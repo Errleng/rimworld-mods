@@ -32,7 +32,7 @@ namespace RimCheats
         {
 
             Listing_Standard listingStandard = new Listing_Standard();
-            Rect listingRect = new Rect(inRect.x, inRect.y, inRect.width - 40, inRect.height * 10);
+            Rect listingRect = new Rect(inRect.x, inRect.y, inRect.width - 40, 50000);
             listingStandard.Begin(listingRect);
 
             var outRect = new Rect(0, 0, inRect.width, inRect.height - 20);
@@ -45,8 +45,8 @@ namespace RimCheats
             listingStandard.CheckboxLabeled("IgnoreTerrainCostToggleLabel".Translate(), ref settings.disableTerrainCost);
             listingStandard.CheckboxLabeled("IgnoreTerrainCostNonHumanToggleLabel".Translate(), ref settings.disableTerrainCostNonHuman);
             listingStandard.CheckboxLabeled("ToilSpeedToggleLabel".Translate(), ref settings.enableToilSpeed);
+            listingStandard.CheckboxLabeled("AutoCleanToggleLabel".Translate(), ref settings.autoClean);
             listingStandard.CheckboxLabeled("CarryingCapacityMassToggleLabel".Translate(), ref settings.enableCarryingCapacityMass);
-            listingStandard.CheckboxLabeled("CleaningSpeedToggleLabel".Translate(), ref settings.enableInstantCleaning);
 
             listingStandard.GapLine();
             foreach (var key in settings.statDefMults.Keys.OrderBy(x => x))
@@ -55,7 +55,7 @@ namespace RimCheats
                 float multiplier = stat.multiplier;
                 bool enabled = stat.enabled;
                 listingStandard.CheckboxLabeled("StatMultiplierToggleLabel".Translate(key), ref enabled);
-                TextFieldNumericLabeled(listingStandard, "", ref multiplier, 0, 100000);
+                TextFieldNumericLabeled(listingStandard, "", ref multiplier, 0, 100000000);
                 settings.statDefMults[key].enabled = enabled;
                 settings.statDefMults[key].multiplier = multiplier;
             }
@@ -82,7 +82,7 @@ namespace RimCheats
         public bool disableTerrainCostNonHuman;
         public bool enableCarryingCapacityMass;
         public bool enableToilSpeed;
-        public bool enableInstantCleaning;
+        public bool autoClean;
         public float toilSpeedMultiplier;
         public Dictionary<string, StatSetting> statDefMults = new Dictionary<string, StatSetting>();
 
@@ -95,7 +95,7 @@ namespace RimCheats
             Scribe_Values.Look(ref disableTerrainCost, "disableTerrainCost");
             Scribe_Values.Look(ref disableTerrainCostNonHuman, "disableTerrainCostNonHuman");
             Scribe_Values.Look(ref enableCarryingCapacityMass, "enableCarryingCapacityMass");
-            Scribe_Values.Look(ref enableInstantCleaning, "enableInstantCleaning");
+            Scribe_Values.Look(ref autoClean, "autoClean");
             Scribe_Values.Look(ref toilSpeedMultiplier, "toilSpeedMultiplier", 1f);
             Scribe_Collections.Look(ref statDefMults, "statMultipliers", LookMode.Value, LookMode.Deep);
 
@@ -123,11 +123,15 @@ namespace RimCheats
             var harmony = new Harmony("com.rimcheats.rimworld.mod");
             var assembly = Assembly.GetExecutingAssembly();
             harmony.PatchAll(assembly);
+            foreach (var method in harmony.GetPatchedMethods())
+            {
+                Log.Message($"RimCheats patched {method.DeclaringType.FullName}.{method.Name}");
+            }
             Log.Message("RimCheats loaded");
         }
 
         [HarmonyPatch(typeof(Pawn_PathFollower), "TrySetNewPath")]
-        class Patch_Pawn_PathFollower_PatherTick
+        class Patch_Pawn_PathFollower_TrySetNewPath
         {
             static void Postfix(Pawn_PathFollower __instance, bool __result, Pawn ___pawn)
             {
@@ -155,7 +159,14 @@ namespace RimCheats
                     {
                         return;
                     }
-                    ___pawn.Position = __instance.Destination.Cell;
+                    if (__instance.curPath != null)
+                    {
+                        while (__instance.curPath.NodesLeftCount > 1)
+                        {
+                            __instance.curPath.ConsumeNextNode();
+                        }
+                        ___pawn.Position = __instance.curPath.Peek(0);
+                    }
                 }
             }
         }
@@ -365,25 +376,6 @@ namespace RimCheats
                     __result = capacity;
                 }
                 return false;
-            }
-        }
-
-        [HarmonyPatch(typeof(JobDriver_CleanFilth), "Filth", MethodType.Getter)]
-        class Patch_JobDriver_CleanFilth_Filth
-        {
-            static void Postfix(ref Filth __result)
-            {
-                if (settings.enableInstantCleaning)
-                {
-                    if (__result.thickness < 0)
-                    {
-                        __result.Destroy();
-                    }
-                    else
-                    {
-                        __result.thickness = 0;
-                    }
-                }
             }
         }
 
