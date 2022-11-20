@@ -198,10 +198,11 @@ namespace HighDensityHydroCustom
                                 plantClone.Growth = 1;
                                 Thing resultingThing;
                                 GenDrop.TryDropSpawn(plantClone, cell, Map, ThingPlaceMode.Direct, out resultingThing, null, null, true);
+                                --numPlants;
                                 break;
                             }
 
-                            numCellsLooked++;
+                            ++numCellsLooked;
                         }
 
                         if (numCellsLooked >= numCells)
@@ -209,9 +210,16 @@ namespace HighDensityHydroCustom
                             break;
                         }
                     }
-                    bayStage = BayStage.Sowing;
-                    simPlant.Growth = 0;
-                    numPlants = 0;
+
+                    if (autoFarm)
+                    {
+                        numPlants = 0;
+                    }
+                    if (numPlants <= 0)
+                    {
+                        bayStage = BayStage.Sowing;
+                        simPlant.Growth = 0;
+                    }
                 }
 
                 if (bayStage == BayStage.Sowing && autoFarm)
