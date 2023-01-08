@@ -374,8 +374,9 @@ namespace RimCheats
                         explanation.Append("  - " + p.LabelShortCap + ": " + capacity.ToStringMassOffset());
                     }
                     __result = capacity;
+                    return false;
                 }
-                return false;
+                return true;
             }
         }
 
