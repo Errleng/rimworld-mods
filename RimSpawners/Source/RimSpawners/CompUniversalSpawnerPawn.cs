@@ -779,7 +779,7 @@ namespace RimSpawners
         {
             if (!Props.spawnMessageKey.NullOrEmpty() && MessagesRepeatAvoider.MessageShowAllowed(Props.spawnMessageKey, 0.1f))
             {
-                Messages.Message(Props.spawnMessageKey.Translate(chosenKind.LabelCap), parent, MessageTypeDefOf.PositiveEvent);
+                Messages.Message(Props.spawnMessageKey.Translate(chosenKind.LabelCap), parent, MessageTypeDefOf.SilentInput);
             }
         }
 
