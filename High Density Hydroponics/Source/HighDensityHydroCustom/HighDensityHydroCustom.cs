@@ -1,10 +1,13 @@
-﻿using System;
+﻿using HarmonyLib;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
+using Verse.AI;
 
 namespace HighDensityHydroCustom
 {
@@ -30,6 +33,26 @@ namespace HighDensityHydroCustom
         public HighDensityHydroCustom(ModContentPack content) : base(content)
         {
             Settings = GetSettings<HighDensityHydroSettings>();
+            var harmony = new Harmony("com.hdhc.rimworld.mod");
+            harmony.PatchAll();
+        }
+
+        [HarmonyPatch(typeof(PlantUtility), "CanSowOnGrower")]
+        public class Patch_Sow
+        {
+            static void Postfix(ThingDef plantDef, object obj, ref bool __result)
+            {
+                if (__result)
+                {
+                    return;
+                }
+
+                Thing thing = obj as Thing;
+                if (thing != null && thing.def.building != null && thing.def.building.sowTag.Equals("Anything"))
+                {
+                    __result = true;
+                }
+            }
         }
 
         public override string SettingsCategory()

@@ -25,6 +25,7 @@ namespace HighDensityHydroCustom
         private float margin;
 
         private int updateInterval = SLOW_UPDATE_INTERVAL;
+        private int growUntil = 1000000;
 
         private bool autoFarm;
         private readonly ResearchProjectDef autoFarmResearch;
@@ -40,6 +41,17 @@ namespace HighDensityHydroCustom
             {
                 yield return baseGizmo;
             }
+            yield return new Command_SetValue
+            {
+                defaultLabel = "HDHGizmoGrowLimit".Translate(),
+                defaultDesc = "HDHGizmoGrowLimitDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/Designators/Harvest", true),
+                maxVal = 1000000,
+                minVal = 0,
+                onValueChange = (int value) => {
+                    growUntil = value;
+                }
+            };
             if (autoFarmResearch.IsFinished)
             {
                 yield return new Command_Toggle
@@ -76,6 +88,21 @@ namespace HighDensityHydroCustom
             }
         }
 
+        public int GetStockpiledProducts()
+        {
+            if (simPlant.def?.plant?.harvestedThingDef == null)
+            {
+                return 0;
+            }
+            var things = Map.listerThings.ThingsOfDef(simPlant.def.plant.harvestedThingDef);
+            int count = 0;
+            foreach (var thing in things)
+            {
+                count += thing.stackCount;
+            }
+            return count;
+        }
+
         IEnumerable<IntVec3> IPlantToGrowSettable.Cells => this.OccupiedRect().Cells;
 
         public new bool CanAcceptSowNow()
@@ -95,6 +122,11 @@ namespace HighDensityHydroCustom
                 {
                     plant.Destroy();
                 }
+            }
+            else if (bayStage == BayStage.Growing && !autoFarm)
+            {
+                bayStage = BayStage.Sowing;
+                numPlants = 0;
             }
         }
 
@@ -136,7 +168,8 @@ namespace HighDensityHydroCustom
                 var temperature = Position.GetTemperature(Map);
                 var canGrow = bayStage == BayStage.Growing &&
                               temperature > Plant.MinOptimalGrowthTemperature &&
-                              temperature < Plant.MaxOptimalGrowthTemperature;
+                              temperature < Plant.MaxOptimalGrowthTemperature &&
+                              GetStockpiledProducts() < growUntil;
                 var plantProps = simPlant.def.plant;
                 if (canGrow)
                 {
@@ -247,6 +280,7 @@ namespace HighDensityHydroCustom
             var daysToMature = (1 - simPlant.Growth) / growthPerDayAdjusted;
             text += $"\n{"HDHCapacity".Translate(numPlants, capacity)}";
             text += $"\n{"HDHGrowth".Translate(simPlant.def.LabelCap, Math.Round(simPlant.Growth * 100, 2), Math.Round(daysToMature, 2))}";
+            text += $"\n{"HDHGrowUntil".Translate(GetStockpiledProducts(), growUntil)}";
 
             return text;
         }

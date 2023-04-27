@@ -1,9 +1,11 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
+using static UnityEngine.Scripting.GarbageCollector;
 
 namespace RimSpawners
 {
@@ -98,63 +100,79 @@ namespace RimSpawners
             {
                 foreach (var offset in hediffStatOffsets)
                 {
-                    var statOffsetIndex = stage.statOffsets.FindIndex(x => x.stat.defName.Equals(offset.Key));
-                    if (statOffsetIndex == -1)
+                    try
                     {
-                        if (!offset.Value.enabled)
+                        var statOffsetIndex = stage.statOffsets.FindIndex(x => x.stat?.defName.Equals(offset.Key) ?? false);
+                        if (statOffsetIndex == -1)
                         {
-                            continue;
-                        }
-                        var statMod = new StatModifier();
-                        var traverse = Traverse.Create(typeof(StatDefOf));
-                        statMod.stat = (StatDef)traverse.Field(offset.Value.statName).GetValue();
-                        statMod.value = offset.Value.offset / 100;
-                        stage.statOffsets.Add(statMod);
-                        Log.Message($"Added new stat offset to hediff: {offset.Key} = {offset.Value.offset}");
-                    }
-                    else
-                    {
-                        var statMod = stage.statOffsets[statOffsetIndex];
-                        //Log.Message($"Changed stat offset from: {statMod} to {offset.Value.offset}");
-                        if (offset.Value.enabled)
-                        {
+                            if (!offset.Value.enabled)
+                            {
+                                continue;
+                            }
+                            var statMod = new StatModifier();
+                            var traverse = Traverse.Create(typeof(StatDefOf));
+                            statMod.stat = (StatDef)traverse.Field(offset.Value.statName).GetValue();
                             statMod.value = offset.Value.offset / 100;
+                            stage.statOffsets.Add(statMod);
+                            Log.Message($"Added stat offset to hediff: {offset.Key} = {offset.Value.offset}");
                         }
                         else
                         {
-                            statMod.value = 0;
+                            var statMod = stage.statOffsets[statOffsetIndex];
+                            Log.Message($"Changed stat offset from: {statMod} to {offset.Value.offset}");
+                            if (offset.Value.enabled)
+                            {
+                                statMod.value = offset.Value.offset / 100;
+                            }
+                            else
+                            {
+                                statMod.value = 0;
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"Exception when trying to add stat offset to hediff: {offset.Key} = {offset.Value.offset}:\n{ex.Message}");
+                        throw ex;
+                    }
                 }
+                
 
                 foreach (var mod in hediffCapMods)
                 {
-                    var capModIndex = stage.capMods.FindIndex(x => x.capacity.defName.Equals(mod.Key));
-                    if (capModIndex == -1)
+                    try
                     {
-                        if (!mod.Value.enabled)
+                        var capModIndex = stage.capMods.FindIndex(x => x.capacity?.defName.Equals(mod.Key) ?? false);
+                        if (capModIndex == -1)
                         {
-                            continue;
-                        }
-                        var traverse = Traverse.Create(typeof(PawnCapacityDefOf));
-                        var capMod = new PawnCapacityModifier();
-                        capMod.capacity = (PawnCapacityDef)traverse.Field(mod.Value.capacityName).GetValue();
-                        capMod.offset = mod.Value.offset / 100;
-                        stage.capMods.Add(capMod);
-                        Log.Message($"Added new capacity mod to hediff: {mod.Key} = {mod.Value}");
-                    }
-                    else
-                    {
-                        var capMod = stage.capMods[capModIndex];
-                        //Log.Message($"Changed stat offset from: {capMod.capacity.defName} to {mod.Value.offset}");
-                        if (mod.Value.enabled)
-                        {
+                            if (!mod.Value.enabled)
+                            {
+                                continue;
+                            }
+                            var traverse = Traverse.Create(typeof(PawnCapacityDefOf));
+                            var capMod = new PawnCapacityModifier();
+                            capMod.capacity = (PawnCapacityDef)traverse.Field(mod.Value.capacityName).GetValue();
                             capMod.offset = mod.Value.offset / 100;
+                            stage.capMods.Add(capMod);
+                            Log.Message($"Added capacity mod to hediff: {mod.Key} = {mod.Value}");
                         }
                         else
                         {
-                            capMod.offset = 0;
+                            var capMod = stage.capMods[capModIndex];
+                            Log.Message($"Changed capacity mod from: {capMod.capacity.defName} to {mod.Value.offset}");
+                            if (mod.Value.enabled)
+                            {
+                                capMod.offset = mod.Value.offset / 100;
+                            }
+                            else
+                            {
+                                capMod.offset = 0;
+                            }
                         }
+                    } catch (Exception ex)
+                    {
+                        Log.Error($"Exception when trying to add capacity mod to hediff: {mod.Key} = {mod.Value}:\n{ex.Message}");
+                        throw ex;
                     }
                 }
             }

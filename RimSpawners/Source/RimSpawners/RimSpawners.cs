@@ -1,15 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
+using System.Runtime;
 using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace RimSpawners
 {
+    [StaticConstructorOnStartup]
+    internal class Loader
+    {
+        static Loader()
+        {
+            RimSpawners.settings.ApplySettings();
+        }
+    }
+
     internal class RimSpawners : Mod
     {
         public static readonly string modName = "RimSpawners";
-        private readonly RimSpawnersSettings settings;
+        public static RimSpawnersSettings settings;
         private Vector2 scrollPos = new Vector2(0, 0);
         public static FactionDef spawnedPawnFactionDef;
         public static Faction spawnedPawnFaction;
@@ -17,6 +28,9 @@ namespace RimSpawners
         public RimSpawners(ModContentPack content) : base(content)
         {
             settings = GetSettings<RimSpawnersSettings>();
+            var harmony = new Harmony("com.rimspawners.rimworld.mod");
+            harmony.PatchAll();
+            Log.Message("RimSpawners loaded");
         }
 
         public static void LogMessage(string message)

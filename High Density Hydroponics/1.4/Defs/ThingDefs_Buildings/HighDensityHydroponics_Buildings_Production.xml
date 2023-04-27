@@ -1,6 +1,9 @@
 <Defs>
     <ThingDef Name="HDH_Hydroponics_Base" ParentName="BuildingBase" Abstract="True">
-        <description>An artificial nutrient bath that allows very dense crop growths in grow bays underneath. The nutrient pumps must work continuously; the plants will die if power is cut. Includes its own internal light source, but the internal ventilation system is not temperature controlled.</description>
+        <description>An artificial nutrient bath that allows very dense crop growths in grow bays
+            underneath. The nutrient pumps must work continuously; the plants will die if power is
+            cut. Includes its own internal light source, but the internal ventilation system is not
+            temperature controlled.</description>
         <thingClass>HighDensityHydroCustom.Building_HighDensityHydro</thingClass>
         <minifiedDef>MinifiedThing</minifiedDef>
         <thingCategories>
@@ -27,7 +30,7 @@
         <fertility>2.0</fertility>
         <building>
             <defaultPlantToGrow>Plant_Rice</defaultPlantToGrow>
-            <sowTag>Ground</sowTag>
+            <sowTag>Anything</sowTag>
         </building>
         <tickerType>Normal</tickerType>
         <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>

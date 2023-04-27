@@ -8,19 +8,9 @@ using Verse.AI;
 
 namespace RimSpawners
 {
-    [StaticConstructorOnStartup]
     public class Patcher
     {
-        private static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
-
-        static Patcher()
-        {
-            var harmony = new Harmony("com.rimspawners.rimworld.mod");
-            var assembly = Assembly.GetExecutingAssembly();
-            harmony.PatchAll(assembly);
-            Settings.ApplySettings();
-            Log.Message("RimSpawners loaded");
-        }
+        private static readonly RimSpawnersSettings Settings = RimSpawners.settings;
 
         [HarmonyPatch(typeof(Pawn_HealthTracker), "MakeDowned")]
         private class Pawn_HealthTracker_MakeDowned_Patch

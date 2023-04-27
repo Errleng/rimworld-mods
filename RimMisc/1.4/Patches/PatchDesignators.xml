@@ -16,11 +16,6 @@
                     <li>RimMisc.Designator_MeleeAttack</li>
                 </value>
             </li>
-            <li Class="PatchOperationAttributeSet">
-                <xpath>/Defs/ThingDefs[defName="MealNutrientPaste"]</xpath>
-                <attribute>ParentName</attribute>
-                <value>MealBaseIngredientless</value>
-            </li>
         </operations>
     </Operation>
 </Patch>

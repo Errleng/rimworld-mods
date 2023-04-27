@@ -52,12 +52,14 @@
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Building_HighDensityHydro.cs" />
+    <Compile Include="Command_SetValue.cs" />
     <Compile Include="HDH_Graphics.cs" />
     <Compile Include="HighDensityHydroCustom.cs" />
     <Compile Include="HighDensityHydroSettings.cs" />
