@@ -26,9 +26,9 @@ namespace HighDensityHydroCustom
                     int num = -1;
                     if (int.TryParse(val, out num))
                     {
+                        onValueChange(Math.Min(Math.Max(num, minVal), maxVal));
                         if (num >= minVal && num <= maxVal)
                         {
-                            onValueChange(num);
                             return;
                         }
                     }
