@@ -272,13 +272,12 @@ namespace HighDensityHydroCustom
         public override string GetInspectString()
         {
             var text = base.GetInspectString();
-            text += $"\n{"HDHFertility".Translate(Math.Round(fertility * 100), 2)}";
             var fertilitySensitivity = simPlant.def.plant.fertilitySensitivity;
             var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
             var growthPerDay = 1f / (GenDate.TicksPerDay * simPlant.def.plant.growDays);
             var growthPerDayAdjusted = fertilityGrowthRateFactor * growthPerDay * GenDate.TicksPerDay;
             var daysToMature = (1 - simPlant.Growth) / growthPerDayAdjusted;
-            text += $"\n{"HDHCapacity".Translate(numPlants, capacity)}";
+            text += $"\n{"HDHFertility".Translate(Math.Round(fertility * 100), 2)}, {"HDHCapacity".Translate(numPlants, capacity)}";
             text += $"\n{"HDHGrowth".Translate(simPlant.def.LabelCap, Math.Round(simPlant.Growth * 100, 2), Math.Round(daysToMature, 2))}";
             text += $"\n{"HDHGrowUntil".Translate(GetStockpiledProducts(), growUntil)}";
 
@@ -339,6 +338,7 @@ namespace HighDensityHydroCustom
             Scribe_Values.Look(ref numPlants, "numPlants", 0);
             Scribe_Values.Look(ref bayStage, "growingStage", BayStage.Growing);
             Scribe_Values.Look(ref autoFarm, "autoFarm");
+            Scribe_Values.Look(ref growUntil, "growUntil");
         }
 
         protected enum BayStage

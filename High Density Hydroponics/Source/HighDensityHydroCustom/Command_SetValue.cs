@@ -12,6 +12,7 @@ namespace HighDensityHydroCustom
     internal class Command_SetValue : Command
     {
         public Action<int> onValueChange;
+        public int initialVal;
         public int minVal;
         public int maxVal;
 
@@ -21,6 +22,7 @@ namespace HighDensityHydroCustom
 
             Dialog_TextInput dialog = new Dialog_TextInput
             {
+                initialVal = initialVal.ToString(),
                 setValue = (string val) =>
                 {
                     int num = -1;
@@ -41,6 +43,13 @@ namespace HighDensityHydroCustom
 
     internal class Dialog_TextInput : Window
     {
+        public Action<string> setValue;
+        public string initialVal;
+
+        private string value;
+        private bool focusField;
+        private int startAcceptingInputAtFrame;
+
         private bool AcceptsInput
         {
             get
@@ -72,6 +81,7 @@ namespace HighDensityHydroCustom
             absorbInputAroundWindow = true;
             closeOnAccept = false;
             closeOnClickedOutside = true;
+            value = initialVal;
         }
 
         public void WasOpenedByHotkey()
@@ -132,15 +142,5 @@ namespace HighDensityHydroCustom
                 }
             }
         }
-
-        public Action<string> setValue;
-
-        protected string value;
-
-        // Token: 0x04001960 RID: 6496
-        private bool focusField;
-
-        // Token: 0x04001961 RID: 6497
-        private int startAcceptingInputAtFrame;
     }
 }
