@@ -46,6 +46,7 @@ namespace HighDensityHydroCustom
                 defaultLabel = "HDHGizmoGrowLimit".Translate(),
                 defaultDesc = "HDHGizmoGrowLimitDesc".Translate(),
                 icon = ContentFinder<Texture2D>.Get("UI/Designators/Harvest", true),
+                initialVal = growUntil,
                 maxVal = 1000000,
                 minVal = 0,
                 onValueChange = (int value) => {
@@ -130,6 +131,24 @@ namespace HighDensityHydroCustom
             }
         }
 
+        private void AcceptPlants()
+        {
+            foreach (var plant in PlantsOnMe)
+            {
+                if (plant.LifeStage == PlantLifeStage.Growing)
+                {
+                    plant.Destroy();
+                    if (numPlants >= capacity)
+                    {
+                        bayStage = BayStage.Growing;
+                        SoundDefOf.CryptosleepCasket_Accept.PlayOneShot(new TargetInfo(Position, Map));
+                        break;
+                    }
+                    ++numPlants;
+                }
+            }
+        }
+
         public override void Tick()
         {
             base.Tick();
@@ -148,40 +167,26 @@ namespace HighDensityHydroCustom
                 updateInterval = SLOW_UPDATE_INTERVAL;
             }
 
-            foreach (var plant in PlantsOnMe)
-            {
-                if (plant.LifeStage == PlantLifeStage.Growing)
-                {
-                    plant.Destroy();
-                    if (numPlants >= capacity)
-                    {
-                        bayStage = BayStage.Growing;
-                        SoundDefOf.CryptosleepCasket_Accept.PlayOneShot(new TargetInfo(Position, Map));
-                        break;
-                    }
-                    ++numPlants;
-                }
-            }
+            AcceptPlants();
 
             if (base.CanAcceptSowNow())
             {
                 var temperature = Position.GetTemperature(Map);
                 var canGrow = bayStage == BayStage.Growing &&
                               temperature > Plant.MinOptimalGrowthTemperature &&
-                              temperature < Plant.MaxOptimalGrowthTemperature &&
-                              GetStockpiledProducts() < growUntil;
+                              temperature < Plant.MaxOptimalGrowthTemperature;
                 var plantProps = simPlant.def.plant;
                 if (canGrow)
                 {
+                    if (simPlant.LifeStage == PlantLifeStage.Mature && GetStockpiledProducts() < growUntil)
+                    {
+                        bayStage = BayStage.Harvest;
+                    }
                     var fertilitySensitivity = plantProps.fertilitySensitivity;
                     var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
                     var growthPerDay = 1f / (GenDate.TicksPerDay * plantProps.growDays);
                     var growthAmount = fertilityGrowthRateFactor * growthPerDay * updateInterval;
                     simPlant.Growth += growthAmount;
-                    if (simPlant.LifeStage == PlantLifeStage.Mature)
-                    {
-                        bayStage = BayStage.Harvest;
-                    }
                 }
 
                 if (bayStage == BayStage.Harvest)

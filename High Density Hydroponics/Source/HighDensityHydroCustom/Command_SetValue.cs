@@ -1,9 +1,6 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
@@ -16,9 +13,16 @@ namespace HighDensityHydroCustom
         public int minVal;
         public int maxVal;
 
+        private List<Action<int>> onValueChanges = new List<Action<int>>();
+
         public override void ProcessInput(Event ev)
         {
             base.ProcessInput(ev);
+
+            if (!onValueChanges.Contains(onValueChange))
+            {
+                onValueChanges.Add(onValueChange);
+            }
 
             Dialog_TextInput dialog = new Dialog_TextInput
             {
@@ -28,7 +32,10 @@ namespace HighDensityHydroCustom
                     int num = -1;
                     if (int.TryParse(val, out num))
                     {
-                        onValueChange(Math.Min(Math.Max(num, minVal), maxVal));
+                        foreach (var action in onValueChanges)
+                        {
+                            action(Math.Min(Math.Max(num, minVal), maxVal));
+                        }
                         if (num >= minVal && num <= maxVal)
                         {
                             return;
@@ -38,6 +45,16 @@ namespace HighDensityHydroCustom
                 }
             };
             Find.WindowStack.Add(dialog);
+        }
+
+        public override bool InheritInteractionsFrom(Gizmo other)
+        {
+            Command_SetValue command = other as Command_SetValue;
+            if (command != null && !onValueChanges.Contains(command.onValueChange))
+            {
+                onValueChanges.Add(command.onValueChange);
+            }
+            return false;
         }
     }
 
