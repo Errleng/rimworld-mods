@@ -14,7 +14,7 @@
     <RimSpawners_SettingsDoNotAttackFleeing>Do not attack fleeing enemies</RimSpawners_SettingsDoNotAttackFleeing>
     <RimSpawners_SettingsSpawnOnThreats>Spawn pawns only when threats are detected</RimSpawners_SettingsSpawnOnThreats>
     <RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier>Initial spawning speed multiplier in reaction to threats</RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier>
-    <RimSpawners_SettingsDropPodMinDist>Minimum drop pod distance from an enemy</RimSpawners_SettingsDropPodMinDist>
+    <RimSpawners_SettingsCrossMap>Drop pods will spawn near threats across all maps</RimSpawners_SettingsCrossMap>
     <RimSpawners_SettingsHediffStatOffset>Hediff stat offset (/100): {0}</RimSpawners_SettingsHediffStatOffset>
     <RimSpawners_SettingsHediffCapMod>Hediff capacity mod (/100): {0}</RimSpawners_SettingsHediffCapMod>
 
@@ -30,10 +30,12 @@
     <!-- COMPSPAWNERPAWN GIZMOS -->
     <RimSpawners_Pause>Pause</RimSpawners_Pause>
     <RimSpawners_PauseDesc>Toggle fabrication on and off</RimSpawners_PauseDesc>
-    <RimSpawners_DropPodToggle>Drop Pods</RimSpawners_DropPodToggle>
-    <RimSpawners_DropPodToggleDesc>Call in drop pods to deliver creatures instead of fabricating</RimSpawners_DropPodToggleDesc>
-    <RimSpawners_DropSpotSelect>Select Drop Spot</RimSpawners_DropSpotSelect>
-    <RimSpawners_DropSpotSelectDesc>Select drop pod location</RimSpawners_DropSpotSelectDesc>
+    <RimSpawners_DropPodToggle>Drop pods</RimSpawners_DropPodToggle>
+    <RimSpawners_DropPodToggleDesc>Call in drop pods to deliver creatures near the edge of the map</RimSpawners_DropPodToggleDesc>
+    <RimSpawners_DropPodNearEnemyToggle>Drop near enemy</RimSpawners_DropPodNearEnemyToggle>
+    <RimSpawners_DropPodNearEnemyToggleDesc>Will spawn creatures near enemies</RimSpawners_DropPodNearEnemyToggleDesc>
+    <RimSpawners_DropSpotSelect>Select drop spot</RimSpawners_DropSpotSelect>
+    <RimSpawners_DropSpotSelectDesc>Select a location where drop pods should be centered on</RimSpawners_DropSpotSelectDesc>
     <RimSpawners_SpawnAllAtOnce>Burst spawn</RimSpawners_SpawnAllAtOnce>
     <RimSpawners_SpawnAllAtOnceDesc>Burst fabricate creatures until the control point limit is reached. The time necessary to cool down will increase accordingly.</RimSpawners_SpawnAllAtOnceDesc>
     <RimSpawners_KillSwitch>Activate kill switch</RimSpawners_KillSwitch>

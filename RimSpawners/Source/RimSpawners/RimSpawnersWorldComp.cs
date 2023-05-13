@@ -28,6 +28,7 @@ namespace RimSpawners
                     if (allyFaction == null)
                     {
                         RimSpawners.LogError("Cannot find the custom faction for spawned pawns");
+                        RimSpawners.spawnedPawnFaction = Find.FactionManager.FirstFactionOfDef(RimSpawners.spawnedPawnFactionDef);
                     }
 
                     var playerFactionRelation = allyFaction.RelationWith(Faction.OfPlayer);

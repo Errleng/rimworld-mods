@@ -3,9 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Verse;
-using static UnityEngine.Scripting.GarbageCollector;
 
 namespace RimSpawners
 {
@@ -24,12 +22,12 @@ namespace RimSpawners
         public float maxSpawnerPoints;
 
         public bool spawnOnlyOnThreat;
+        public bool crossMap;
         public float spawnOnThreatSpeedMultiplier;
 
         public SpawnTimeSetting spawnTime;
         public float spawnTimePointsPerSecond;
         public float spawnTimeSecondsPerSpawn;
-        public float dropPodMinDist;
         public bool useAllyFaction;
         public Dictionary<string, StatOffset> hediffStatOffsets = new Dictionary<string, StatOffset>();
         public Dictionary<string, CapMod> hediffCapMods = new Dictionary<string, CapMod>();
@@ -47,8 +45,8 @@ namespace RimSpawners
             Scribe_Values.Look(ref disableNeeds, "disableNeeds", true);
             Scribe_Values.Look(ref doNotAttackFleeing, "doNotAttackFleeing");
             Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat");
+            Scribe_Values.Look(ref crossMap, "crossMap");
             Scribe_Values.Look(ref spawnOnThreatSpeedMultiplier, "spawnOnThreatSpeedMultiplier", 2f);
-            Scribe_Values.Look(ref dropPodMinDist, "dropMinDist", 0);
             Scribe_Collections.Look(ref hediffStatOffsets, "hediffStatOffsets", LookMode.Value, LookMode.Deep);
             Scribe_Collections.Look(ref hediffCapMods, "hediffCapMods", LookMode.Value, LookMode.Deep);
 
@@ -114,12 +112,12 @@ namespace RimSpawners
                             statMod.stat = (StatDef)traverse.Field(offset.Value.statName).GetValue();
                             statMod.value = offset.Value.offset / 100;
                             stage.statOffsets.Add(statMod);
-                            Log.Message($"Added stat offset to hediff: {offset.Key} = {offset.Value.offset}");
+                            //Log.Message($"Added stat offset to hediff: {offset.Key} = {offset.Value.offset}");
                         }
                         else
                         {
                             var statMod = stage.statOffsets[statOffsetIndex];
-                            Log.Message($"Changed stat offset from: {statMod} to {offset.Value.offset}");
+                            //Log.Message($"Changed stat offset from: {statMod} to {offset.Value.offset}");
                             if (offset.Value.enabled)
                             {
                                 statMod.value = offset.Value.offset / 100;
@@ -136,7 +134,7 @@ namespace RimSpawners
                         throw ex;
                     }
                 }
-                
+
 
                 foreach (var mod in hediffCapMods)
                 {
@@ -154,12 +152,12 @@ namespace RimSpawners
                             capMod.capacity = (PawnCapacityDef)traverse.Field(mod.Value.capacityName).GetValue();
                             capMod.offset = mod.Value.offset / 100;
                             stage.capMods.Add(capMod);
-                            Log.Message($"Added capacity mod to hediff: {mod.Key} = {mod.Value}");
+                            //Log.Message($"Added capacity mod to hediff: {mod.Key} = {mod.Value}");
                         }
                         else
                         {
                             var capMod = stage.capMods[capModIndex];
-                            Log.Message($"Changed capacity mod from: {capMod.capacity.defName} to {mod.Value.offset}");
+                            //Log.Message($"Changed capacity mod from: {capMod.capacity.defName} to {mod.Value.offset}");
                             if (mod.Value.enabled)
                             {
                                 capMod.offset = mod.Value.offset / 100;
@@ -169,7 +167,8 @@ namespace RimSpawners
                                 capMod.offset = 0;
                             }
                         }
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         Log.Error($"Exception when trying to add capacity mod to hediff: {mod.Key} = {mod.Value}:\n{ex.Message}");
                         throw ex;

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using RimWorld;
+using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -10,7 +10,7 @@ namespace RimSpawners
     {
         private static readonly RimSpawnersSettings Settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
         private static readonly int THREAT_CHECK_TICKS = GenTicks.SecondsToTicks(5);
-        private static readonly int THREAT_OVER_DESTROY_PAWNS_TICKS = GenTicks.SecondsToTicks(300);
+        private static readonly int THREAT_OVER_DESTROY_PAWNS_TICKS = GenTicks.SecondsToTicks(60);
 
         private CompVanometricFabricatorPawn cusp;
 
@@ -24,6 +24,53 @@ namespace RimSpawners
             Log.Message($"CompVanometricFabricatorPawn is {cusp.ToStringNullable()}");
         }
 
+        private void UpdateThreats()
+        {
+            var isThreatOnMap = ParentHolder is Map &&
+                                GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction)
+                //|| Map.listerThings.ThingsOfDef(ThingDefOf.Tornado).Any()
+                //|| Map.listerThings.ThingsOfDef(ThingDefOf.DropPodIncoming).Any()
+                ;
+
+            if (isThreatOnMap)
+            {
+                ThreatActive = true;
+                cusp.Dormant = false;
+                return;
+            }
+
+            if (Settings.crossMap && cusp.SpawnInDropPods)
+            {
+                var maps = Find.Maps;
+                foreach (var map in maps)
+                {
+                    if (GenHostility.AnyHostileActiveThreatTo(map, Faction))
+                    {
+                        ThreatActive = true;
+                        cusp.Dormant = false;
+                        return;
+                    }
+                }
+            }
+
+            ThreatActive = false;
+            cusp.Dormant = true;
+        }
+
+        private void SpawnOnThreats()
+        {
+            // only spawn all pawns when the threat is first detected
+            if (!ThreatActive)
+            {
+                //cusp.SpawnPawnsUntilPoints(Settings.maxSpawnerPoints);
+                cusp.SpawnUntilFullSpeedMultiplier = Settings.spawnOnThreatSpeedMultiplier;
+                if (cusp.nextPawnSpawnTick > Find.TickManager.TicksGame)
+                {
+                    cusp.CalculateNextPawnSpawnTick();
+                }
+            }
+        }
+
         public override void Tick()
         {
             base.Tick();
@@ -32,33 +79,8 @@ namespace RimSpawners
             {
                 if (Settings.spawnOnlyOnThreat)
                 {
-                    var isThreatOnMap = ParentHolder is Map &&
-                                        GenHostility.AnyHostileActiveThreatTo(MapHeld, Faction)
-                        //|| Map.listerThings.ThingsOfDef(ThingDefOf.Tornado).Any()
-                        //|| Map.listerThings.ThingsOfDef(ThingDefOf.DropPodIncoming).Any()
-                        ;
-
-                    if (isThreatOnMap)
-                    {
-                        // only spawn all pawns when the threat is first detected
-                        if (!ThreatActive)
-                        {
-                            //cusp.SpawnPawnsUntilPoints(Settings.maxSpawnerPoints);
-                            cusp.SpawnUntilFullSpeedMultiplier = Settings.spawnOnThreatSpeedMultiplier;
-                            if (cusp.nextPawnSpawnTick > Find.TickManager.TicksGame)
-                            {
-                                cusp.CalculateNextPawnSpawnTick();
-                            }
-                        }
-
-                        ThreatActive = true;
-                        cusp.Dormant = false;
-                    }
-                    else
-                    {
-                        ThreatActive = false;
-                        cusp.Dormant = true;
-                    }
+                    UpdateThreats();
+                    SpawnOnThreats();
                 }
                 else
                 {
@@ -112,24 +134,41 @@ namespace RimSpawners
                     }
                 }
             };
-            yield return new Command_Action
+
+            if (cusp.SpawnInDropPods)
             {
-                defaultLabel = "RimSpawners_DropSpotSelect".Translate(),
-                defaultDesc = "RimSpawners_DropSpotSelectDesc".Translate(),
-                icon = ContentFinder<Texture2D>.Get("Things/Special/DropPod"),
-                action = () =>
+                yield return new Command_Toggle
                 {
-                    var targetParams = TargetingParameters.ForDropPodsDestination();
-                    Find.Targeter.BeginTargeting(targetParams, delegate (LocalTargetInfo target)
+                    defaultLabel = "RimSpawners_DropPodNearEnemyToggle".Translate(),
+                    defaultDesc = "RimSpawners_DropPodNearEnemyToggleDesc".Translate(),
+                    icon = ContentFinder<Texture2D>.Get("UI/Commands/DropCarriedPawn"),
+                    isActive = () => cusp.SpawnInDropPodsNearEnemy,
+                    toggleAction = () =>
                     {
-                        var spawners = Find.Selector.SelectedObjects.OfType<VanometricFabricator>().ToList();
-                        foreach (var spawner in spawners)
+                        cusp.SpawnInDropPodsNearEnemy = !cusp.SpawnInDropPodsNearEnemy;
+                    }
+                };
+
+                yield return new Command_Action
+                {
+                    defaultLabel = "RimSpawners_DropSpotSelect".Translate(),
+                    defaultDesc = "RimSpawners_DropSpotSelectDesc".Translate(),
+                    icon = ContentFinder<Texture2D>.Get("Things/Special/DropPod"),
+                    action = () =>
+                    {
+                        var targetParams = TargetingParameters.ForDropPodsDestination();
+                        Find.Targeter.BeginTargeting(targetParams, delegate (LocalTargetInfo target)
                         {
-                            spawner.cusp.dropSpotTarget = new TargetInfo(target.Cell, Map);
-                        }
-                    });
-                }
-            };
+                            var spawners = Find.Selector.SelectedObjects.OfType<VanometricFabricator>().ToList();
+                            foreach (var spawner in spawners)
+                            {
+                                spawner.cusp.dropSpotTarget = new TargetInfo(target.Cell, Map);
+                            }
+                        });
+                    }
+                };
+            }
+
             yield return new Command_Toggle
             {
                 defaultLabel = "RimSpawners_SpawnAllAtOnce".Translate(),

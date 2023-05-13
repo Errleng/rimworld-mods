@@ -1,8 +1,8 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using RimWorld;
 using Verse;
 using Verse.AI;
 using Verse.AI.Group;
@@ -32,6 +32,7 @@ namespace RimSpawners
 
         public List<Pawn> spawnedPawns = new List<Pawn>();
         private bool spawnInDropPods;
+        private bool spawnInDropPodsNearEnemy;
 
         private float spawnUntilFullSpeedMultiplier = 1f;
 
@@ -53,6 +54,12 @@ namespace RimSpawners
         {
             get => spawnInDropPods;
             set => spawnInDropPods = value;
+        }
+
+        public bool SpawnInDropPodsNearEnemy
+        {
+            get => spawnInDropPodsNearEnemy;
+            set => spawnInDropPodsNearEnemy = value;
         }
 
         public bool SpawnAllAtOnce
@@ -108,6 +115,8 @@ namespace RimSpawners
             {
                 pawnsLeftToSpawn = Props.maxPawnsToSpawn.RandomInRange;
             }
+
+            dropSpotTarget = new TargetInfo(IntVec3.Invalid, null, true);
         }
 
         public static Lord FindLordToJoin(Thing spawner,
@@ -317,8 +326,62 @@ namespace RimSpawners
             {
                 return result;
             }
-
             return null;
+        }
+
+        private IntVec3 GetTargetCellFromHostile(Pawn target)
+        {
+            if (SpawnInDropPodsNearEnemy)
+            {
+                return target.Position;
+            }
+            return DropCellFinder.FindRaidDropCenterDistant(target.Map);
+        }
+
+        private Tuple<Map, IntVec3> FindDropCenter()
+        {
+            var dropCenter = IntVec3.Invalid;
+            var targetCell = dropSpotTarget.Cell;
+            var targetMap = dropSpotTarget.Map;
+
+            // if no target specified, then try finding automatically on current map
+            if (dropSpotTarget.Cell == IntVec3.Invalid)
+            {
+                targetMap = parent.Map;
+                var target = FindRandomActiveHostile(targetMap);
+                if (target != null)
+                {
+                    targetCell = GetTargetCellFromHostile(target);
+                }
+            }
+
+            // if there are no threats on current map or on target map, then spawn on another map
+            if (FindRandomActiveHostile(targetMap) == null && FindRandomActiveHostile(parent.Map) == null && Settings.crossMap)
+            {
+                var maps = Find.Maps;
+                foreach (var map in maps)
+                {
+                    var target = FindRandomActiveHostile(map);
+                    if (target != null)
+                    {
+                        targetCell = GetTargetCellFromHostile(target);
+                        targetMap = map;
+                        break;
+                    }
+                }
+            }
+
+            if (targetCell != IntVec3.Invalid)
+            {
+                DropCellFinder.TryFindDropSpotNear(targetCell, targetMap, out dropCenter, true, false, false);
+            }
+
+            if (dropCenter == IntVec3.Invalid)
+            {
+                dropCenter = DropCellFinder.FindRaidDropCenterDistant(targetMap);
+            }
+
+            return new Tuple<Map, IntVec3>(targetMap, dropCenter);
         }
 
         private bool TrySpawnPawn(out Pawn pawn)
@@ -370,29 +433,10 @@ namespace RimSpawners
             var dropPodSuccess = false;
             if (SpawnInDropPods)
             {
-                var dropCenter = IntVec3.Invalid;
+                var dropInfo = FindDropCenter();
 
-                if (dropSpotTarget.Cell != IntVec3.Invalid)
-                {
-                    DropCellFinder.TryFindDropSpotNear(dropSpotTarget.Cell, parent.Map, out dropCenter, true, false);
-                }
-                else
-                {
-                    var target = FindRandomActiveHostile(parent.Map);
-
-                    if (target != null)
-                    {
-                        TryFindDropSpotNearMinDist(target.Position, parent.Map, out dropCenter, true, false, false, Settings.dropPodMinDist);
-                    }
-                }
-
-                if (dropCenter == IntVec3.Invalid)
-                {
-                    dropCenter = DropCellFinder.RandomDropSpot(parent.Map);
-                }
-
-                DropPodUtility.DropThingsNear(dropCenter,
-                    parent.Map,
+                DropPodUtility.DropThingsNear(dropInfo.Item2,
+                    dropInfo.Item1,
                     Gen.YieldSingle<Thing>(pawn),
                     60,
                     false,
@@ -426,71 +470,6 @@ namespace RimSpawners
 
             SendMessage();
             return true;
-        }
-
-        private bool TryFindDropSpotNearMinDist(IntVec3 center, Map map, out IntVec3 result, bool allowFogged, bool canRoofPunch, bool allowIndoors = true, float minDist = 0, bool mustBeReachableFromCenter = true)
-        {
-            if (DebugViewSettings.drawDestSearch)
-            {
-                map.debugDrawer.FlashCell(center, 1f, "center");
-            }
-
-            Room centerRoom = center.GetRoom(map);
-            Predicate<IntVec3> validator = delegate (IntVec3 c)
-            {
-                if (c.DistanceTo(center) < minDist)
-                {
-                    return false;
-                }
-
-                if (!DropCellFinder.IsGoodDropSpot(c, map, allowFogged, canRoofPunch, allowIndoors))
-                {
-                    return false;
-                }
-
-                return (!mustBeReachableFromCenter || map.reachability.CanReach(center, c, PathEndMode.OnCell, TraverseMode.PassDoors, Danger.Deadly)) ? true : false;
-            };
-            if (allowIndoors && canRoofPunch && centerRoom != null && !centerRoom.PsychologicallyOutdoors)
-            {
-                Predicate<IntVec3> centerValidator = (IntVec3 c) => validator(c) && c.GetRoom(map) == centerRoom;
-                if (TryFindCell(centerValidator, out result))
-                {
-                    return true;
-                }
-
-                Predicate<IntVec3> indoorValidator = delegate (IntVec3 c)
-                {
-                    if (!validator(c))
-                    {
-                        return false;
-                    }
-
-                    Room room = c.GetRoom(map);
-                    return room != null && !room.PsychologicallyOutdoors;
-                };
-                if (TryFindCell(indoorValidator, out result))
-                {
-                    return true;
-                }
-            }
-
-            return TryFindCell(validator, out result);
-            bool TryFindCell(Predicate<IntVec3> v, out IntVec3 r)
-            {
-                int num = 5;
-                do
-                {
-                    if (CellFinder.TryFindRandomCellNear(center, map, num, v, out r))
-                    {
-                        return true;
-                    }
-
-                    num += 3;
-                }
-                while (num <= 16);
-                r = center;
-                return false;
-            }
         }
 
         private void AddCustomCompToPawn(Pawn pawn)
@@ -855,6 +834,7 @@ namespace RimSpawners
             Scribe_Values.Look(ref dormant, "dormant");
             Scribe_Values.Look(ref paused, "paused");
             Scribe_Values.Look(ref spawnInDropPods, "spawnInDropPods");
+            Scribe_Values.Look(ref spawnInDropPodsNearEnemy, "spawnInDropPodsNearEnemy");
             Scribe_Values.Look(ref spawnAllAtOnce, "spawnAllAtOnce");
             Scribe_Defs.Look(ref chosenKind, "chosenKind");
             Scribe_TargetInfo.Look(ref dropSpotTarget, "dropSpotTarget");

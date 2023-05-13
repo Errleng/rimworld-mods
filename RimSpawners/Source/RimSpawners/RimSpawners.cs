@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
-using System.Runtime;
+﻿using HarmonyLib;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -86,7 +85,7 @@ namespace RimSpawners
 
             listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnOnThreats".Translate(), ref settings.spawnOnlyOnThreat);
             TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier".Translate(), ref settings.spawnOnThreatSpeedMultiplier);
-            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsDropPodMinDist".Translate(), ref settings.dropPodMinDist);
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsCrossMap".Translate(), ref settings.crossMap);
 
             listingStandard.GapLine();
 
