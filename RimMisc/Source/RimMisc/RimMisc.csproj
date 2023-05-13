@@ -65,6 +65,7 @@
     <Compile Include="CondenserItem.cs" />
     <Compile Include="Designator_MeleeAttack.cs" />
     <Compile Include="CompMeleeAttackable.cs" />
+    <Compile Include="JobDriver_MeleeAttack.cs" />
     <Compile Include="Patch_MakeNewBill.cs" />
     <Compile Include="Patch_JobDriver_TakeInventory_MakeNewToils.cs" />
     <Compile Include="Patch_Toils_Construct_UninstallIfMinifiable.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="RimMiscSettings.cs" />
     <Compile Include="MainTabWindow_WealthTab.cs" />
     <Compile Include="UnfinishedCondenserThing.cs" />
+    <Compile Include="WorkGiver_MeleeAttack.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

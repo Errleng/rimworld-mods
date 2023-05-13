@@ -1,8 +1,8 @@
-﻿using System;
+﻿using HarmonyLib;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -86,6 +86,8 @@ namespace RimMisc
             settingsSection.CheckboxLabeled("RimMisc_DefaultDoUntil".Translate(), ref Settings.defaultDoUntil);
             settingsSection.CheckboxLabeled("RimMisc_AutoCloseLetters".Translate(), ref Settings.autoCloseLetters);
             settingsSection.CheckboxLabeled("RimMisc_DisableEnemyUninstall".Translate(), ref Settings.disableEnemyUninstall);
+            settingsSection.CheckboxLabeled("RimMisc_KillDownedPawns".Translate(), ref Settings.killDownedPawns);
+            settingsSection.CheckboxLabeled("RimMisc_PatchBuildingHp".Translate(), ref Settings.patchBuildingHp);
 
             settingsSection.Label("RimMisc_AutoCloseLettersSeconds".Translate(Settings.autoCloseLettersSeconds));
             Settings.autoCloseLettersSeconds = settingsSection.Slider(Settings.autoCloseLettersSeconds, MIN_AUTOCLOSE_SECONDS, MAX_AUTOCLOSE_SECONDS);

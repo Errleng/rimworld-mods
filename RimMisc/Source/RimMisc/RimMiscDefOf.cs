@@ -6,6 +6,7 @@ namespace RimMisc
     [DefOf]
     public static class RimMiscDefOf
     {
-        public static DesignationDef MeleeAttackDesignation;
+        public static DesignationDef Designation_MeleeAttack;
+        public static JobDef Job_MeleeAttack;
     }
 }

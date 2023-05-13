@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
-  <WorkGiverDef>
-    <defName>DoBillsVanometricCondenser</defName>
-    <label>condense energy into matter</label>
-    <giverClass>WorkGiver_DoBill</giverClass>
-    <workType>Research</workType>
-    <priorityInType>150</priorityInType>
-    <verb>condense</verb>
-    <gerund>condensing</gerund>
-    <fixedBillGiverDefs>
-      <li>VanometricCondenser</li>
-    </fixedBillGiverDefs>
-  </WorkGiverDef>
+    <WorkGiverDef>
+        <defName>DoBillsVanometricCondenser</defName>
+        <label>condense energy into matter</label>
+        <giverClass>WorkGiver_DoBill</giverClass>
+        <workType>Research</workType>
+        <priorityInType>150</priorityInType>
+        <verb>condense</verb>
+        <gerund>condensing</gerund>
+        <fixedBillGiverDefs>
+            <li>VanometricCondenser</li>
+        </fixedBillGiverDefs>
+    </WorkGiverDef>
+    <WorkGiverDef>
+        <defName>WorkGiver_MeleeAttack</defName>
+        <label>melee attack thing</label>
+        <giverClass>RimMisc.WorkGiver_MeleeAttack</giverClass>
+        <workType>Hauling</workType>
+        <priorityInType>50</priorityInType>
+        <verb>melee attack</verb>
+        <gerund>melee attacking</gerund>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+    </WorkGiverDef>
 </Defs>

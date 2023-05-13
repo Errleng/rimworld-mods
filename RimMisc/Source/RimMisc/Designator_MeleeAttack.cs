@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using RimWorld;
+﻿using RimWorld;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -12,15 +12,15 @@ namespace RimMisc
             defaultLabel = "RimMisc_DesignatorMeleeAttack".Translate();
             defaultDesc = "RimMisc_DesignatorMeleeAttackDesc".Translate();
             icon = ContentFinder<Texture2D>.Get("Designations/AttackMelee");
+            useMouseIcon = true;
             soundDragSustain = SoundDefOf.Designate_DragStandard;
             soundDragChanged = SoundDefOf.Designate_DragStandard_Changed;
-            useMouseIcon = true;
             soundSucceeded = SoundDefOf.Designate_Deconstruct;
         }
 
         public override int DraggableDimensions => 2;
 
-        protected override DesignationDef Designation => RimMiscDefOf.MeleeAttackDesignation;
+        protected override DesignationDef Designation => RimMiscDefOf.Designation_MeleeAttack;
 
         public override AcceptanceReport CanDesignateCell(IntVec3 c)
         {
@@ -53,8 +53,8 @@ namespace RimMisc
         {
             reportToDisplay = AcceptanceReport.WasRejected;
             foreach (var thing in from t in Map.thingGrid.ThingsAt(loc)
-                orderby t.def.altitudeLayer descending
-                select t)
+                                  orderby t.def.altitudeLayer descending
+                                  select t)
             {
                 var acceptanceReport = CanDesignateThing(thing);
                 if (CanDesignateThing(thing).Accepted)
@@ -74,7 +74,7 @@ namespace RimMisc
 
         public override void DesignateThing(Thing t)
         {
-            if (Prefs.DevMode)
+            if (DebugSettings.godMode)
             {
                 t.Destroy();
             }

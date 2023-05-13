@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using RimWorld;
+using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
 using Verse;
 
 namespace RimMisc
@@ -9,10 +10,12 @@ namespace RimMisc
     {
         public bool autoCloseLetters;
         public float autoCloseLettersSeconds;
-        public List<CondenserItem> condenserItems = new List<CondenserItem>();
         public bool defaultDoUntil;
         public float defaultIngredientRadius;
         public bool disableEnemyUninstall;
+        public bool killDownedPawns;
+        public bool patchBuildingHp;
+        public List<CondenserItem> condenserItems = new List<CondenserItem>();
 
         public override void ExposeData()
         {
@@ -21,6 +24,8 @@ namespace RimMisc
             Scribe_Values.Look(ref autoCloseLetters, "autoCloseLetters");
             Scribe_Values.Look(ref autoCloseLettersSeconds, "autoCloseLettersSeconds", 10f);
             Scribe_Values.Look(ref disableEnemyUninstall, "disableEnemyUninstall");
+            Scribe_Values.Look(ref killDownedPawns, "killDownedPawns");
+            Scribe_Values.Look(ref patchBuildingHp, "patchBuildingHp");
             Scribe_Collections.Look(ref condenserItems, "condenserItems", LookMode.Deep);
             base.ExposeData();
         }
@@ -49,6 +54,31 @@ namespace RimMisc
                     }
                 });
                 AccessTools.FieldRefAccess<ThingDef, List<RecipeDef>>(condenserDef, "allRecipesCached") = null;
+            }
+
+            if (patchBuildingHp)
+            {
+                var count = 0;
+                foreach (var def in DefDatabase<ThingDef>.AllDefs)
+                {
+                    if (def.IsBuildingArtificial && def.building.buildingTags.Contains("Production"))
+                    {
+                        def.SetStatBaseValue(StatDefOf.MaxHitPoints, 100000);
+                    }
+                }
+
+                Log.Message($"Patched HP for {count} building defs");
+
+                if (Find.CurrentMap != null)
+                {
+                    foreach (var building in Find.CurrentMap.listerBuildings.allBuildingsColonist)
+                    {
+                        if (building.def.building.buildingTags.Contains("Production"))
+                        {
+                            building.HitPoints = building.MaxHitPoints;
+                        }
+                    }
+                }
             }
         }
     }
