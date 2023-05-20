@@ -21,7 +21,7 @@ namespace RimSpawners
             base.SpawnSetup(map, respawningAfterLoad);
 
             cusp = GetComp<CompVanometricFabricatorPawn>();
-            Log.Message($"CompVanometricFabricatorPawn is {cusp.ToStringNullable()}");
+            //Log.Message($"CompVanometricFabricatorPawn is {cusp.ToStringNullable()}");
         }
 
         private void UpdateThreats()
@@ -39,17 +39,13 @@ namespace RimSpawners
                 return;
             }
 
-            if (Settings.crossMap && cusp.SpawnInDropPods)
+            if (Settings.crossMap)
             {
-                var maps = Find.Maps;
-                foreach (var map in maps)
+                if (Utils.OtherMapsHostile(new List<Map>() { MapHeld }, Faction))
                 {
-                    if (GenHostility.AnyHostileActiveThreatTo(map, Faction))
-                    {
-                        ThreatActive = true;
-                        cusp.Dormant = false;
-                        return;
-                    }
+                    ThreatActive = true;
+                    cusp.Dormant = false;
+                    return;
                 }
             }
 
@@ -57,17 +53,12 @@ namespace RimSpawners
             cusp.Dormant = true;
         }
 
-        private void SpawnOnThreats()
+        private void InitialSpawnOnThreat()
         {
-            // only spawn all pawns when the threat is first detected
-            if (!ThreatActive)
+            cusp.SpawnPawnsUntilPoints(Settings.maxSpawnerPoints);
+            if (cusp.nextPawnSpawnTick > Find.TickManager.TicksGame)
             {
-                //cusp.SpawnPawnsUntilPoints(Settings.maxSpawnerPoints);
-                cusp.SpawnUntilFullSpeedMultiplier = Settings.spawnOnThreatSpeedMultiplier;
-                if (cusp.nextPawnSpawnTick > Find.TickManager.TicksGame)
-                {
-                    cusp.CalculateNextPawnSpawnTick();
-                }
+                cusp.CalculateNextPawnSpawnTick();
             }
         }
 
@@ -79,8 +70,12 @@ namespace RimSpawners
             {
                 if (Settings.spawnOnlyOnThreat)
                 {
+                    var oldThreatActive = ThreatActive;
                     UpdateThreats();
-                    SpawnOnThreats();
+                    if (ThreatActive && !oldThreatActive && !cusp.Paused)
+                    {
+                        InitialSpawnOnThreat();
+                    }
                 }
                 else
                 {

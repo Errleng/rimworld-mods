@@ -34,8 +34,6 @@ namespace RimSpawners
         private bool spawnInDropPods;
         private bool spawnInDropPodsNearEnemy;
 
-        private float spawnUntilFullSpeedMultiplier = 1f;
-
         private CompProperties_VanometricFabricatorPawn Props => (CompProperties_VanometricFabricatorPawn)props;
 
         public bool Dormant
@@ -77,11 +75,6 @@ namespace RimSpawners
                 ClearCachedPawns();
                 CalculateNextPawnSpawnTick();
             }
-        }
-
-        public float SpawnUntilFullSpeedMultiplier
-        {
-            set => spawnUntilFullSpeedMultiplier = value;
         }
 
         public Lord Lord => FindLordToJoin(parent, Props.lordJob, Props.shouldJoinParentLord);
@@ -286,8 +279,6 @@ namespace RimSpawners
                 }
             }
 
-            delayTicks /= spawnUntilFullSpeedMultiplier;
-
             nextPawnSpawnTick = Find.TickManager.TicksGame + (int)delayTicks;
         }
 
@@ -356,7 +347,7 @@ namespace RimSpawners
             }
 
             // if there are no threats on current map or on target map, then spawn on another map
-            if (FindRandomActiveHostile(targetMap) == null && FindRandomActiveHostile(parent.Map) == null && Settings.crossMap)
+            if (Settings.crossMap && Utils.OtherMapsHostile(new List<Map>() { parent.Map, targetMap }, parent.Faction))
             {
                 var maps = Find.Maps;
                 foreach (var map in maps)
@@ -431,7 +422,8 @@ namespace RimSpawners
             spawnedPawns.Add(pawn);
 
             var dropPodSuccess = false;
-            if (SpawnInDropPods)
+            if (SpawnInDropPods ||
+                (Settings.crossMap && Utils.OtherMapsHostile(new List<Map>() { parent.Map }, parent.Faction)))
             {
                 var dropInfo = FindDropCenter();
 
@@ -443,11 +435,14 @@ namespace RimSpawners
                     false,
                     false);
                 dropPodSuccess = true;
+                SendMessage(dropInfo.Item2, dropInfo.Item1);
             }
 
             if (!SpawnInDropPods || !dropPodSuccess)
             {
-                GenSpawn.Spawn(pawn, CellFinder.RandomClosewalkCellNear(parent.Position, parent.Map, Props.pawnSpawnRadius), parent.Map);
+                var spawnPos = CellFinder.RandomClosewalkCellNear(parent.Position, parent.Map, Props.pawnSpawnRadius);
+                GenSpawn.Spawn(pawn, spawnPos, parent.Map);
+                SendMessage(spawnPos, parent.Map);
             }
 
             // setup pawn lord and AI
@@ -468,8 +463,15 @@ namespace RimSpawners
                 pawnsLeftToSpawn--;
             }
 
-            SendMessage();
             return true;
+        }
+
+        void SendMessage(IntVec3 pos, Map map)
+        {
+            if (!Props.spawnMessageKey.NullOrEmpty() && MessagesRepeatAvoider.MessageShowAllowed(Props.spawnMessageKey, 0.1f))
+            {
+                Messages.Message(Props.spawnMessageKey.Translate(chosenKind.LabelCap), new TargetInfo(pos, map), MessageTypeDefOf.SilentInput);
+            }
         }
 
         private void AddCustomCompToPawn(Pawn pawn)
@@ -616,7 +618,7 @@ namespace RimSpawners
 
         public void RemoveAllSpawnedPawns()
         {
-            Log.Message("Vanometric fabricator comp is destroying all spawned pawns");
+            //Log.Message("Vanometric fabricator comp is destroying all spawned pawns");
 
             foreach (var pawn in spawnedPawns)
             {
@@ -645,7 +647,8 @@ namespace RimSpawners
 
         public void ClearCachedPawns()
         {
-            Log.Message("Vanometric fabricator comp is destroying all cached pawns");
+            //Log.Message("Vanometric fabricator comp is destroying all cached pawns");
+
             foreach (var cachedPawn in cachedPawns)
             {
                 if (cachedPawn != null && !cachedPawn.Destroyed)
@@ -661,7 +664,7 @@ namespace RimSpawners
         {
             if (pawn.kindDef.Equals(chosenKind))
             {
-                Log.Message($"Recycling pawn {pawn.kindDef.LabelCap} {pawn.Name}");
+                //Log.Message($"Recycling pawn {pawn.kindDef.LabelCap} {pawn.Name}");
                 // add dead pawns to cached pawns
                 cachedPawns.Add(pawn);
             }
@@ -726,11 +729,6 @@ namespace RimSpawners
 
             if (parent.Spawned)
             {
-                if (SpawnedPawnsPoints >= Props.maxSpawnedPawnsPoints)
-                {
-                    spawnUntilFullSpeedMultiplier = 1f;
-                }
-
                 if (Active && Find.TickManager.TicksGame >= nextPawnSpawnTick && SpawnedPawnsPoints < Props.maxSpawnedPawnsPoints)
                 {
                     FilterOutUnspawnedPawns();
@@ -751,14 +749,6 @@ namespace RimSpawners
                         CalculateNextPawnSpawnTick();
                     }
                 }
-            }
-        }
-
-        public void SendMessage()
-        {
-            if (!Props.spawnMessageKey.NullOrEmpty() && MessagesRepeatAvoider.MessageShowAllowed(Props.spawnMessageKey, 0.1f))
-            {
-                Messages.Message(Props.spawnMessageKey.Translate(chosenKind.LabelCap), parent, MessageTypeDefOf.SilentInput);
             }
         }
 

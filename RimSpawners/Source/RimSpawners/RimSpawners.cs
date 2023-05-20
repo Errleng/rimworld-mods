@@ -48,10 +48,17 @@ namespace RimSpawners
             listingStandard.TextFieldNumericLabeled(label, ref value, ref buffer, min, max);
         }
 
+        public override void WriteSettings()
+        {
+            settings.ApplySettings();
+            base.WriteSettings();
+        }
+
         public override void DoSettingsWindowContents(Rect inRect)
         {
             var listingStandard = new Listing_Standard();
-            Rect listingRect = new Rect(inRect.x, inRect.y, inRect.width - 40, inRect.height * 20);
+            var listHeight = (settings.hediffCapMods.Count + settings.hediffStatOffsets.Count) * 46;
+            Rect listingRect = new Rect(inRect.x, inRect.y, inRect.width - 40, inRect.height + 20 + listHeight);
             listingStandard.Begin(listingRect);
 
             var outRect = new Rect(0, 0, inRect.width, inRect.height - 20);
@@ -84,7 +91,6 @@ namespace RimSpawners
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDoNotAttackFleeing".Translate(), ref settings.doNotAttackFleeing);
 
             listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnOnThreats".Translate(), ref settings.spawnOnlyOnThreat);
-            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier".Translate(), ref settings.spawnOnThreatSpeedMultiplier);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsCrossMap".Translate(), ref settings.crossMap);
 
             listingStandard.GapLine();
@@ -95,7 +101,7 @@ namespace RimSpawners
                 float offset = val.offset;
                 bool enabled = val.enabled;
                 listingStandard.CheckboxLabeled("RimSpawners_SettingsHediffCapMod".Translate(key), ref enabled);
-                TextFieldNumericLabeled(listingStandard, "", ref offset, -10000, 100000);
+                TextFieldNumericLabeled(listingStandard, "", ref offset, -10000);
                 settings.hediffCapMods[key].enabled = enabled;
                 settings.hediffCapMods[key].offset = offset;
             }
@@ -108,15 +114,13 @@ namespace RimSpawners
                 float offset = val.offset;
                 bool enabled = val.enabled;
                 listingStandard.CheckboxLabeled("RimSpawners_SettingsHediffStatOffset".Translate(key), ref enabled);
-                TextFieldNumericLabeled(listingStandard, "", ref offset, -10000, 100000);
+                TextFieldNumericLabeled(listingStandard, "", ref offset, -10000);
                 settings.hediffStatOffsets[key].enabled = enabled;
                 settings.hediffStatOffsets[key].offset = offset;
             }
 
             Widgets.EndScrollView();
             listingStandard.End();
-
-            settings.ApplySettings();
             base.DoSettingsWindowContents(inRect);
         }
 

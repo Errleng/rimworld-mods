@@ -75,6 +75,7 @@
     <Compile Include="models\SpawnTimeSetting.cs" />
     <Compile Include="models\StatOffset.cs" />
     <Compile Include="Texture2DExtensions.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="VanometricFabricator.cs" />
   </ItemGroup>
   <ItemGroup>

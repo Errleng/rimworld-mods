@@ -2,7 +2,6 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Verse;
 
 namespace RimSpawners
@@ -10,8 +9,7 @@ namespace RimSpawners
     internal class RimSpawnersSettings : ModSettings
     {
         public const float MIN_VALUE = 1;
-        public const float MAX_VALUE = 10000;
-        private const string V = ", ";
+        public const float MAX_VALUE = 100000;
         public HediffDef spawnedPawnHediff;
 
         public bool cachePawns;
@@ -23,12 +21,12 @@ namespace RimSpawners
 
         public bool spawnOnlyOnThreat;
         public bool crossMap;
-        public float spawnOnThreatSpeedMultiplier;
 
         public SpawnTimeSetting spawnTime;
         public float spawnTimePointsPerSecond;
         public float spawnTimeSecondsPerSpawn;
         public bool useAllyFaction;
+
         public Dictionary<string, StatOffset> hediffStatOffsets = new Dictionary<string, StatOffset>();
         public Dictionary<string, CapMod> hediffCapMods = new Dictionary<string, CapMod>();
 
@@ -46,31 +44,65 @@ namespace RimSpawners
             Scribe_Values.Look(ref doNotAttackFleeing, "doNotAttackFleeing");
             Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat");
             Scribe_Values.Look(ref crossMap, "crossMap");
-            Scribe_Values.Look(ref spawnOnThreatSpeedMultiplier, "spawnOnThreatSpeedMultiplier", 2f);
             Scribe_Collections.Look(ref hediffStatOffsets, "hediffStatOffsets", LookMode.Value, LookMode.Deep);
             Scribe_Collections.Look(ref hediffCapMods, "hediffCapMods", LookMode.Value, LookMode.Deep);
 
-            var traverse = new Traverse(typeof(StatDefOf));
-            foreach (var field in traverse.Fields())
+            foreach (var def in DefDatabase<StatDef>.AllDefs)
             {
-                if (!hediffStatOffsets.ContainsKey(field))
+                var name = def.defName;
+                if (!hediffStatOffsets.ContainsKey(name))
                 {
-                    hediffStatOffsets.Add(field, new StatOffset(field));
+                    hediffStatOffsets.Add(name, new StatOffset(name));
                 }
             }
 
-            traverse = new Traverse(typeof(PawnCapacityDefOf));
-            foreach (var field in traverse.Fields())
+            foreach (var def in DefDatabase<PawnCapacityDef>.AllDefs)
             {
-                if (!hediffCapMods.ContainsKey(field))
+                var name = def.defName;
+                if (!hediffCapMods.ContainsKey(name))
                 {
-                    hediffCapMods.Add(field, new CapMod(field));
+                    hediffCapMods.Add(name, new CapMod(name));
                 }
             }
-            Log.Message($"hediffStatOffsets: {string.Join(", ", hediffStatOffsets.Keys.ToList())}");
-            Log.Message($"hediffCapMods: {string.Join(", ", hediffCapMods.Keys.ToList())}");
+
+            //Log.Message($"hediffStatOffsets: {string.Join(", ", hediffStatOffsets.Keys.OrderBy(x => x).ToList())}");
+            //Log.Message($"hediffCapMods: {string.Join(", ", hediffCapMods.Keys.OrderBy(x => x).ToList())}");
 
             base.ExposeData();
+        }
+
+        public void ApplyStatOffsets(List<StatModifier> statOffsets)
+        {
+            foreach (var offset in hediffStatOffsets)
+            {
+                var statOffsetIndex = statOffsets.FindIndex(x => x.stat?.defName.Equals(offset.Key) ?? false);
+                if (statOffsetIndex == -1)
+                {
+                    if (!offset.Value.enabled)
+                    {
+                        continue;
+                    }
+                    var statMod = new StatModifier();
+                    var traverse = Traverse.Create(typeof(StatDefOf));
+                    statMod.stat = (StatDef)traverse.Field(offset.Value.statName).GetValue();
+                    statMod.value = offset.Value.offset / 100;
+                    statOffsets.Add(statMod);
+                    //Log.Message($"Added stat offset to hediff: {offset.Key} = {offset.Value.offset}");
+                }
+                else
+                {
+                    var statMod = statOffsets[statOffsetIndex];
+                    //Log.Message($"Changed stat offset from: {statMod} to {offset.Value.offset}");
+                    if (offset.Value.enabled)
+                    {
+                        statMod.value = offset.Value.offset / 100;
+                    }
+                    else
+                    {
+                        statOffsets.RemoveAt(statOffsetIndex);
+                    }
+                }
+            }
         }
 
         public void ApplySettings()
@@ -100,33 +132,7 @@ namespace RimSpawners
                 {
                     try
                     {
-                        var statOffsetIndex = stage.statOffsets.FindIndex(x => x.stat?.defName.Equals(offset.Key) ?? false);
-                        if (statOffsetIndex == -1)
-                        {
-                            if (!offset.Value.enabled)
-                            {
-                                continue;
-                            }
-                            var statMod = new StatModifier();
-                            var traverse = Traverse.Create(typeof(StatDefOf));
-                            statMod.stat = (StatDef)traverse.Field(offset.Value.statName).GetValue();
-                            statMod.value = offset.Value.offset / 100;
-                            stage.statOffsets.Add(statMod);
-                            //Log.Message($"Added stat offset to hediff: {offset.Key} = {offset.Value.offset}");
-                        }
-                        else
-                        {
-                            var statMod = stage.statOffsets[statOffsetIndex];
-                            //Log.Message($"Changed stat offset from: {statMod} to {offset.Value.offset}");
-                            if (offset.Value.enabled)
-                            {
-                                statMod.value = offset.Value.offset / 100;
-                            }
-                            else
-                            {
-                                statMod.value = 0;
-                            }
-                        }
+                        ApplyStatOffsets(stage.statOffsets);
                     }
                     catch (Exception ex)
                     {
@@ -164,7 +170,7 @@ namespace RimSpawners
                             }
                             else
                             {
-                                capMod.offset = 0;
+                                stage.capMods.RemoveAt(capModIndex);
                             }
                         }
                     }

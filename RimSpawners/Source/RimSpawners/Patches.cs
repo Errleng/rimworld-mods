@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -70,24 +67,6 @@ namespace RimSpawners
                 {
                     __instance.Corpse?.Destroy();
                 }
-            }
-        }
-
-        // disable social interactions for spawned pawns
-        // this isn't really necessary, just extra details
-        [HarmonyPatch(typeof(PawnUtility), "IsInteractionBlocked")]
-        private class PawnUtility_IsInteractionBlocked_Patch
-        {
-            public static bool Prefix(ref bool __result, Pawn pawn)
-            {
-                var customThingComp = pawn.GetComp<RimSpawnersPawnComp>();
-                if (customThingComp != null)
-                {
-                    __result = true;
-                    return false;
-                }
-
-                return true;
             }
         }
 
