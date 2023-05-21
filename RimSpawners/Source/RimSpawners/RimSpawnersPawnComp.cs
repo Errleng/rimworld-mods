@@ -48,17 +48,17 @@ namespace RimSpawners
 
     internal class CompProperties_RimSpawnersPawn : CompProperties
     {
-        public CompProperties_RimSpawnersPawn(CompVanometricFabricatorPawn cusp)
+        public Action<Pawn> Recycle { get; }
+
+        public CompProperties_RimSpawnersPawn(Action<Pawn> RecycleFunc)
         {
             compClass = typeof(RimSpawnersPawnComp);
-            SpawnerComp = cusp;
+            Recycle = RecycleFunc;
         }
 
         public CompProperties_RimSpawnersPawn(Type compClass) : base(compClass)
         {
             this.compClass = compClass;
         }
-
-        public CompVanometricFabricatorPawn SpawnerComp { get; }
     }
 }

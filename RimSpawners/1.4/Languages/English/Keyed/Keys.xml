@@ -13,8 +13,7 @@
     <RimSpawners_SettingsDisableCorpses>Disable spawned pawn corpses and dropped items</RimSpawners_SettingsDisableCorpses>
     <RimSpawners_SettingsDoNotAttackFleeing>Do not attack fleeing enemies</RimSpawners_SettingsDoNotAttackFleeing>
     <RimSpawners_SettingsSpawnOnThreats>Spawn pawns only when threats are detected</RimSpawners_SettingsSpawnOnThreats>
-    <RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier>Initial spawning speed multiplier in reaction to threats</RimSpawners_SettingsSpawnOnThreatsSpeedMultiplier>
-    <RimSpawners_SettingsCrossMap>Drop pods will spawn near threats across all maps</RimSpawners_SettingsCrossMap>
+    <RimSpawners_SettingsCrossMap>Spawn pawns near threats on different maps</RimSpawners_SettingsCrossMap>
     <RimSpawners_SettingsHediffStatOffset>Hediff stat offset (/100): {0}</RimSpawners_SettingsHediffStatOffset>
     <RimSpawners_SettingsHediffCapMod>Hediff capacity mod (/100): {0}</RimSpawners_SettingsHediffCapMod>
 
@@ -25,7 +24,7 @@
     <RimSpawners_PawnSelectionButtonUnselected>Select</RimSpawners_PawnSelectionButtonUnselected>
     <RimSpawners_PawnSelectionButtonSelected>Current</RimSpawners_PawnSelectionButtonSelected>
     <RimSpawners_PawnSelectionListEntry>{0} ({1} points)</RimSpawners_PawnSelectionListEntry>
-    <RimSpawners_PawnSelectionToolTip>Weapons: {0}\nApparel: {1}\nRequired Apparel: {2}\nDisallowed Apparel: {3}\nProsthetics: {4}</RimSpawners_PawnSelectionToolTip>
+    <RimSpawners_PawnSelectionToolTip>Def name: {0}\nWeapons: {1}\nApparel: {2}\nRequired Apparel: {3}\nDisallowed Apparel: {4}\nProsthetics: {5}</RimSpawners_PawnSelectionToolTip>
 
     <!-- COMPSPAWNERPAWN GIZMOS -->
     <RimSpawners_Pause>Pause</RimSpawners_Pause>
@@ -54,4 +53,11 @@
 
     <!-- VANOMETRIC FABRICATOR NOTIFICATIONS AND MESSAGES -->
     <RimSpawners_VanometricFabricatorSpawnMessage>{0} fabricated</RimSpawners_VanometricFabricatorSpawnMessage>
+
+    <!-- SPAWNER MANAGER -->
+    <RimSpawners_OpenSpawnerManager>Spawner manager</RimSpawners_OpenSpawnerManager>
+    <RimSpawners_OpenSpawnerManagerDesc>Open the spawner manager window</RimSpawners_OpenSpawnerManagerDesc>
+    <RimSpawners_SpawnerManagerInspectString>Points {0}/{1}. +{2} points per second.\nControlling {3} creatures using up {4} points.\n{5} seconds until next fabrication round.\nFabrication queue: {6}.</RimSpawners_SpawnerManagerInspectString>
+    <RimSpawners_SpawnerManagerPawnCount>Spawning {0}</RimSpawners_SpawnerManagerPawnCount>
+    <RimSpawners_SpawnerManagerResetQueue>Reset queue</RimSpawners_SpawnerManagerResetQueue>
 </LanguageData>

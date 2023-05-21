@@ -99,10 +99,13 @@ namespace RimMisc
 
             DrawSelectedCondenserItems(condenserItemsScrollRect);
             DrawItemSelect(condenserItemsSelectScrollRect);
-
-            Settings.ApplySettings();
-
             base.DoSettingsWindowContents(inRect);
+        }
+
+        public override void WriteSettings()
+        {
+            Settings.ApplySettings();
+            base.WriteSettings();
         }
 
         public override string SettingsCategory()

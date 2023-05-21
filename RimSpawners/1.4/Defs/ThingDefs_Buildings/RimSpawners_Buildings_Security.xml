@@ -1,73 +1,224 @@
 <Defs>
-  <!-- Base Spawner -->
-  <ThingDef ParentName="BuildingBase" Name="SpawnerBase" Abstract="True">
-    <thingCategories>
-      <li>BuildingsSecurity</li>
-    </thingCategories>
-    <tickerType>Normal</tickerType>
-    <size>(3, 3)</size>
-    <fillPercent>1.0</fillPercent>
-    <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
-    <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
-    <passability>PassThroughOnly</passability>
-    <rotatable>true</rotatable>
-    <canOverlapZones>false</canOverlapZones>
-    <minifiedDef>MinifiedThing</minifiedDef>
-    <tradeTags>
-      <li>Exotic</li>
-    </tradeTags>
-    <designationCategory>Security</designationCategory>
-  </ThingDef>
+    <!-- Base Spawner -->
+    <ThingDef ParentName="BuildingBase" Name="SpawnerBase" Abstract="True">
+        <thingCategories>
+            <li>BuildingsSecurity</li>
+        </thingCategories>
+        <tickerType>Normal</tickerType>
+        <size>(3, 3)</size>
+        <fillPercent>1.0</fillPercent>
+        <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+        <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
+        <passability>PassThroughOnly</passability>
+        <rotatable>true</rotatable>
+        <canOverlapZones>false</canOverlapZones>
+        <minifiedDef>MinifiedThing</minifiedDef>
+        <tradeTags>
+            <li>Exotic</li>
+        </tradeTags>
+        <designationCategory>Security</designationCategory>
+    </ThingDef>
 
-  <!-- Vanometric Fabricator -->
-  <ThingDef ParentName="SpawnerBase">
-    <defName>VanometricFabricator</defName>
-    <label>vanometric fabricator</label>
-    <description>An ultra-tech vanometric fabrication unit used to automatically create any creature from pets to mechanoids to other humans. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats.</description>
-    <thingClass>RimSpawners.VanometricFabricator</thingClass>
-    <costList>
-      <Plasteel>500</Plasteel>
-      <Steel>1000</Steel>
-      <ComponentIndustrial>50</ComponentIndustrial>
-      <ComponentSpacer>20</ComponentSpacer>
-    </costList>
-    <altitudeLayer>Building</altitudeLayer>
-    <statBases>
-      <MaxHitPoints>1000</MaxHitPoints>
-      <Flammability>1.0</Flammability>
-      <Beauty>0</Beauty>
-      <Mass>35</Mass>
-      <WorkToBuild>10000</WorkToBuild>
-    </statBases>
-    <researchPrerequisites>
-      <li>VanometricFabrication</li>
-    </researchPrerequisites>
-    <graphicData>
-      <texPath>Things/Building/Security/MechAssembler</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-      <drawSize>(3, 3)</drawSize>
-      <shadowData>
-        <volume>(1.5, 1.0, 0.2)</volume>
-        <offset>(0.0, 0.0, 0.0)</offset>
-      </shadowData>
-    </graphicData>
-    <comps>
-      <li Class="RimSpawners.CompProperties_VanometricFabricatorPawn">
-        <spawnablePawnKinds></spawnablePawnKinds>
-        <chooseSingleTypeToSpawn>True</chooseSingleTypeToSpawn>
-        <maxSpawnedPawnsPoints>500</maxSpawnedPawnsPoints>
-        <spawnSound>MechAssembler_Spawn</spawnSound>
-        <lordJob>LordJob_AssaultColony</lordJob>
-        <pawnSpawnIntervalSeconds>100</pawnSpawnIntervalSeconds>
-        <spawnMessageKey>RimSpawners_VanometricFabricatorSpawnMessage</spawnMessageKey>
-      </li>
-      <li Class="CompProperties_Glower">
-        <glowRadius>3</glowRadius>
-        <glowColor>(102,0,0,0)</glowColor>
-      </li>
-      <li>
-        <compClass>RimSpawners.CompPawnSelectionGizmo</compClass>
-      </li>
-    </comps>
-  </ThingDef>
+    <!-- Vanometric Fabricator -->
+    <ThingDef ParentName="SpawnerBase">
+        <defName>VanometricFabricator</defName>
+        <label>vanometric fabricator</label>
+        <description>An ultra-tech vanometric fabrication unit used to automatically create any creature from pets to mechanoids to other humans. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats.</description>
+        <thingClass>RimSpawners.VanometricFabricator</thingClass>
+        <costList>
+            <Plasteel>500</Plasteel>
+            <Steel>1000</Steel>
+            <ComponentIndustrial>50</ComponentIndustrial>
+            <ComponentSpacer>20</ComponentSpacer>
+        </costList>
+        <altitudeLayer>Building</altitudeLayer>
+        <statBases>
+            <MaxHitPoints>1000</MaxHitPoints>
+            <Flammability>1.0</Flammability>
+            <Beauty>0</Beauty>
+            <Mass>35</Mass>
+            <WorkToBuild>10000</WorkToBuild>
+        </statBases>
+        <researchPrerequisites>
+            <li>VanometricFabrication</li>
+        </researchPrerequisites>
+        <graphicData>
+            <texPath>Things/Building/Security/VanometricFabricator</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(3, 3)</drawSize>
+            <shadowData>
+                <volume>(1.5, 1.0, 0.2)</volume>
+                <offset>(0.0, 0.0, 0.0)</offset>
+            </shadowData>
+        </graphicData>
+        <comps>
+            <li Class="RimSpawners.CompProperties_VanometricFabricatorPawn">
+                <spawnablePawnKinds></spawnablePawnKinds>
+                <chooseSingleTypeToSpawn>True</chooseSingleTypeToSpawn>
+                <maxSpawnedPawnsPoints>500</maxSpawnedPawnsPoints>
+                <spawnSound>MechAssembler_Spawn</spawnSound>
+                <lordJob>LordJob_AssaultColony</lordJob>
+                <pawnSpawnIntervalSeconds>100</pawnSpawnIntervalSeconds>
+                <spawnMessageKey>RimSpawners_VanometricFabricatorSpawnMessage</spawnMessageKey>
+            </li>
+            <li Class="CompProperties_Glower">
+                <glowRadius>3</glowRadius>
+                <glowColor>(102,0,0,0)</glowColor>
+            </li>
+            <li>
+                <compClass>RimSpawners.CompPawnSelectionGizmo</compClass>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <ThingDef ParentName="BuildingBase">
+        <defName>CoreFabricator</defName>
+        <label>core fabricator</label>
+        <description>An ultra-tech fabricator used to automatically create any creature from pets to mechanoids to other humans. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats.</description>
+        <costList>
+            <Plasteel>500</Plasteel>
+            <Steel>1000</Steel>
+            <ComponentIndustrial>50</ComponentIndustrial>
+            <ComponentSpacer>20</ComponentSpacer>
+        </costList>
+        <altitudeLayer>Building</altitudeLayer>
+        <statBases>
+            <MaxHitPoints>10000</MaxHitPoints>
+            <Flammability>0.0</Flammability>
+            <Beauty>0</Beauty>
+            <Mass>25</Mass>
+            <WorkToBuild>10000</WorkToBuild>
+        </statBases>
+        <researchPrerequisites>
+            <li>VanometricFabrication</li>
+        </researchPrerequisites>
+        <graphicData>
+            <texPath>Things/Building/Security/CoreFabricator</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(3, 3)</drawSize>
+            <shadowData>
+                <volume>(1.5, 1.0, 0.2)</volume>
+                <offset>(0.0, 0.0, 0.0)</offset>
+            </shadowData>
+        </graphicData>
+        <size>(3, 3)</size>
+        <fillPercent>1.0</fillPercent>
+        <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+        <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
+        <passability>PassThroughOnly</passability>
+        <rotatable>true</rotatable>
+        <canOverlapZones>false</canOverlapZones>
+        <minifiedDef>MinifiedThing</minifiedDef>
+        <tradeTags>
+            <li>Exotic</li>
+        </tradeTags>
+        <thingCategories>
+            <li>BuildingsSecurity</li>
+        </thingCategories>
+        <designationCategory>Security</designationCategory>
+        <comps>
+            <li Class="RimSpawners.CompProperties_Fabricator"></li>
+        </comps>
+    </ThingDef>
+
+    <ThingDef ParentName="BuildingBase">
+        <defName>MatterSiphon</defName>
+        <label>matter siphon</label>
+        <description>Generates matter using vanometrics for use in a fabricator.</description>
+        <costList>
+            <Plasteel>100</Plasteel>
+            <Steel>500</Steel>
+            <ComponentIndustrial>10</ComponentIndustrial>
+        </costList>
+        <altitudeLayer>Building</altitudeLayer>
+        <statBases>
+            <MaxHitPoints>1000</MaxHitPoints>
+            <Flammability>0</Flammability>
+            <Beauty>0</Beauty>
+            <Mass>25</Mass>
+            <WorkToBuild>10000</WorkToBuild>
+        </statBases>
+        <researchPrerequisites>
+            <li>VanometricFabrication</li>
+        </researchPrerequisites>
+        <graphicData>
+            <texPath>Things/Building/Security/MatterSiphon</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(2,2)</drawSize>
+            <shadowData>
+                <volume>(1.5, 0.35, 1.2)</volume>
+                <offset>(0, 0, -0.15)</offset>
+            </shadowData>
+        </graphicData>
+        <size>(2, 2)</size>
+        <fillPercent>1.0</fillPercent>
+        <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+        <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
+        <passability>PassThroughOnly</passability>
+        <rotatable>true</rotatable>
+        <canOverlapZones>false</canOverlapZones>
+        <minifiedDef>MinifiedThing</minifiedDef>
+        <tradeTags>
+            <li>Exotic</li>
+        </tradeTags>
+        <thingCategories>
+            <li>BuildingsSecurity</li>
+        </thingCategories>
+        <designationCategory>Security</designationCategory>
+        <comps>
+            <li Class="RimSpawners.CompProperties_PointGenerator">
+                <pointsPerSecond>5</pointsPerSecond>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <ThingDef ParentName="BuildingBase">
+        <defName>ControlNode</defName>
+        <label>control node</label>
+        <description>Allows more fabricated creatures to be controlled.</description>
+        <costList>
+            <Steel>1000</Steel>
+            <ComponentIndustrial>5</ComponentIndustrial>
+        </costList>
+        <altitudeLayer>Building</altitudeLayer>
+        <statBases>
+            <MaxHitPoints>1000</MaxHitPoints>
+            <Flammability>0</Flammability>
+            <Beauty>0</Beauty>
+            <Mass>25</Mass>
+            <WorkToBuild>10000</WorkToBuild>
+        </statBases>
+        <researchPrerequisites>
+            <li>VanometricFabrication</li>
+        </researchPrerequisites>
+        <graphicData>
+            <texPath>Things/Building/Security/ControlNode</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(2,2)</drawSize>
+            <shadowData>
+                <volume>(1.5, 0.35, 1.2)</volume>
+                <offset>(0, 0, -0.15)</offset>
+            </shadowData>
+        </graphicData>
+        <size>(2, 2)</size>
+        <fillPercent>1.0</fillPercent>
+        <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+        <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
+        <passability>PassThroughOnly</passability>
+        <rotatable>true</rotatable>
+        <canOverlapZones>false</canOverlapZones>
+        <minifiedDef>MinifiedThing</minifiedDef>
+        <tradeTags>
+            <li>Exotic</li>
+        </tradeTags>
+        <thingCategories>
+            <li>BuildingsSecurity</li>
+        </thingCategories>
+        <designationCategory>Security</designationCategory>
+        <comps>
+            <li Class="RimSpawners.CompProperties_PointStorage">
+                <pointsStored>500</pointsStored>
+            </li>
+        </comps>
+    </ThingDef>
 </Defs>

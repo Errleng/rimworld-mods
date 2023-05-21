@@ -1,0 +1,27 @@
+<Defs>
+    <ThingDef ParentName="BuildingBase">
+        <defName>SpawnMarker</defName>
+        <label>spawn marker</label>
+        <description>Creatures will spawn around this.</description>
+        <graphicData>
+            <texPath>Things/Building/Misc/SpawnerMarker</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <altitudeLayer>FloorEmplacement</altitudeLayer>
+        <statBases>
+            <WorkToBuild>0</WorkToBuild>
+        </statBases>
+        <rotatable>false</rotatable>
+        <scatterableOnMapGen>false</scatterableOnMapGen>
+        <useHitPoints>False</useHitPoints>
+        <designationCategory>Misc</designationCategory>
+        <passability>Standable</passability>
+        <building>
+            <sowTag>SupportPlantsOnly</sowTag>
+            <canPlaceOverImpassablePlant>false</canPlaceOverImpassablePlant>
+            <ai_chillDestination>false</ai_chillDestination>
+            <wakeDormantPawnsOnConstruction>false</wakeDormantPawnsOnConstruction>
+            <artificialForMeditationPurposes>false</artificialForMeditationPurposes>
+        </building>
+    </ThingDef>
+</Defs>

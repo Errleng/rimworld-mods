@@ -1,14 +1,13 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using Verse;
-using Verse.AI;
-using System.Reflection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using System;
+using System.Reflection;
 using System.Text;
-using RimWorld.QuestGen;
+using UnityEngine;
+using Verse;
+using Verse.AI;
 
 namespace RimCheats
 {
@@ -32,7 +31,8 @@ namespace RimCheats
         {
 
             Listing_Standard listingStandard = new Listing_Standard();
-            Rect listingRect = new Rect(inRect.x, inRect.y, inRect.width - 40, 50000);
+            var listHeight = settings.statDefMults.Count * 46;
+            Rect listingRect = new Rect(inRect.x, inRect.y, inRect.width - 40, inRect.height + listHeight);
             listingStandard.Begin(listingRect);
 
             var outRect = new Rect(0, 0, inRect.width, inRect.height - 20);
@@ -99,12 +99,13 @@ namespace RimCheats
             Scribe_Values.Look(ref toilSpeedMultiplier, "toilSpeedMultiplier", 1f);
             Scribe_Collections.Look(ref statDefMults, "statMultipliers", LookMode.Value, LookMode.Deep);
 
-            var traverse = new Traverse(typeof(StatDefOf));
-            foreach (var field in traverse.Fields())
+
+            foreach (var def in DefDatabase<StatDef>.AllDefs)
             {
-                if (!statDefMults.ContainsKey(field))
+                var name = def.defName;
+                if (!statDefMults.ContainsKey(name))
                 {
-                    statDefMults.Add(field, new StatSetting(field));
+                    statDefMults.Add(name, new StatSetting(name));
                 }
             }
 

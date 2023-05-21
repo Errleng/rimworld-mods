@@ -56,6 +56,7 @@ namespace RimMisc
                     {
                         if (pawn.Faction != null &&
                             !pawn.Faction.IsPlayer &&
+                            !pawn.IsPrisonerOfColony &&
                             pawn.Faction.HostileTo(Faction.OfPlayer) &&
                             pawn.Downed
                             )

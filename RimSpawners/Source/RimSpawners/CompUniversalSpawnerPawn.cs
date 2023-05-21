@@ -480,7 +480,7 @@ namespace RimSpawners
             if (existingSpawnedPawnComp == null)
             {
                 var spawnedPawnComp = new RimSpawnersPawnComp();
-                var spawnedPawnCompProps = new CompProperties_RimSpawnersPawn(this);
+                var spawnedPawnCompProps = new CompProperties_RimSpawnersPawn(RecyclePawn);
                 spawnedPawnComp.parent = pawn;
                 pawn.AllComps.Add(spawnedPawnComp);
                 spawnedPawnComp.Initialize(spawnedPawnCompProps);

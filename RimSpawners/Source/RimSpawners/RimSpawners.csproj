@@ -60,6 +60,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompProperties_Fabricator.cs" />
+    <Compile Include="CompFabricator.cs" />
+    <Compile Include="CompPointStorage.cs" />
+    <Compile Include="CompPointGenerator.cs" />
+    <Compile Include="CompProperties_PointStorage.cs" />
+    <Compile Include="CompProperties_PointGenerator.cs" />
+    <Compile Include="RimSpawnersDefOf.cs" />
     <Compile Include="models\CapMod.cs" />
     <Compile Include="CompProperties_UniversalSpawnerPawn.cs" />
     <Compile Include="CompUniversalSpawnerPawn.cs" />
@@ -74,6 +81,9 @@
     <Compile Include="RimSpawnersWorldComp.cs" />
     <Compile Include="models\SpawnTimeSetting.cs" />
     <Compile Include="models\StatOffset.cs" />
+    <Compile Include="SpawnerManager.cs" />
+    <Compile Include="SpawnerManagerWindow.cs" />
+    <Compile Include="SpawnPawnInfo.cs" />
     <Compile Include="Texture2DExtensions.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="VanometricFabricator.cs" />

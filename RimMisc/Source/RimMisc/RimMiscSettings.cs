@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -59,9 +60,16 @@ namespace RimMisc
             if (patchBuildingHp)
             {
                 var count = 0;
+
+                Predicate<ThingDef> isValidBuilding = delegate (ThingDef def)
+                {
+                    return def.IsBuildingArtificial &&
+                    (def.building.buildingTags.Contains("Production") || def.IsWorkTable);
+                };
+
                 foreach (var def in DefDatabase<ThingDef>.AllDefs)
                 {
-                    if (def.IsBuildingArtificial && def.building.buildingTags.Contains("Production"))
+                    if (isValidBuilding(def))
                     {
                         def.SetStatBaseValue(StatDefOf.MaxHitPoints, 100000);
                     }
@@ -73,7 +81,7 @@ namespace RimMisc
                 {
                     foreach (var building in Find.CurrentMap.listerBuildings.allBuildingsColonist)
                     {
-                        if (building.def.building.buildingTags.Contains("Production"))
+                        if (isValidBuilding(building.def))
                         {
                             building.HitPoints = building.MaxHitPoints;
                         }

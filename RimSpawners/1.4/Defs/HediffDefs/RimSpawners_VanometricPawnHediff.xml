@@ -19,8 +19,8 @@
                 </statOffsets>
                 <capMods>
                     <li>
-                        <capacity>Moving</capacity>
-                        <offset>5</offset>
+                        <capacity>Talking</capacity>
+                        <setMax>0</setMax>
                     </li>
                 </capMods>
             </li>

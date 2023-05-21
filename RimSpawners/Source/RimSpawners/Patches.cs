@@ -40,8 +40,7 @@ namespace RimSpawners
                     if (Settings.cachePawns && __instance.RaceProps.Humanlike)
                     {
                         // recycle pawn into spawner
-                        var cusp = customThingComp.Props.SpawnerComp;
-                        cusp.RecyclePawn(__instance);
+                        customThingComp.Props.Recycle(__instance);
                     }
 
                     // make it like the pawn never existed
