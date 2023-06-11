@@ -57,6 +57,11 @@ namespace RimSpawners
                 }
                 cachedPawns.Add(pawnKind.defName, new List<Pawn>());
             }
+
+            foreach (var pawn in spawnedPawns)
+            {
+                AddCustomCompToPawn(pawn);
+            }
         }
 
         public override void WorldComponentTick()
@@ -141,6 +146,11 @@ namespace RimSpawners
                 }
 
                 GenerateQueue();
+
+                if (spawnQueue.Count == 0)
+                {
+                    break;
+                }
             }
         }
 
@@ -151,14 +161,14 @@ namespace RimSpawners
             spawnLocations.Clear();
 
             List<Map> maps = Find.Maps;
-            active = false;
+            bool foundCoreFab = false;
             foreach (var map in maps)
             {
                 foreach (Building building in map.listerBuildings.allBuildingsColonist)
                 {
                     if (building.def == RimSpawnersDefOf.CoreFabricator)
                     {
-                        active = true;
+                        foundCoreFab = true;
                     }
                     else if (building.def == RimSpawnersDefOf.MatterSiphon)
                     {
@@ -173,6 +183,11 @@ namespace RimSpawners
                         spawnLocations.Add(new TargetInfo(building.Position, building.Map));
                     }
                 }
+            }
+
+            if (!foundCoreFab)
+            {
+                active = false;
             }
 
             pointsPerSecond = newPointsPerSecond;
@@ -313,12 +328,18 @@ namespace RimSpawners
 
             spawnedPawns.Add(pawn);
 
-            TargetInfo dropInfo;
+            var faction = pawn.Faction;
+
+            TargetInfo dropInfo = null;
             if (spawnLocations.Count > 0)
             {
-                dropInfo = spawnLocations.RandomElement();
+                var hostileSpawnLocations = spawnLocations.Where(x => GenHostility.AnyHostileActiveThreatTo(x.Map, faction)).ToList();
+                if (hostileSpawnLocations.Count > 0)
+                {
+                    dropInfo = hostileSpawnLocations.RandomElement();
+                }
             }
-            else
+            if (dropInfo == null)
             {
                 dropInfo = Utils.FindDropCenter(dropNearEnemy);
             }
@@ -342,7 +363,7 @@ namespace RimSpawners
             SendMessage(dropInfo.Cell, dropInfo.Map, kind);
 
             // setup pawn lord and AI
-            var lord = LordMaker.MakeNewLord(pawn.Faction,
+            var lord = LordMaker.MakeNewLord(faction,
                 new LordJob_AssaultColony(
                     Faction.OfAncientsHostile,
                     false,

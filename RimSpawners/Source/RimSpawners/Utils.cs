@@ -62,7 +62,6 @@ namespace RimSpawners
             var targetCell = IntVec3.Invalid;
             Map targetMap = null;
 
-            // prioritize maps with hostiles over preferred spot
             var maps = Find.Maps;
             foreach (var map in maps)
             {

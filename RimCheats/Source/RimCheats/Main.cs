@@ -46,6 +46,7 @@ namespace RimCheats
             listingStandard.CheckboxLabeled("IgnoreTerrainCostNonHumanToggleLabel".Translate(), ref settings.disableTerrainCostNonHuman);
             listingStandard.CheckboxLabeled("ToilSpeedToggleLabel".Translate(), ref settings.enableToilSpeed);
             listingStandard.CheckboxLabeled("AutoCleanToggleLabel".Translate(), ref settings.autoClean);
+            listingStandard.CheckboxLabeled("MaxSkillsToggleLabel".Translate(), ref settings.maxSkills);
             listingStandard.CheckboxLabeled("CarryingCapacityMassToggleLabel".Translate(), ref settings.enableCarryingCapacityMass);
 
             listingStandard.GapLine();
@@ -83,6 +84,7 @@ namespace RimCheats
         public bool enableCarryingCapacityMass;
         public bool enableToilSpeed;
         public bool autoClean;
+        public bool maxSkills;
         public float toilSpeedMultiplier;
         public Dictionary<string, StatSetting> statDefMults = new Dictionary<string, StatSetting>();
 
@@ -96,6 +98,7 @@ namespace RimCheats
             Scribe_Values.Look(ref disableTerrainCostNonHuman, "disableTerrainCostNonHuman");
             Scribe_Values.Look(ref enableCarryingCapacityMass, "enableCarryingCapacityMass");
             Scribe_Values.Look(ref autoClean, "autoClean");
+            Scribe_Values.Look(ref maxSkills, "maxSkills");
             Scribe_Values.Look(ref toilSpeedMultiplier, "toilSpeedMultiplier", 1f);
             Scribe_Collections.Look(ref statDefMults, "statMultipliers", LookMode.Value, LookMode.Deep);
 
@@ -162,7 +165,7 @@ namespace RimCheats
                     }
                     if (__instance.curPath != null)
                     {
-                        while (__instance.curPath.NodesLeftCount > 1)
+                        while (__instance.curPath.NodesLeftCount > 2)
                         {
                             __instance.curPath.ConsumeNextNode();
                         }

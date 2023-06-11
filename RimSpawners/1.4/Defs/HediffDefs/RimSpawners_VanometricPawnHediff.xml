@@ -5,10 +5,11 @@
         <label>superior design</label>
         <description>This being was designed for combat.</description>
         <defaultLabelColor>(0.6,0.85,0.91)</defaultLabelColor>
+        <maxSeverity>1.0</maxSeverity>
         <isBad>false</isBad>
         <scenarioCanAdd>false</scenarioCanAdd>
-        <maxSeverity>1.0</maxSeverity>
-
+        <alwaysAllowMothball>true</alwaysAllowMothball>
+        <alwaysAllowMothballCached>true</alwaysAllowMothballCached>
         <stages>
             <li>
                 <painFactor>0</painFactor>

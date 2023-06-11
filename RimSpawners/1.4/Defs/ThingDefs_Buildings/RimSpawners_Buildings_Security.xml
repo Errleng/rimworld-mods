@@ -126,9 +126,10 @@
         <label>matter siphon</label>
         <description>Generates matter using vanometrics for use in a fabricator.</description>
         <costList>
-            <Plasteel>100</Plasteel>
-            <Steel>500</Steel>
-            <ComponentIndustrial>10</ComponentIndustrial>
+            <Plasteel>1000</Plasteel>
+            <Steel>2000</Steel>
+            <ComponentIndustrial>25</ComponentIndustrial>
+            <ComponentSpacer>10</ComponentSpacer>
         </costList>
         <altitudeLayer>Building</altitudeLayer>
         <statBases>
@@ -178,7 +179,8 @@
         <description>Allows more fabricated creatures to be controlled.</description>
         <costList>
             <Steel>1000</Steel>
-            <ComponentIndustrial>5</ComponentIndustrial>
+            <ComponentIndustrial>20</ComponentIndustrial>
+            <ComponentSpacer>5</ComponentSpacer>
         </costList>
         <altitudeLayer>Building</altitudeLayer>
         <statBases>

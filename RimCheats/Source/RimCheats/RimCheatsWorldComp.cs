@@ -1,10 +1,5 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace RimCheats
@@ -12,7 +7,8 @@ namespace RimCheats
     internal class RimCheatsWorldComp : WorldComponent
     {
         private static readonly RimCheatsSettings settings = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>();
-        private static readonly int CLEAN_FILTH_TICKS = 60000; // 1 day
+        private static readonly int CLEAN_FILTH_TICKS = GenDate.TicksPerDay; // 1 day
+        private static readonly int UPDATE_PAWNS_TICK = GenDate.TicksPerDay; // 1 day
 
         public RimCheatsWorldComp(World world) : base(world)
         {
@@ -22,7 +18,9 @@ namespace RimCheats
         {
             base.WorldComponentTick();
 
-            if (settings.autoClean && Find.TickManager.TicksGame % CLEAN_FILTH_TICKS == 0)
+            var ticks = Find.TickManager.TicksGame;
+
+            if (settings.autoClean && ticks % CLEAN_FILTH_TICKS == 0)
             {
                 var map = Find.CurrentMap;
                 var filths = map.listerThings.ThingsInGroup(ThingRequestGroup.Filth);
@@ -49,6 +47,20 @@ namespace RimCheats
                     }
                 }
                 Log.Message($"Cleaned {cleaned} filth");
+            }
+
+            if (ticks % UPDATE_PAWNS_TICK == 0)
+            {
+                if (settings.maxSkills)
+                {
+                    foreach (var colonist in PawnsFinder.AllMaps_FreeColonists)
+                    {
+                        foreach (var skill in colonist.skills.skills)
+                        {
+                            skill.Level += 20;
+                        }
+                    }
+                }
             }
         }
     }
