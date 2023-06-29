@@ -53,20 +53,13 @@
         </comps>
     </ThingDef>
 
-    <ThingDef ParentName="BuildingBase">
+    <ThingDef ParentName="Vent">
         <defName>Supervent_Over</defName>
         <label>over-wall supervent</label>
         <description>A very powerful vent that equalizes temperatures.</description>
         <thingClass>RimMisc.Building_Supervent</thingClass>
         <graphicData>
-            <texPath>Things/Building/Misc/TempControl/Vent</texPath>
-            <graphicClass>Graphic_Multi</graphicClass>
-            <damageData>
-                <cornerTL>Damage/Corner</cornerTL>
-                <cornerTR>Damage/Corner</cornerTR>
-                <cornerBL>Damage/Corner</cornerBL>
-                <cornerBR>Damage/Corner</cornerBR>
-            </damageData>
+            <texPath>Vent_Over</texPath>
         </graphicData>
         <altitudeLayer>BuildingOnTop</altitudeLayer>
         <passability>PassThroughOnly</passability>
@@ -74,38 +67,12 @@
         <fillPercent>.6</fillPercent>
         <coversFloor>false</coversFloor>
         <blockLight>false</blockLight>
-        <staticSunShadowHeight>.6</staticSunShadowHeight>
-        <castEdgeShadows>true</castEdgeShadows>
-        <canOverlapZones>false</canOverlapZones>
-        <statBases>
-            <WorkToBuild>400</WorkToBuild>
-            <MaxHitPoints>100</MaxHitPoints>
-            <Flammability>0.0</Flammability>
-        </statBases>
-        <tickerType>Rare</tickerType>
-        <costList>
-            <Steel>100</Steel>
-        </costList>
-        <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
-        <placeWorkers>
-            <li>PlaceWorker_Vent</li>
-        </placeWorkers>
-        <drawPlaceWorkersWhileSelected>true</drawPlaceWorkersWhileSelected>
+        <castEdgeShadows>false</castEdgeShadows>
         <building>
-            <canPlaceOverWall>true</canPlaceOverWall>
+            <canPlaceOverWall>false</canPlaceOverWall>
             <isEdifice>false</isEdifice>
         </building>
-        <researchPrerequisites>
-            <li>ComplexFurniture</li>
-        </researchPrerequisites>
-        <designationCategory>Temperature</designationCategory>
-        <comps>
-            <li Class="CompProperties_Flickable">
-                <commandTexture>UI/Commands/Vent</commandTexture>
-                <commandLabelKey>CommandDesignateOpenCloseVentLabel</commandLabelKey>
-                <commandDescKey>CommandDesignateOpenCloseVentDesc</commandDescKey>
-            </li>
-        </comps>
+        <designationHotKey>Misc7</designationHotKey>
     </ThingDef>
 
     <ThingDef ParentName="BuildingBase">

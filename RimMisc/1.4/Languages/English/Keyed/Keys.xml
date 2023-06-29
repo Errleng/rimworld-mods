@@ -8,6 +8,7 @@
     <RimMisc_DisableEnemyUninstall>Prevent enemy from uninstalling buildings</RimMisc_DisableEnemyUninstall>
     <RimMisc_KillDownedPawns>Periodically kill downed hostile pawns</RimMisc_KillDownedPawns>
     <RimMisc_PatchBuildingHp>Give all production buildings huge HP</RimMisc_PatchBuildingHp>
+    <RimMisc_EnableRocketmanTimeDilation>Enable Rocketman time dilation for all safe races</RimMisc_EnableRocketmanTimeDilation>
     <RimMisc_CondenserItemsSection>Condenser Items</RimMisc_CondenserItemsSection>
     <RimMisc_CondenserItemsSelectSection>Add Condenser Items</RimMisc_CondenserItemsSelectSection>
     <RimMisc_CondenserItemAddButton>Add</RimMisc_CondenserItemAddButton>

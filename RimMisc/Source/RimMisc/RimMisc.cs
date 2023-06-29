@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using RocketMan;
+using Soyuz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +67,7 @@ namespace RimMisc
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            var settingsRect = inRect.TopPart(0.3f).Rounded();
+            var settingsRect = inRect.TopPart(0.5f).Rounded();
             var condenserItemsRect = inRect.BottomPart(0.5f).Rounded();
             var condenserItemsSelectRect = inRect.BottomPart(0.3f).Rounded();
             var condenserItemsScrollRect = new Rect(condenserItemsRect)
@@ -88,6 +90,10 @@ namespace RimMisc
             settingsSection.CheckboxLabeled("RimMisc_DisableEnemyUninstall".Translate(), ref Settings.disableEnemyUninstall);
             settingsSection.CheckboxLabeled("RimMisc_KillDownedPawns".Translate(), ref Settings.killDownedPawns);
             settingsSection.CheckboxLabeled("RimMisc_PatchBuildingHp".Translate(), ref Settings.patchBuildingHp);
+            if (settingsSection.ButtonText("RimMisc_EnableRocketmanTimeDilation".Translate()))
+            {
+                EnableRocketmanRaces();
+            }
 
             settingsSection.Label("RimMisc_AutoCloseLettersSeconds".Translate(Settings.autoCloseLettersSeconds));
             Settings.autoCloseLettersSeconds = settingsSection.Slider(Settings.autoCloseLettersSeconds, MIN_AUTOCLOSE_SECONDS, MAX_AUTOCLOSE_SECONDS);
@@ -240,6 +246,25 @@ namespace RimMisc
                 var item = new CondenserItem(thing.defName, MIN_WORK, MIN_YIELD);
                 item.CalculateWorkAmount();
                 Settings.condenserItems.Add(item);
+            }
+        }
+
+        private void EnableRocketmanRaces()
+        {
+            if (ModsConfig.IsActive("Krkr.RocketMan"))
+            {
+                foreach (var raceSettings in Context.Settings.AllRaceSettings)
+                {
+                    var hasCustomThingClass = IgnoreMeDatabase.ShouldIgnore(raceSettings.def);
+                    if (raceSettings.enabled || raceSettings.isFastMoving || hasCustomThingClass)
+                    {
+                        continue;
+                    }
+                    Context.DilationEnabled[(int)raceSettings.def.index] = true;
+                    raceSettings.enabled = true;
+                    raceSettings.Prepare(true);
+                    Log.Message($"Enable time dilation for {(string)raceSettings.def.LabelCap ?? raceSettings.def.defName}");
+                }
             }
         }
     }
