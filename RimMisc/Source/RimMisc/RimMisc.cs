@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using Rimatomics;
 using RimWorld;
 using RocketMan;
 using Soyuz;
@@ -93,6 +94,10 @@ namespace RimMisc
             if (settingsSection.ButtonText("RimMisc_EnableRocketmanTimeDilation".Translate()))
             {
                 EnableRocketmanRaces();
+            }
+            if (settingsSection.ButtonText("RimMisc_FinishRimatomicsResearch".Translate()))
+            {
+                FinishRimatomicsResearch();
             }
 
             settingsSection.Label("RimMisc_AutoCloseLettersSeconds".Translate(Settings.autoCloseLettersSeconds));
@@ -264,6 +269,18 @@ namespace RimMisc
                     raceSettings.enabled = true;
                     raceSettings.Prepare(true);
                     Log.Message($"Enable time dilation for {(string)raceSettings.def.LabelCap ?? raceSettings.def.defName}");
+                }
+            }
+        }
+
+        private void FinishRimatomicsResearch()
+        {
+            if (ModsConfig.IsActive("Dubwise.Rimatomics"))
+            {
+                foreach (var research in DubUtils.GetResearch().AllProjects)
+                {
+                    Building_RimatomicsResearchBench.Purchase(research);
+                    Building_RimatomicsResearchBench.DebugFinish(research);
                 }
             }
         }

@@ -40,6 +40,9 @@
     <Reference Include="Cosmodrome">
       <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\workshop\content\294100\2479389928\1.4\Assemblies\Cosmodrome.dll</HintPath>
     </Reference>
+    <Reference Include="Rimatomics">
+      <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\workshop\content\294100\1127530465\1.4\Assemblies\Rimatomics.dll</HintPath>
+    </Reference>
     <Reference Include="Soyuz">
       <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\workshop\content\294100\2479389928\1.4\Plugins\Stable\Soyuz.dll</HintPath>
     </Reference>
@@ -72,6 +75,7 @@
     <Compile Include="Designator_MeleeAttack.cs" />
     <Compile Include="CompMeleeAttackable.cs" />
     <Compile Include="JobDriver_MeleeAttack.cs" />
+    <Compile Include="MainTabWindow_ItemInfoTab.cs" />
     <Compile Include="Patch_MakeNewBill.cs" />
     <Compile Include="Patch_JobDriver_TakeInventory_MakeNewToils.cs" />
     <Compile Include="Patch_Toils_Construct_UninstallIfMinifiable.cs" />
