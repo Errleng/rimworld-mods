@@ -28,55 +28,55 @@ namespace RimMisc
         private static readonly Dictionary<string, Func<ThingDef, string>> STUFF_INFOS = new Dictionary<string, Func<ThingDef, string>> {
                 { "Name", x => x.LabelCap.ToString() },
                 { "Categories", x => string.Join(", ", x.stuffProps.categories) },
-                { "Market value", x => x.GetStatValueAbstract(StatDefOf.MarketValue).ToString() },
-                { "Mass", x => x.GetStatValueAbstract(StatDefOf.Mass).ToStringMass()},
+                { "Market value", x => RoundNum(x.GetStatValueAbstract(StatDefOf.MarketValue)).ToString() },
+                { "Mass", x => RoundNum(x.GetStatValueAbstract(StatDefOf.Mass)).ToStringMass()},
                 { "Max HP", x => x.stuffProps.statFactors.GetStatFactorFromList(StatDefOf.MaxHitPoints).ToStringPercent()},
                 { "Flammability", x => x.stuffProps.statFactors.GetStatFactorFromList(StatDefOf.Flammability).ToStringPercent()},
                 { "Beauty", x => x.stuffProps.statFactors.GetStatFactorFromList(StatDefOf.Beauty).ToStringPercent()},
-                { "Armor - sharp", x => x.GetStatValueAbstract(StatDefOf.StuffPower_Armor_Sharp).ToStringPercent() },
-                { "Armor - blunt", x => x.GetStatValueAbstract(StatDefOf.StuffPower_Armor_Blunt).ToStringPercent()},
-                { "Armor - heat", x => x.GetStatValueAbstract(StatDefOf.StuffPower_Armor_Heat).ToStringPercent()},
-                { "Insulation - cold", x => x.GetStatValueAbstract(StatDefOf.StuffPower_Insulation_Cold).ToStringTemperatureOffset()},
-                { "Insulation - heat", x => x.GetStatValueAbstract(StatDefOf.StuffPower_Insulation_Heat).ToStringTemperatureOffset()},
-                { "Sharp damage", x => x.GetStatValueAbstract(StatDefOf.SharpDamageMultiplier).ToStringPercent()},
-                { "Blunt damage", x => x.GetStatValueAbstract(StatDefOf.BluntDamageMultiplier).ToStringPercent()},
+                { "Armor - sharp", x => RoundNum(x.GetStatValueAbstract(StatDefOf.StuffPower_Armor_Sharp)).ToStringPercent() },
+                { "Armor - blunt", x => RoundNum(x.GetStatValueAbstract(StatDefOf.StuffPower_Armor_Blunt)).ToStringPercent()},
+                { "Armor - heat", x => RoundNum(x.GetStatValueAbstract(StatDefOf.StuffPower_Armor_Heat)).ToStringPercent()},
+                { "Insulation - cold", x => RoundNum(x.GetStatValueAbstract(StatDefOf.StuffPower_Insulation_Cold)).ToStringTemperatureOffset()},
+                { "Insulation - heat", x => RoundNum(x.GetStatValueAbstract(StatDefOf.StuffPower_Insulation_Heat)).ToStringTemperatureOffset()},
+                { "Sharp damage", x => RoundNum(x.GetStatValueAbstract(StatDefOf.SharpDamageMultiplier)).ToStringPercent()},
+                { "Blunt damage", x => RoundNum(x.GetStatValueAbstract(StatDefOf.BluntDamageMultiplier)).ToStringPercent()},
                 { "Melee cooldown", x => x.stuffProps.statFactors.GetStatFactorFromList(StatDefOf.MeleeWeapon_CooldownMultiplier).ToStringPercent()},
                 { "Door speed", x => x.stuffProps.statFactors.GetStatFactorFromList(StatDefOf.DoorOpenSpeed).ToStringPercent()},
             };
         private static readonly Dictionary<string, Func<ThingDef, string>> RANGED_WEAPON_INFOS = new Dictionary<string, Func<ThingDef, string>> {
                 { "Name", x => x.LabelCap.ToString() },
-                { "Market value", x => x.GetStatValueAbstract(StatDefOf.MarketValue).ToString() },
+                { "Market value", x => RoundNum(x.GetStatValueAbstract(StatDefOf.MarketValue, GenStuff.DefaultStuffFor(x))).ToString() },
                 { "Damage", x =>  DebugOutputGeneralMethod("damage", new Type[]{ typeof(ThingDef) }, x).ToString()},
-                { "Armor penetration", x => ((float)DebugOutputGeneralMethod("armorPenetration", new Type[]{ typeof(ThingDef) }, x)).ToStringPercent()},
+                { "Armor penetration", x => RoundNum((float) DebugOutputGeneralMethod("armorPenetration", new Type[] { typeof(ThingDef) }, x)).ToStringPercent()},
                 { "Range", x => x.Verbs[0].range.ToString()},
                 { "Burst", x => DebugOutputGeneralMethod("burstShots", new Type[]{ typeof(ThingDef) }, x).ToString()},
                 { "Cooldown", x => DebugOutputGeneralMethod("cooldown", new Type[]{ typeof(ThingDef) }, x).ToString()},
                 { "Warmup", x => DebugOutputGeneralMethod("warmup", new Type[]{ typeof(ThingDef) }, x).ToString()},
-                { "Full Cycle", x =>  Math.Round((float)DebugOutputGeneralMethod("fullcycle", new Type[]{ typeof(ThingDef) }, x), 2).ToString()},
-                { "DPS", x =>  Math.Round((float)DebugOutputGeneralMethod("dpsMissless", new Type[]{ typeof(ThingDef) }, x), 2).ToString()},
+                { "Full Cycle", x =>  RoundNum((float)DebugOutputGeneralMethod("fullcycle", new Type[]{ typeof(ThingDef) }, x)).ToString()},
+                { "DPS", x =>  RoundNum((float)DebugOutputGeneralMethod("dpsMissless", new Type[]{ typeof(ThingDef) }, x)).ToString()},
                 { "Stopping power", x => DebugOutputGeneralMethod("stoppingPower", new Type[]{ typeof(ThingDef) }, x).ToString()},
-                { "Accuracy touch", x => ((float)DebugOutputGeneralMethod("accTouch", new Type[]{ typeof(ThingDef) }, x)).ToStringPercent()},
-                { "Accuracy short", x =>((float)DebugOutputGeneralMethod("accShort", new Type[]{ typeof(ThingDef) }, x)).ToStringPercent()},
-                { "Accuracy medium", x => ((float)DebugOutputGeneralMethod("accMed", new Type[]{ typeof(ThingDef) }, x)).ToStringPercent()},
-                { "Accuracy long", x => ((float) DebugOutputGeneralMethod("accLong", new Type[]{ typeof(ThingDef) }, x)).ToStringPercent()},
+                { "Accuracy touch", x => RoundNum((float)DebugOutputGeneralMethod("accTouch", new Type[]{ typeof(ThingDef) }, x)).ToStringPercent()},
+                { "Accuracy short", x => RoundNum((float)DebugOutputGeneralMethod("accShort", new Type[]{ typeof(ThingDef) }, x)).ToStringPercent()},
+                { "Accuracy medium", x => RoundNum((float) DebugOutputGeneralMethod("accMed", new Type[] { typeof(ThingDef) }, x)).ToStringPercent()},
+                { "Accuracy long", x => RoundNum((float) DebugOutputGeneralMethod("accLong", new Type[] { typeof(ThingDef) }, x)).ToStringPercent()},
                 //{ "Projectile speed", x => x.projectile != null ? x.projectile.speed.ToString() : ""},
                 { "Forced miss radius", x => x.Verbs[0].ForcedMissRadius.ToString()},
             };
         private static readonly Dictionary<string, Func<ThingDef, string>> MELEE_WEAPON_INFOS = new Dictionary<string, Func<ThingDef, string>> {
                 { "Name", x => x.LabelCap.ToString() },
-                { "Market value", x => x.GetStatValueAbstract(StatDefOf.MarketValue).ToString() },
-                { "DPS", x => x.GetStatValueAbstract(StatDefOf.MeleeWeapon_AverageDPS).ToString()},
-                { "Armor Penetration", x => x.GetStatValueAbstract(StatDefOf.MeleeWeapon_AverageArmorPenetration).ToStringPercent() },
+                { "Market value", x => RoundNum(x.GetStatValueAbstract(StatDefOf.MarketValue, GenStuff.DefaultStuffFor(x))).ToString() },
+                { "DPS", x => RoundNum(x.GetStatValueAbstract(StatDefOf.MeleeWeapon_AverageDPS, GenStuff.DefaultStuffFor(x))).ToString()},
+                { "Armor Penetration", x => RoundNum(x.GetStatValueAbstract(StatDefOf.MeleeWeapon_AverageArmorPenetration, GenStuff.DefaultStuffFor(x))).ToStringPercent() },
             };
         private static readonly Dictionary<string, Func<ThingDef, string>> APPAREL_INFOS = new Dictionary<string, Func<ThingDef, string>> {
                 { "Name", x => x.LabelCap.ToString() },
-                { "Layer", x => string.Join(", ", x.apparel.layers.Select((ApparelLayerDef l) => l.ToString())) },
-                { "Market value", x => x.GetStatValueAbstract(StatDefOf.MarketValue).ToString() },
-                { "Armor - sharp", x => x.GetStatValueAbstract(StatDefOf.ArmorRating_Sharp).ToStringPercent() },
-                { "Armor - blunt", x => x.GetStatValueAbstract(StatDefOf.ArmorRating_Blunt).ToStringPercent()},
-                { "Armor - heat", x => x.GetStatValueAbstract(StatDefOf.ArmorRating_Heat).ToStringPercent()},
-                { "Insulation - cold", x => x.GetStatValueAbstract(StatDefOf.Insulation_Cold).ToStringTemperatureOffset()},
-                { "Insulation - heat", x => x.GetStatValueAbstract(StatDefOf.Insulation_Heat).ToStringTemperatureOffset()},
+                { "Layer", x => string.Join(", ", x.apparel.layers.Select((ApparelLayerDef l) => l.LabelCap)) },
+                { "Market value", x => RoundNum(x.GetStatValueAbstract(StatDefOf.MarketValue, GenStuff.DefaultStuffFor(x))).ToString() },
+                { "Armor - sharp", x => RoundNum(x.GetStatValueAbstract(StatDefOf.ArmorRating_Sharp, GenStuff.DefaultStuffFor(x))).ToStringPercent() },
+                { "Armor - blunt", x => RoundNum(x.GetStatValueAbstract(StatDefOf.ArmorRating_Blunt, GenStuff.DefaultStuffFor(x))).ToStringPercent()},
+                { "Armor - heat", x => RoundNum(x.GetStatValueAbstract(StatDefOf.ArmorRating_Heat, GenStuff.DefaultStuffFor(x))).ToStringPercent()},
+                { "Insulation - cold", x => RoundNum(x.GetStatValueAbstract(StatDefOf.Insulation_Cold, GenStuff.DefaultStuffFor(x))).ToStringTemperatureOffset()},
+                { "Insulation - heat", x => RoundNum(x.GetStatValueAbstract(StatDefOf.Insulation_Heat, GenStuff.DefaultStuffFor(x))).ToStringTemperatureOffset()},
                 { "Global work speed", x => x.equippedStatOffsets?.Find(y => y.stat.Equals(StatDefOf.WorkSpeedGlobal))?.ValueToStringAsOffset ?? "0"},
                 { "Move speed", x => x.equippedStatOffsets?.Find(y => y.stat.Equals(StatDefOf.MoveSpeed))?.ValueToStringAsOffset ?? "0"},
                 { "General labor speed", x => x.equippedStatOffsets?.Find(y => y.stat.Equals(StatDefOf.GeneralLaborSpeed))?.ValueToStringAsOffset ?? "0"},
@@ -113,6 +113,11 @@ namespace RimMisc
         private static object DebugOutputGeneralMethod(string methodName, Type[] argTypes, params object[] args)
         {
             return Traverse.Create(typeof(DebugOutputsGeneral)).Method(methodName, argTypes).GetValue(args);
+        }
+
+        private static float RoundNum(float num)
+        {
+            return (float)Math.Round(num, 3);
         }
 
         private void UpdateItemLists()
