@@ -28,4 +28,6 @@
     <RimMisc_DesignatorMeleeAttack>Melee attack</RimMisc_DesignatorMeleeAttack>
     <RimMisc_DesignatorMeleeAttackDesc>Designate this building to be melee attacked.</RimMisc_DesignatorMeleeAttackDesc>
     <RimMisc_JobMeleeAttackMessage>{0} is melee attacking {1}</RimMisc_JobMeleeAttackMessage>
+    <RimMisc_GeneMutationTime>{0} days until gene mutation finishes</RimMisc_GeneMutationTime>
+    <RimMisc_GeneMutationComplete>{0} gene mutation complete</RimMisc_GeneMutationComplete>
 </LanguageData>

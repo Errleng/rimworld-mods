@@ -1,5 +1,5 @@
 <Defs>
-    <ThingDef ParentName="BuildingBase">
+    <ThingDef ParentName="BuildingBase" Name="Supervent">
         <defName>Supervent</defName>
         <label>supervent</label>
         <description>A very powerful vent that equalizes temperatures.</description>
@@ -53,14 +53,11 @@
         </comps>
     </ThingDef>
 
-    <ThingDef ParentName="Vent">
+    <ThingDef ParentName="Supervent">
         <defName>Supervent_Over</defName>
         <label>over-wall supervent</label>
         <description>A very powerful vent that equalizes temperatures.</description>
         <thingClass>RimMisc.Building_Supervent</thingClass>
-        <graphicData>
-            <texPath>Vent_Over</texPath>
-        </graphicData>
         <altitudeLayer>BuildingOnTop</altitudeLayer>
         <passability>PassThroughOnly</passability>
         <blockWind>false</blockWind>
@@ -72,7 +69,6 @@
             <canPlaceOverWall>false</canPlaceOverWall>
             <isEdifice>false</isEdifice>
         </building>
-        <designationHotKey>Misc7</designationHotKey>
     </ThingDef>
 
     <ThingDef ParentName="BuildingBase">

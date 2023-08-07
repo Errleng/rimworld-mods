@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Building_GeneMutator.cs" />
     <Compile Include="Building_SuperVent.cs" />
     <Compile Include="Building_TempChanger.cs" />
     <Compile Include="CondenserItem.cs" />
