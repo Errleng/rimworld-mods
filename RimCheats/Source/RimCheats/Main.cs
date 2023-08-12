@@ -46,6 +46,7 @@ namespace RimCheats
             listingStandard.CheckboxLabeled("IgnoreTerrainCostNonHumanToggleLabel".Translate(), ref settings.disableTerrainCostNonHuman);
             listingStandard.CheckboxLabeled("ToilSpeedToggleLabel".Translate(), ref settings.enableToilSpeed);
             listingStandard.CheckboxLabeled("AutoCleanToggleLabel".Translate(), ref settings.autoClean);
+            listingStandard.CheckboxLabeled("AutoRepairToggleLabel".Translate((int)Math.Round(RimCheatsSettings.REPAIR_PERCENT * 100)), ref settings.autoRepair);
             listingStandard.CheckboxLabeled("MaxSkillsToggleLabel".Translate(), ref settings.maxSkills);
             listingStandard.CheckboxLabeled("CarryingCapacityMassToggleLabel".Translate(), ref settings.enableCarryingCapacityMass);
 
@@ -76,6 +77,8 @@ namespace RimCheats
     {
         public const float MIN_VALUE = 0;
         public const float MAX_VALUE = 1000;
+        public const float REPAIR_PERCENT = 0.05f;
+
         public bool enablePathing;
         public bool enablePathingNonHuman;
         public bool enablePathingAlly;
@@ -84,6 +87,7 @@ namespace RimCheats
         public bool enableCarryingCapacityMass;
         public bool enableToilSpeed;
         public bool autoClean;
+        public bool autoRepair;
         public bool maxSkills;
         public float toilSpeedMultiplier;
         public Dictionary<string, StatSetting> statDefMults = new Dictionary<string, StatSetting>();
@@ -98,6 +102,7 @@ namespace RimCheats
             Scribe_Values.Look(ref disableTerrainCostNonHuman, "disableTerrainCostNonHuman");
             Scribe_Values.Look(ref enableCarryingCapacityMass, "enableCarryingCapacityMass");
             Scribe_Values.Look(ref autoClean, "autoClean");
+            Scribe_Values.Look(ref autoRepair, "autoRepair");
             Scribe_Values.Look(ref maxSkills, "maxSkills");
             Scribe_Values.Look(ref toilSpeedMultiplier, "toilSpeedMultiplier", 1f);
             Scribe_Collections.Look(ref statDefMults, "statMultipliers", LookMode.Value, LookMode.Deep);
@@ -165,7 +170,13 @@ namespace RimCheats
                     }
                     if (__instance.curPath != null)
                     {
-                        while (__instance.curPath.NodesLeftCount > 2)
+                        int nodesToRemain = 1;
+                        Building_Door door = ___pawn.Map.thingGrid.ThingAt<Building_Door>(__instance.Destination.Cell);
+                        if (door != null)
+                        {
+                            nodesToRemain = 2;
+                        }
+                        while (__instance.curPath.NodesLeftCount > nodesToRemain)
                         {
                             __instance.curPath.ConsumeNextNode();
                         }

@@ -56,9 +56,9 @@ namespace RimSpawners
             return hostilePawn;
         }
 
-        public static TargetInfo FindDropCenter(bool dropNearEnemy)
+        public static TargetInfo FindSpawnCenter(bool useDropPod, bool spawnNearEnemy)
         {
-            var dropCenter = IntVec3.Invalid;
+            var spawnCenter = IntVec3.Invalid;
             var targetCell = IntVec3.Invalid;
             Map targetMap = null;
 
@@ -68,37 +68,51 @@ namespace RimSpawners
                 var target = FindRandomActiveHostile(map);
                 if (target != null)
                 {
-                    targetCell = GetTargetCellFromHostile(target, dropNearEnemy);
+                    targetCell = target.Position;
                     targetMap = map;
                     break;
                 }
             }
 
-            if (targetCell != IntVec3.Invalid)
-            {
-                DropCellFinder.TryFindDropSpotNear(targetCell, targetMap, out dropCenter, true, false, false);
-            }
-
             if (targetMap == null)
             {
+                // no hostiles on any map found, so spawn randomly on a player map
                 targetMap = Find.AnyPlayerHomeMap;
             }
 
-            if (dropCenter == IntVec3.Invalid && targetMap != null)
+            if (useDropPod)
             {
-                dropCenter = DropCellFinder.FindRaidDropCenterDistant(targetMap);
+                if (spawnNearEnemy && targetCell != IntVec3.Invalid)
+                {
+                    // found a hostile to spawn near
+                    DropCellFinder.TryFindDropSpotNear(targetCell, targetMap, out spawnCenter, true, false, false);
+                }
+
+                if (spawnCenter == IntVec3.Invalid)
+                {
+                    // otherwise spawn far away
+                    spawnCenter = DropCellFinder.FindRaidDropCenterDistant(targetMap);
+                }
+            }
+            else
+            {
+                if (spawnNearEnemy && targetCell != IntVec3.Invalid)
+                {
+                    // found a hostile to spawn near
+                    spawnCenter = CellFinder.RandomClosewalkCellNear(targetCell, targetMap, 20);
+                }
+
+                if (spawnCenter == IntVec3.Invalid)
+                {
+                    // otherwise spawn far away
+                    if (!RCellFinder.TryFindRandomPawnEntryCell(out spawnCenter, targetMap, 0f, false, null))
+                    {
+                        spawnCenter = CellFinder.RandomCell(targetMap);
+                    }
+                }
             }
 
-            return new TargetInfo(dropCenter, targetMap);
-        }
-
-        public static IntVec3 GetTargetCellFromHostile(Pawn target, bool dropNearEnemy)
-        {
-            if (dropNearEnemy)
-            {
-                return target.Position;
-            }
-            return DropCellFinder.FindRaidDropCenterDistant(target.Map);
+            return new TargetInfo(spawnCenter, targetMap);
         }
     }
 }

@@ -126,10 +126,10 @@
         <label>matter siphon</label>
         <description>Generates matter using vanometrics for use in a fabricator.</description>
         <costList>
-            <Plasteel>1000</Plasteel>
-            <Steel>2000</Steel>
-            <ComponentIndustrial>25</ComponentIndustrial>
-            <ComponentSpacer>10</ComponentSpacer>
+            <Plasteel>500</Plasteel>
+            <Steel>1000</Steel>
+            <ComponentIndustrial>10</ComponentIndustrial>
+            <ComponentSpacer>5</ComponentSpacer>
         </costList>
         <altitudeLayer>Building</altitudeLayer>
         <statBases>
@@ -168,7 +168,7 @@
         <designationCategory>Security</designationCategory>
         <comps>
             <li Class="RimSpawners.CompProperties_PointGenerator">
-                <pointsPerSecond>5</pointsPerSecond>
+                <pointsPerSecond>2</pointsPerSecond>
             </li>
         </comps>
     </ThingDef>

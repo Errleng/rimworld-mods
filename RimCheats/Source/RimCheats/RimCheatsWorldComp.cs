@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
+using System;
 using Verse;
 
 namespace RimCheats
@@ -7,8 +8,9 @@ namespace RimCheats
     internal class RimCheatsWorldComp : WorldComponent
     {
         private static readonly RimCheatsSettings settings = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>();
-        private static readonly int CLEAN_FILTH_TICKS = GenDate.TicksPerDay; // 1 day
-        private static readonly int UPDATE_PAWNS_TICK = GenDate.TicksPerDay; // 1 day
+        private static readonly int CLEAN_FILTH_TICKS = GenDate.TicksPerDay;
+        private static readonly int REPAIR_TICKS = GenDate.TicksPerDay;
+        private static readonly int UPDATE_PAWNS_TICK = GenDate.TicksPerDay;
 
         public RimCheatsWorldComp(World world) : base(world)
         {
@@ -47,6 +49,22 @@ namespace RimCheats
                     }
                 }
                 Log.Message($"Cleaned {cleaned} filth");
+            }
+
+            if (settings.autoRepair && ticks % REPAIR_TICKS == 0)
+            {
+                var map = Find.CurrentMap;
+                var buildings = map.listerBuildings.allBuildingsColonist;
+                foreach (var building in buildings)
+                {
+                    if (building.IsBrokenDown())
+                    {
+                        building.GetComp<CompBreakdownable>().Notify_Repaired();
+                    }
+                    building.HitPoints += (int)Math.Ceiling(building.MaxHitPoints * RimCheatsSettings.REPAIR_PERCENT);
+                    building.HitPoints = Math.Min(building.HitPoints, building.MaxHitPoints);
+                    map.listerBuildingsRepairable.Notify_BuildingRepaired(building);
+                }
             }
 
             if (ticks % UPDATE_PAWNS_TICK == 0)

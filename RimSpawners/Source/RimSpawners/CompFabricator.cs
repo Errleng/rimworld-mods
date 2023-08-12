@@ -21,7 +21,7 @@ namespace RimSpawners
             {
                 defaultLabel = "RimSpawners_OpenSpawnerManager".Translate(),
                 defaultDesc = "RimSpawners_OpenSpawnerManagerDesc".Translate(),
-                icon = ContentFinder<Texture2D>.Get("UI/Commands/Draft"),
+                icon = ContentFinder<Texture2D>.Get("UI/SpawnerManagerWindow"),
                 action = () => { Find.WindowStack.Add(new SpawnerManagerWindow()); }
             };
 
@@ -29,20 +29,29 @@ namespace RimSpawners
             {
                 defaultLabel = "RimSpawners_Pause".Translate(),
                 defaultDesc = "RimSpawners_PauseDesc".Translate(),
-                icon = ContentFinder<Texture2D>.Get("UI/Commands/Halt"),
+                icon = ContentFinder<Texture2D>.Get("UI/Pause"),
                 isActive = () => !spawnerManager.active,
                 toggleAction = () => { spawnerManager.active = !spawnerManager.active; }
             };
 
             yield return new Command_Toggle
             {
-                defaultLabel = "RimSpawners_DropPodNearEnemyToggle".Translate(),
-                defaultDesc = "RimSpawners_DropPodNearEnemyToggleDesc".Translate(),
-                icon = ContentFinder<Texture2D>.Get("UI/Commands/DropCarriedPawn"),
-                isActive = () => spawnerManager.dropNearEnemy,
+                defaultLabel = "RimSpawners_DropPodToggle".Translate(),
+                defaultDesc = "RimSpawners_DropPodToggleDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/DropPod"),
+                isActive = () => spawnerManager.useDropPod,
+                toggleAction = () => { spawnerManager.useDropPod = !spawnerManager.useDropPod; }
+            };
+
+            yield return new Command_Toggle
+            {
+                defaultLabel = "RimSpawners_SpawnNearEnemyToggle".Translate(),
+                defaultDesc = "RimSpawners_SpawnNearEnemyToggleDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/SpawnNearEnemy"),
+                isActive = () => spawnerManager.spawnNearEnemy,
                 toggleAction = () =>
                 {
-                    spawnerManager.dropNearEnemy = !spawnerManager.dropNearEnemy;
+                    spawnerManager.spawnNearEnemy = !spawnerManager.spawnNearEnemy;
                 }
             };
 
@@ -50,14 +59,14 @@ namespace RimSpawners
             {
                 defaultLabel = "RimSpawners_KillSwitch".Translate(),
                 defaultDesc = "RimSpawners_KillSwitchDesc".Translate(),
-                icon = ContentFinder<Texture2D>.Get("UI/Commands/Detonate"),
+                icon = ContentFinder<Texture2D>.Get("UI/KillSwitch"),
                 action = spawnerManager.RemoveAllSpawnedPawns
             };
 
             yield return new Command_Action
             {
                 defaultLabel = "RimSpawners_SpawnerManagerResetQueue".Translate(),
-                icon = ContentFinder<Texture2D>.Get("UI/Commands/TryReconnect"),
+                icon = ContentFinder<Texture2D>.Get("UI/ResetQueue"),
                 action = spawnerManager.GenerateQueue
             };
 
@@ -65,8 +74,16 @@ namespace RimSpawners
             {
                 defaultLabel = "RimSpawners_Reset".Translate(),
                 defaultDesc = "RimSpawners_ResetDesc".Translate(),
-                icon = ContentFinder<Texture2D>.Get("Things/Special/Fire/FireA"),
+                icon = ContentFinder<Texture2D>.Get("UI/Reset"),
                 action = spawnerManager.Reset
+            };
+
+            yield return new Command_Action
+            {
+                defaultLabel = "RimSpawners_SpawnerManagerUpdate".Translate(),
+                defaultDesc = "RimSpawners_SpawnerManagerUpdateDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/Calculate"),
+                action = spawnerManager.CalculateCache
             };
         }
 

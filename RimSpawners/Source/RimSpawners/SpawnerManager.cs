@@ -10,7 +10,6 @@ namespace RimSpawners
 {
     internal class SpawnerManager : WorldComponent
     {
-        private static readonly int UPDATE_POINTS_INTERVAL = GenTicks.SecondsToTicks(5);
         private static readonly int LONG_UPDATE_INTERVAL = GenTicks.SecondsToTicks(60);
         private static readonly int SPAWN_INTERVAL = GenTicks.SecondsToTicks(15);
 
@@ -20,7 +19,8 @@ namespace RimSpawners
 
         private bool dormant;
 
-        public bool dropNearEnemy;
+        public bool useDropPod = true;
+        public bool spawnNearEnemy;
         public bool active = true;
 
         public int points;
@@ -39,7 +39,8 @@ namespace RimSpawners
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref dropNearEnemy, "dropNearEnemy");
+            Scribe_Values.Look(ref useDropPod, "useDropPod");
+            Scribe_Values.Look(ref spawnNearEnemy, "spawnNearEnemy");
             Scribe_Values.Look(ref active, "active");
 
             Scribe_Values.Look(ref points, "points");
@@ -69,11 +70,6 @@ namespace RimSpawners
             base.WorldComponentTick();
 
             var ticks = Find.TickManager.TicksGame;
-
-            if (ticks % UPDATE_POINTS_INTERVAL == 0)
-            {
-                points = Math.Min(points + (int)(pointsPerSecond * GenTicks.TicksToSeconds(SPAWN_INTERVAL)), maxPoints);
-            }
 
             if (ticks % SPAWN_INTERVAL == 0)
             {
@@ -234,7 +230,8 @@ namespace RimSpawners
                 , spawnedPawns.Count
                 , SpawnedPawnPoints >= maxPoints ? "all" : SpawnedPawnPoints.ToString()
                 , timeToNextSpawn
-                , string.Join(", ", queueStr));
+                , string.Join(", ", queueStr),
+                active ? "" : "PAUSED");
         }
 
         public string[] GetSpawnedPawnCounts()
@@ -330,37 +327,44 @@ namespace RimSpawners
 
             var faction = pawn.Faction;
 
-            TargetInfo dropInfo = null;
+            TargetInfo spawnInfo = null;
             if (spawnLocations.Count > 0)
             {
                 var hostileSpawnLocations = spawnLocations.Where(x => GenHostility.AnyHostileActiveThreatTo(x.Map, faction)).ToList();
                 if (hostileSpawnLocations.Count > 0)
                 {
-                    dropInfo = hostileSpawnLocations.RandomElement();
+                    spawnInfo = hostileSpawnLocations.RandomElement();
                 }
             }
-            if (dropInfo == null)
+            if (spawnInfo == null)
             {
-                dropInfo = Utils.FindDropCenter(dropNearEnemy);
+                spawnInfo = Utils.FindSpawnCenter(useDropPod, spawnNearEnemy);
             }
 
-            if (dropInfo.Map == null || dropInfo.Cell == IntVec3.Invalid)
+            if (spawnInfo.Map == null || spawnInfo.Cell == IntVec3.Invalid)
             {
-                Log.Error($"Could not find drop pod location for spawning {kind.defName}");
+                Log.Error($"Could not find location for spawning {kind.defName}");
                 return false;
             }
 
             //Log.Message($"Dropping {pawn} near {dropInfo.Item1}, {dropInfo.Item2}");
 
-            DropPodUtility.DropThingsNear(dropInfo.Cell,
-                dropInfo.Map,
+            if (useDropPod)
+            {
+                DropPodUtility.DropThingsNear(spawnInfo.Cell,
+                spawnInfo.Map,
                 Gen.YieldSingle<Thing>(pawn),
                 60,
                 false,
                 false,
                 false);
+            }
+            else
+            {
+                GenSpawn.Spawn(pawn, spawnInfo.Cell, spawnInfo.Map);
+            }
 
-            SendMessage(dropInfo.Cell, dropInfo.Map, kind);
+            SendMessage(spawnInfo.Cell, spawnInfo.Map, kind);
 
             // setup pawn lord and AI
             var lord = LordMaker.MakeNewLord(faction,
@@ -373,7 +377,7 @@ namespace RimSpawners
                     false,
                     false,
                     false),
-                dropInfo.Map);
+                spawnInfo.Map);
             lord.AddPawn(pawn);
 
             return true;

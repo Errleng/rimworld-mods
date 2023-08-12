@@ -30,9 +30,9 @@
     <RimSpawners_Pause>Pause</RimSpawners_Pause>
     <RimSpawners_PauseDesc>Toggle fabrication on and off</RimSpawners_PauseDesc>
     <RimSpawners_DropPodToggle>Drop pods</RimSpawners_DropPodToggle>
-    <RimSpawners_DropPodToggleDesc>Call in drop pods to deliver creatures near the edge of the map</RimSpawners_DropPodToggleDesc>
-    <RimSpawners_DropPodNearEnemyToggle>Drop near enemy</RimSpawners_DropPodNearEnemyToggle>
-    <RimSpawners_DropPodNearEnemyToggleDesc>Will spawn creatures near enemies</RimSpawners_DropPodNearEnemyToggleDesc>
+    <RimSpawners_DropPodToggleDesc>Use drop pods to deliver creatures</RimSpawners_DropPodToggleDesc>
+    <RimSpawners_SpawnNearEnemyToggle>Spawn near enemy</RimSpawners_SpawnNearEnemyToggle>
+    <RimSpawners_SpawnNearEnemyToggleDesc>Will spawn creatures near enemies</RimSpawners_SpawnNearEnemyToggleDesc>
     <RimSpawners_DropSpotSelect>Select drop spot</RimSpawners_DropSpotSelect>
     <RimSpawners_DropSpotSelectDesc>Select a location where drop pods should be centered on</RimSpawners_DropSpotSelectDesc>
     <RimSpawners_SpawnAllAtOnce>Burst spawn</RimSpawners_SpawnAllAtOnce>
@@ -57,7 +57,9 @@
     <!-- SPAWNER MANAGER -->
     <RimSpawners_OpenSpawnerManager>Spawner manager</RimSpawners_OpenSpawnerManager>
     <RimSpawners_OpenSpawnerManagerDesc>Open the spawner manager window</RimSpawners_OpenSpawnerManagerDesc>
-    <RimSpawners_SpawnerManagerInspectString>Points {0}/{1}. +{2} points per second.\nControlling {3} creatures using up {4} points.\n{5} seconds until next fabrication round.\nFabrication queue: {6}.</RimSpawners_SpawnerManagerInspectString>
+    <RimSpawners_SpawnerManagerInspectString>Points {0}/{1}. +{2} points per second.\nControlling {3} creatures using up {4} points.\n{5} seconds until next fabrication round.\nFabrication queue: {6}.\n{7}</RimSpawners_SpawnerManagerInspectString>
     <RimSpawners_SpawnerManagerPawnCount>Spawning {0}</RimSpawners_SpawnerManagerPawnCount>
     <RimSpawners_SpawnerManagerResetQueue>Reset queue</RimSpawners_SpawnerManagerResetQueue>
+    <RimSpawners_SpawnerManagerUpdate>Update now</RimSpawners_SpawnerManagerUpdate>
+    <RimSpawners_SpawnerManagerUpdateDesc>Force an early update of spawner points and spawn locations</RimSpawners_SpawnerManagerUpdateDesc>
 </LanguageData>

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -49,7 +49,8 @@ namespace HighDensityHydroCustom
                 initialVal = growUntil,
                 maxVal = 1000000,
                 minVal = 0,
-                onValueChange = (int value) => {
+                onValueChange = (int value) =>
+                {
                     growUntil = value;
                 }
             };
@@ -277,6 +278,13 @@ namespace HighDensityHydroCustom
         public override string GetInspectString()
         {
             var text = base.GetInspectString();
+
+            var temperature = Position.GetTemperature(Map);
+            if (temperature <= Plant.MinOptimalGrowthTemperature || temperature >= Plant.MaxOptimalGrowthTemperature)
+            {
+                text += $"\n{"HDHBadTemperature".Translate(temperature, Plant.MinOptimalGrowthTemperature.ToStringTemperature(), Plant.MaxOptimalGrowthTemperature.ToStringTemperature())}";
+            }
+
             var fertilitySensitivity = simPlant.def.plant.fertilitySensitivity;
             var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
             var growthPerDay = 1f / (GenDate.TicksPerDay * simPlant.def.plant.growDays);
