@@ -75,8 +75,6 @@ namespace RimMisc
                     }
                 }
 
-                Log.Message($"Patched HP for {count} building defs");
-
                 if (Find.CurrentMap != null)
                 {
                     foreach (var building in Find.CurrentMap.listerBuildings.allBuildingsColonist)

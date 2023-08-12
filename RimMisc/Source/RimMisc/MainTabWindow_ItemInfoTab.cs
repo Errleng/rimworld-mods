@@ -15,8 +15,12 @@ namespace RimMisc
         {
             Stuff,
             RangedWeapons,
+            RangedWeaponsCraftable,
             MeleeWeapons,
-            Apparel
+            MeleeWeaponsCraftable,
+            Apparel,
+            ApparelCraftable,
+            Ingestible,
         }
 
         private static readonly float WINDOW_WIDTH = 1200;
@@ -77,10 +81,24 @@ namespace RimMisc
                 { "Armor - heat", x => RoundNum(x.GetStatValueAbstract(StatDefOf.ArmorRating_Heat, GenStuff.DefaultStuffFor(x))).ToStringPercent()},
                 { "Insulation - cold", x => RoundNum(x.GetStatValueAbstract(StatDefOf.Insulation_Cold, GenStuff.DefaultStuffFor(x))).ToStringTemperatureOffset()},
                 { "Insulation - heat", x => RoundNum(x.GetStatValueAbstract(StatDefOf.Insulation_Heat, GenStuff.DefaultStuffFor(x))).ToStringTemperatureOffset()},
+                { "Consciousness", x => RoundNum(Utils.GetApparelHediffCapacityOffset(x, PawnCapacityDefOf.Consciousness)).ToString()},
+                { "Manipulation", x => RoundNum(Utils.GetApparelHediffCapacityOffset(x, PawnCapacityDefOf.Manipulation)).ToString()},
+                { "Moving", x => RoundNum(Utils.GetApparelHediffCapacityOffset(x, PawnCapacityDefOf.Moving)).ToString() },
                 { "Global work speed", x => x.equippedStatOffsets?.Find(y => y.stat.Equals(StatDefOf.WorkSpeedGlobal))?.ValueToStringAsOffset ?? "0"},
-                { "Move speed", x => x.equippedStatOffsets?.Find(y => y.stat.Equals(StatDefOf.MoveSpeed))?.ValueToStringAsOffset ?? "0"},
                 { "General labor speed", x => x.equippedStatOffsets?.Find(y => y.stat.Equals(StatDefOf.GeneralLaborSpeed))?.ValueToStringAsOffset ?? "0"},
+                { "Move speed", x => x.equippedStatOffsets?.Find(y => y.stat.Equals(StatDefOf.MoveSpeed))?.ValueToStringAsOffset ?? "0"},
                 { "Mental break threshold", x => x.equippedStatOffsets?.Find(y => y.stat.Equals(StatDefOf.MentalBreakThreshold))?.ValueToStringAsOffset ?? "0"},
+            };
+        private static readonly Dictionary<string, Func<ThingDef, string>> INGESTIBLE_INFOS = new Dictionary<string, Func<ThingDef, string>> {
+                { "Name", x => x.LabelCap.ToString() },
+                { "Mood", x => RoundNum(Utils.GetIngestibleMoodOffset(x.ingestible)).ToString()},
+                { "Consciousness", x => RoundNum(Utils.GetIngestibleHediffCapacityOffset(x.ingestible, PawnCapacityDefOf.Consciousness)).ToString() },
+                { "Manipulation", x => RoundNum(Utils.GetIngestibleHediffCapacityOffset(x.ingestible, PawnCapacityDefOf.Manipulation)).ToString() },
+                { "Moving", x => RoundNum(Utils.GetIngestibleHediffCapacityOffset(x.ingestible, PawnCapacityDefOf.Moving)).ToString() },
+                { "Global work speed", x => RoundNum(Utils.GetIngestibleHediffStatOffset(x.ingestible, StatDefOf.WorkSpeedGlobal)).ToString() },
+                { "General labor speed", x => RoundNum(Utils.GetIngestibleHediffStatOffset(x.ingestible, StatDefOf.GeneralLaborSpeed)).ToString() },
+                { "Move speed", x => RoundNum(Utils.GetIngestibleHediffStatOffset(x.ingestible, StatDefOf.MoveSpeed)).ToString() },
+                { "Mental break threshold", x => RoundNum(Utils.GetIngestibleHediffStatOffset(x.ingestible, StatDefOf.MentalBreakThreshold)).ToString() },
             };
 
         private float scrollHeight;
@@ -89,8 +107,12 @@ namespace RimMisc
 
         private List<ThingDef> stuff;
         private List<ThingDef> rangedWeapons;
+        private List<ThingDef> rangedWeaponsCraftable;
         private List<ThingDef> meleeWeapons;
+        private List<ThingDef> meleeWeaponsCraftable;
         private List<ThingDef> apparel;
+        private List<ThingDef> apparelCraftable;
+        private List<ThingDef> ingestible;
 
 
         private ItemType itemTypeToDisplay;
@@ -122,13 +144,18 @@ namespace RimMisc
 
         private void UpdateItemLists()
         {
+            Func<ThingDef, bool> isCraftable = (ThingDef x) => DefDatabase<RecipeDef>.AllDefs.Any(r => r.products.Any(p => p.thingDef == x));
             stuff = DefDatabase<ThingDef>.AllDefsListForReading.Where(x => x.IsStuff).OrderBy(x => x.label).ToList();
             rangedWeapons = DefDatabase<ThingDef>.AllDefsListForReading.Where(x => x.IsRangedWeapon).OrderBy(x => x.label).ToList();
+            rangedWeaponsCraftable = rangedWeapons.Where(x => isCraftable(x)).ToList();
             meleeWeapons = DefDatabase<ThingDef>.AllDefsListForReading.Where(x => x.IsMeleeWeapon).OrderBy(x => x.label).ToList();
+            meleeWeaponsCraftable = meleeWeapons.Where(x => isCraftable(x)).ToList();
             apparel = DefDatabase<ThingDef>.AllDefsListForReading.Where(x => x.IsApparel).OrderBy(x => x.label).ToList();
+            apparelCraftable = apparel.Where(x => isCraftable(x)).ToList();
+            ingestible = DefDatabase<ThingDef>.AllDefsListForReading.Where(x => x.IsIngestible).OrderBy(x => x.label).ToList();
         }
 
-        private void DrawInfos(Rect rowRect, Dictionary<string, Func<ThingDef, string>> columnInfos, ref List<ThingDef> items)
+        private void DrawInfos(Rect outRect, Rect rowRect, Dictionary<string, Func<ThingDef, string>> columnInfos, ref List<ThingDef> items)
         {
             // columns headers
             var columnNameRect = new Rect(rowRect) { width = LABEL_WIDTH };
@@ -180,25 +207,29 @@ namespace RimMisc
 
             for (int i = 0; i < items.Count; i++)
             {
-                var itemDef = items[i];
-
-                var iconRect = new Rect(rowRect.x, rowRect.y, 30, 30);
-                Widgets.ThingIcon(iconRect, itemDef);
-                Widgets.InfoCardButton(rowRect.x + iconRect.width, rowRect.y, itemDef, GenStuff.DefaultStuffFor(itemDef));
-
-                var infoRect = new Rect(rowRect) { width = LABEL_WIDTH };
-                infoRect.x += LABEL_WIDTH;
-                foreach (var info in columnInfos)
+                bool visible = rowRect.y >= scrollPosition.y && rowRect.y + rowRect.height <= scrollPosition.y + outRect.height;
+                if (visible)
                 {
-                    try
+                    var itemDef = items[i];
+
+                    var iconRect = new Rect(rowRect.x, rowRect.y, 30, 30);
+                    Widgets.ThingIcon(iconRect, itemDef);
+                    Widgets.InfoCardButton(rowRect.x + iconRect.width, rowRect.y, itemDef, GenStuff.DefaultStuffFor(itemDef));
+
+                    var infoRect = new Rect(rowRect) { width = LABEL_WIDTH };
+                    infoRect.x += LABEL_WIDTH;
+                    foreach (var info in columnInfos)
                     {
-                        Widgets.Label(infoRect, info.Value(itemDef));
-                        infoRect.x += LABEL_WIDTH;
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error($"Error occurred while getting item {itemDef.defName} info {info.Key}");
-                        throw ex;
+                        try
+                        {
+                            Widgets.Label(infoRect, info.Value(itemDef));
+                            infoRect.x += LABEL_WIDTH;
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"Error occurred while getting item {itemDef.defName} info {info.Key}");
+                            throw ex;
+                        }
                     }
                 }
                 rowRect.y += LABEL_HEIGHT;
@@ -247,16 +278,28 @@ namespace RimMisc
                 switch (itemTypeToDisplay)
                 {
                     case ItemType.Stuff:
-                        DrawInfos(rowRect, STUFF_INFOS, ref stuff);
+                        DrawInfos(outRect, rowRect, STUFF_INFOS, ref stuff);
                         break;
                     case ItemType.RangedWeapons:
-                        DrawInfos(rowRect, RANGED_WEAPON_INFOS, ref rangedWeapons);
+                        DrawInfos(outRect, rowRect, RANGED_WEAPON_INFOS, ref rangedWeapons);
+                        break;
+                    case ItemType.RangedWeaponsCraftable:
+                        DrawInfos(outRect, rowRect, RANGED_WEAPON_INFOS, ref rangedWeaponsCraftable);
                         break;
                     case ItemType.MeleeWeapons:
-                        DrawInfos(rowRect, MELEE_WEAPON_INFOS, ref meleeWeapons);
+                        DrawInfos(outRect, rowRect, MELEE_WEAPON_INFOS, ref meleeWeapons);
+                        break;
+                    case ItemType.MeleeWeaponsCraftable:
+                        DrawInfos(outRect, rowRect, MELEE_WEAPON_INFOS, ref meleeWeaponsCraftable);
                         break;
                     case ItemType.Apparel:
-                        DrawInfos(rowRect, APPAREL_INFOS, ref apparel);
+                        DrawInfos(outRect, rowRect, APPAREL_INFOS, ref apparel);
+                        break;
+                    case ItemType.ApparelCraftable:
+                        DrawInfos(outRect, rowRect, APPAREL_INFOS, ref apparelCraftable);
+                        break;
+                    case ItemType.Ingestible:
+                        DrawInfos(outRect, rowRect, INGESTIBLE_INFOS, ref ingestible);
                         break;
                 }
 

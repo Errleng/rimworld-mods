@@ -87,6 +87,7 @@
     <Compile Include="RimMiscSettings.cs" />
     <Compile Include="MainTabWindow_WealthTab.cs" />
     <Compile Include="UnfinishedCondenserThing.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="WorkGiver_MeleeAttack.cs" />
   </ItemGroup>
   <ItemGroup>

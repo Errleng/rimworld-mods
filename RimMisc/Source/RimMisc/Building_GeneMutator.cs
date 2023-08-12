@@ -25,6 +25,7 @@ namespace RimMisc
         public override void ExposeData()
         {
             Scribe_Values.Look(ref lastSpawnTick, "lastSpawnTick");
+            base.ExposeData();
         }
 
         public override void TickRare()
@@ -41,7 +42,7 @@ namespace RimMisc
                 if (gene != null)
                 {
                     GenPlace.TryPlaceThing(gene, Position, Map, ThingPlaceMode.Near);
-                    Messages.Message("RimMisc_GeneMutationComplete".Translate(gene.LabelNoCount), new LookTargets(new TargetInfo[] { gene }), MessageTypeDefOf.PositiveEvent, false);
+                    Messages.Message("RimMisc_GeneMutationComplete".Translate(gene.LabelNoCount), new LookTargets(new TargetInfo[] { gene }), MessageTypeDefOf.PositiveEvent, true);
                 }
             }
         }
@@ -50,7 +51,7 @@ namespace RimMisc
         {
             string str = base.GetInspectString();
             float daysUntilSpawn = Math.Max(0, (TICKS_BETWEEN_SPAWNS + lastSpawnTick - Find.TickManager.TicksGame) / GenDate.TicksPerDay);
-            str += "\nRimMisc_GeneMutationTime".Translate(Math.Round(daysUntilSpawn, 2));
+            str += "\n" + "RimMisc_GeneMutationTime".Translate(Math.Round(daysUntilSpawn, 2));
             return str;
         }
 
@@ -59,24 +60,29 @@ namespace RimMisc
             var ownedGenes = new HashSet<string>();
             foreach (var map in Find.Maps)
             {
-                foreach (Building building in map.listerBuildings.AllBuildingsColonistOfDef(ThingDefOf.GeneBank))
+                foreach (Building building in map.listerBuildings.allBuildingsColonist)
                 {
                     CompGenepackContainer compGenepackContainer = building.TryGetComp<CompGenepackContainer>();
                     if (compGenepackContainer != null)
                     {
-                        foreach (var gene in compGenepackContainer.ContainedGenepacks)
+                        foreach (var genepack in compGenepackContainer.ContainedGenepacks)
                         {
-                            ownedGenes.Add(gene.def.defName);
+                            foreach (var gene in genepack.GeneSet.GenesListForReading)
+                            {
+                                ownedGenes.Add(gene.defName);
+                            }
                         }
                     }
                 }
 
-                foreach (var thing in map.listerThings.ThingsOfDef(ThingDefOf.Genepack))
+                foreach (var thing in map.listerThings.AllThings)
                 {
-                    var genepack = thing as Genepack;
-                    foreach (var gene in genepack.GeneSet.GenesListForReading)
+                    if (thing is GeneSetHolderBase genepack)
                     {
-                        ownedGenes.Add(gene.defName);
+                        foreach (var gene in genepack.GeneSet.GenesListForReading)
+                        {
+                            ownedGenes.Add(gene.defName);
+                        }
                     }
                 }
             }
@@ -89,6 +95,7 @@ namespace RimMisc
             GeneDef unownedGene = unownedGenes.RandomElement();
             Genepack generatedGenepack = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack, null);
             generatedGenepack.Initialize(new List<GeneDef> { unownedGene });
+            Log.Message($"Unowned gene: {unownedGene.LabelCap}, {ownedGenes.Count} owned genes: {string.Join(", ", ownedGenes)}");
             return generatedGenepack;
         }
     }

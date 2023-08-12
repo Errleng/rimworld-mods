@@ -1,7 +1,7 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -54,7 +54,6 @@ namespace RimMisc
             var map = Find.CurrentMap;
             var items = new List<Thing>();
             ThingOwnerUtility.GetAllThingsRecursively(map, ThingRequest.ForGroup(ThingRequestGroup.HaulableEver), items, false, IsThingItem);
-            //Log.Message($"Initial items: {string.Join(",", items.Select(item => item.Label))}");
 
             foreach (var item in items)
             {
@@ -77,22 +76,18 @@ namespace RimMisc
                             var uniqueItem = wealthRecord.things[0];
                             if (item.GetCustomLabelNoCount(false) == uniqueItem.GetCustomLabelNoCount(false) && Math.Abs(item.MarketValue - uniqueItem.MarketValue) < FLOATING_POINT_TOLERANCE || item.CanStackWith(uniqueItem))
                             {
-                                //Log.Message($"Check {item.Label}, {uniqueItem.Label}, {item.CanStackWith(uniqueItem)}, {(itemCounts.ContainsKey(uniqueItem.LabelNoCount) ? itemCounts[uniqueItem.LabelNoCount].ToString() : "None")}");
                                 wealthRecord.AddThing(item);
                                 foundRecord = true;
                             }
                         }
 
                         if (!foundRecord)
-                            //Log.Message($"Add {item.Label}, {itemCounts.ContainsKey(item.LabelNoCount)}");
                         {
                             itemWealths.Add(new WealthRecord(item));
                         }
                     }
                 }
             }
-
-            Log.Message($"Total item wealth: {itemWealths.Sum(record => record.totalWealth)}");
         }
 
         private void CalculateBuildingWealth()
@@ -135,8 +130,6 @@ namespace RimMisc
                     }
                 }
             }
-
-            Log.Message($"Total building wealth: {buildingWealths.Sum(record => record.totalWealth)}");
         }
 
         private void CalculateFloorWealth()
@@ -183,8 +176,6 @@ namespace RimMisc
                     }
                 }
             }
-
-            Log.Message($"Total floor wealth: {floorWealths.Sum(terrainWealth => terrainWealth.Value.count * terrainWealth.Value.wealth)}");
         }
 
         private void CalculateCreatureWealth()
@@ -196,15 +187,13 @@ namespace RimMisc
             {
                 creatureWealths.Add(new WealthRecord(pawn));
             }
-
-            Log.Message($"Total pawn wealth: {creatureWealths.Sum(record => record.totalWealth)}");
         }
 
         private void DrawItemWealth(Rect rowRect)
         {
             float currHeight = 0;
             var sortedItemWealths = itemWealths.OrderByDescending(record => record.totalWealth).ToList();
-            var labelRect = new Rect(rowRect) {y = 0};
+            var labelRect = new Rect(rowRect) { y = 0 };
             foreach (var record in sortedItemWealths)
             {
                 var item = record.things[0];
@@ -220,7 +209,7 @@ namespace RimMisc
         {
             float currHeight = 0;
             var sortedBuildingWealths = buildingWealths.OrderByDescending(record => record.totalWealth).ToList();
-            var labelRect = new Rect(rowRect) {y = 0};
+            var labelRect = new Rect(rowRect) { y = 0 };
             foreach (var record in sortedBuildingWealths)
             {
                 var building = record.things[0];
@@ -236,7 +225,7 @@ namespace RimMisc
         {
             float currHeight = 0;
             var sortedFloorWealths = floorWealths.OrderByDescending(floorWealth => floorWealth.Value.count * floorWealth.Value.wealth).ToList();
-            var labelRect = new Rect(rowRect) {y = 0};
+            var labelRect = new Rect(rowRect) { y = 0 };
             foreach (var floorWealth in sortedFloorWealths)
             {
                 var terrain = floorWealth.Key;
@@ -253,7 +242,7 @@ namespace RimMisc
         {
             float currHeight = 0;
             var sortedCreatureWealths = creatureWealths.OrderByDescending(record => record.totalWealth).ToList();
-            var labelRect = new Rect(rowRect) {y = 0};
+            var labelRect = new Rect(rowRect) { y = 0 };
             foreach (var record in sortedCreatureWealths)
             {
                 var pawn = record.things[0];
