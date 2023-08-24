@@ -37,9 +37,9 @@
             <Flammability>0.5</Flammability>
         </statBases>
         <costList>
-            <Steel>1000</Steel>
-            <Plasteel>250</Plasteel>
-            <ComponentIndustrial>10</ComponentIndustrial>
+            <Steel>100</Steel>
+            <Plasteel>10</Plasteel>
+            <ComponentIndustrial>2</ComponentIndustrial>
         </costList>
         <building>
             <buildingTags>
@@ -49,7 +49,7 @@
         <comps>
             <li Class="CompProperties_Power">
                 <compClass>CompPowerTrader</compClass>
-                <basePowerConsumption>500</basePowerConsumption>
+                <basePowerConsumption>100</basePowerConsumption>
             </li>
             <li Class="CompProperties_Flickable" />
         </comps>

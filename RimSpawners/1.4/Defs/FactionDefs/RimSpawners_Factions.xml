@@ -10,10 +10,10 @@
         <techLevel>Ultra</techLevel>
         <autoFlee>false</autoFlee>
         <hidden>true</hidden>
-        <listOrderPriority>10</listOrderPriority>
         <requiredCountAtGameStart>1</requiredCountAtGameStart>
         <maxConfigurableAtWorldCreation>1</maxConfigurableAtWorldCreation>
-        <humanlikeFaction>true</humanlikeFaction>
+        <configurationListOrderPriority>2000</configurationListOrderPriority>
+        <displayInFactionSelection>false</displayInFactionSelection>
         <factionIconPath>World/WorldObjects/FactionIcon</factionIconPath>
         <backstoryFilters>
             <li>

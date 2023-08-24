@@ -8,6 +8,8 @@
     <RimMisc_DisableEnemyUninstall>Prevent enemy from uninstalling buildings</RimMisc_DisableEnemyUninstall>
     <RimMisc_KillDownedPawns>Periodically kill downed hostile pawns</RimMisc_KillDownedPawns>
     <RimMisc_PatchBuildingHp>Give all production buildings huge HP</RimMisc_PatchBuildingHp>
+    <RimMisc_PreventSkyfallDestruction>Disable meteorites destroying things</RimMisc_PreventSkyfallDestruction>
+    <RimMisc_PreventRoofCollapse>Disable roof collapse</RimMisc_PreventRoofCollapse>
     <RimMisc_EnableRocketmanTimeDilation>Enable Rocketman time dilation for all safe races</RimMisc_EnableRocketmanTimeDilation>
     <RimMisc_FinishRimatomicsResearch>Finish all Rimatomics research</RimMisc_FinishRimatomicsResearch>
     <RimMisc_CondenserItemsSection>Condenser Items</RimMisc_CondenserItemsSection>
@@ -28,6 +30,8 @@
     <RimMisc_DesignatorMeleeAttack>Melee attack</RimMisc_DesignatorMeleeAttack>
     <RimMisc_DesignatorMeleeAttackDesc>Designate this building to be melee attacked.</RimMisc_DesignatorMeleeAttackDesc>
     <RimMisc_JobMeleeAttackMessage>{0} is melee attacking {1}</RimMisc_JobMeleeAttackMessage>
-    <RimMisc_GeneMutationTime>{0} days until gene mutation finishes</RimMisc_GeneMutationTime>
+    <RimMisc_GeneMutationTime>{0} days until gene mutation finishes. Detected {1}/{2} owned/total genes.</RimMisc_GeneMutationTime>
     <RimMisc_GeneMutationComplete>{0} gene mutation complete</RimMisc_GeneMutationComplete>
+    <RimMisc_ThreatToggleLabel>Toggle on threat</RimMisc_ThreatToggleLabel>
+    <RimMisc_ThreatToggleDesc>Automatically enables this only if there is a threat</RimMisc_ThreatToggleDesc>
 </LanguageData>

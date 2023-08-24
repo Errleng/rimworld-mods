@@ -23,4 +23,19 @@ namespace RimMisc
             }
         }
     }
+
+    [HarmonyPatch(typeof(BillStack), "AddBill")]
+    internal class Patch_AddBill
+    {
+        private static void Postfix(Bill bill)
+        {
+            if (bill is Bill_Production billProduction)
+            {
+                if (RimMisc.Settings.defaultIngredientRadius > 0)
+                {
+                    billProduction.ingredientSearchRadius = RimMisc.Settings.defaultIngredientRadius;
+                }
+            }
+        }
+    }
 }

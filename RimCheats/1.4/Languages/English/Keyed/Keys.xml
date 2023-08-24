@@ -12,6 +12,6 @@
     <ToilSpeedMultiplierLabel>General toil speed multiplier</ToilSpeedMultiplierLabel>
     <ToilSpeedMultiplierDescription></ToilSpeedMultiplierDescription>
     <AutoCleanToggleLabel>Periodically clean filth on the map</AutoCleanToggleLabel>
-    <AutoRepairToggleLabel>Periodically repairs colony buildings by {}% of max HP</AutoRepairToggleLabel>
+    <AutoRepairToggleLabel>Periodically repairs colony buildings by {0}% of max HP</AutoRepairToggleLabel>
     <MaxSkillsToggleLabel>Periodically levels up all colonists' skills</MaxSkillsToggleLabel>
 </LanguageData>

@@ -9,22 +9,18 @@ namespace RimMisc
     internal class Building_GeneMutator : Building
     {
         public static readonly int TICKS_BETWEEN_SPAWNS = GenDate.TicksPerQuadrum;
-        int lastSpawnTick = -1;
+        int ticksToNextSpawn = TICKS_BETWEEN_SPAWNS;
         CompPowerTrader compPowerTrader;
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            if (lastSpawnTick < 0)
-            {
-                lastSpawnTick = Find.TickManager.TicksGame;
-            }
             compPowerTrader = GetComp<CompPowerTrader>();
         }
 
         public override void ExposeData()
         {
-            Scribe_Values.Look(ref lastSpawnTick, "lastSpawnTick");
+            Scribe_Values.Look(ref ticksToNextSpawn, "ticksToNextSpawn");
             base.ExposeData();
         }
 
@@ -34,10 +30,10 @@ namespace RimMisc
             {
                 return;
             }
-            int curTick = Find.TickManager.TicksGame;
-            if (curTick - lastSpawnTick >= TICKS_BETWEEN_SPAWNS)
+            ticksToNextSpawn -= GenTicks.TickRareInterval;
+            if (ticksToNextSpawn <= 0)
             {
-                lastSpawnTick = curTick;
+                ticksToNextSpawn = TICKS_BETWEEN_SPAWNS;
                 var gene = GetUnownedGene();
                 if (gene != null)
                 {
@@ -50,12 +46,13 @@ namespace RimMisc
         public override string GetInspectString()
         {
             string str = base.GetInspectString();
-            float daysUntilSpawn = Math.Max(0, (TICKS_BETWEEN_SPAWNS + lastSpawnTick - Find.TickManager.TicksGame) / GenDate.TicksPerDay);
-            str += "\n" + "RimMisc_GeneMutationTime".Translate(Math.Round(daysUntilSpawn, 2));
+            float daysUntilSpawn = Math.Max(0, ticksToNextSpawn / GenDate.TicksPerDay);
+            var ownedGenes = GetOwnedGenes();
+            str += "\n" + "RimMisc_GeneMutationTime".Translate(Math.Round(daysUntilSpawn, 2), ownedGenes.Count, DefDatabase<GeneDef>.DefCount);
             return str;
         }
 
-        private Genepack GetUnownedGene()
+        private HashSet<string> GetOwnedGenes()
         {
             var ownedGenes = new HashSet<string>();
             foreach (var map in Find.Maps)
@@ -86,16 +83,28 @@ namespace RimMisc
                     }
                 }
             }
+            return ownedGenes;
+        }
 
+        private Genepack GetUnownedGene()
+        {
+            var ownedGenes = GetOwnedGenes();
             var unownedGenes = DefDatabase<GeneDef>.AllDefs.Where(x => !ownedGenes.Contains(x.defName)).ToList();
             if (unownedGenes.Count == 0)
             {
                 return null;
             }
             GeneDef unownedGene = unownedGenes.RandomElement();
+
+            var usefulGenes = unownedGenes.Where(x => x.biostatArc != 0 || x.biostatCpx != 0 || x.biostatMet != 0).ToList();
+            if (usefulGenes.Count > 0)
+            {
+                unownedGene = usefulGenes.RandomElement();
+            }
+
             Genepack generatedGenepack = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack, null);
             generatedGenepack.Initialize(new List<GeneDef> { unownedGene });
-            Log.Message($"Unowned gene: {unownedGene.LabelCap}, {ownedGenes.Count} owned genes: {string.Join(", ", ownedGenes)}");
+            //Log.Message($"Unowned gene: {unownedGene.LabelCap}, {ownedGenes.Count} owned genes: {string.Join(", ", ownedGenes)}");
             return generatedGenepack;
         }
     }

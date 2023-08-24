@@ -4,7 +4,6 @@ using RimWorld;
 using RocketMan;
 using Soyuz;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
@@ -18,14 +17,53 @@ namespace RimMisc
         {
             RimMisc.Settings.ApplySettings();
             AddComps();
+            if (RimMisc.Settings.patchBuildingHp)
+            {
+                PatchBuildingHP();
+            }
         }
 
         public static void AddComps()
         {
-            var thingsWithComps = DefDatabase<ThingDef>.AllDefs.Where(def => typeof(ThingWithComps).IsAssignableFrom(def.thingClass) && def.destroyable).ToList();
-            foreach (var thingDef in thingsWithComps)
+            var things = DefDatabase<ThingDef>.AllDefs;
+            foreach (var thingDef in things)
             {
-                thingDef.comps.Add(new CompProperties(typeof(CompMeleeAttackable)));
+                if (typeof(ThingWithComps).IsAssignableFrom(thingDef.thingClass) && thingDef.destroyable)
+                {
+                    thingDef.comps.Add(new CompProperties(typeof(CompMeleeAttackable)));
+                }
+                if (thingDef.HasComp(typeof(CompFlickable)))
+                {
+                    thingDef.comps.Add(new CompProperties(typeof(CompThreatToggle)));
+                }
+            }
+        }
+
+        public static void PatchBuildingHP()
+        {
+            Predicate<ThingDef> isValidBuilding = delegate (ThingDef def)
+            {
+                return def.IsBuildingArtificial &&
+                (def.building.buildingTags.Contains("Production") || def.IsWorkTable);
+            };
+
+            foreach (var def in DefDatabase<ThingDef>.AllDefs)
+            {
+                if (isValidBuilding(def))
+                {
+                    def.SetStatBaseValue(StatDefOf.MaxHitPoints, 100000);
+                }
+            }
+
+            if (Find.CurrentMap != null)
+            {
+                foreach (var building in Find.CurrentMap.listerBuildings.allBuildingsColonist)
+                {
+                    if (isValidBuilding(building.def))
+                    {
+                        building.HitPoints = building.MaxHitPoints;
+                    }
+                }
             }
         }
     }
@@ -91,6 +129,8 @@ namespace RimMisc
             settingsSection.CheckboxLabeled("RimMisc_DisableEnemyUninstall".Translate(), ref Settings.disableEnemyUninstall);
             settingsSection.CheckboxLabeled("RimMisc_KillDownedPawns".Translate(), ref Settings.killDownedPawns);
             settingsSection.CheckboxLabeled("RimMisc_PatchBuildingHp".Translate(), ref Settings.patchBuildingHp);
+            settingsSection.CheckboxLabeled("RimMisc_PreventSkyfallDestruction".Translate(), ref Settings.preventSkyfallDestruction);
+            settingsSection.CheckboxLabeled("RimMisc_PreventRoofCollapse".Translate(), ref Settings.preventRoofCollapse);
             if (settingsSection.ButtonText("RimMisc_EnableRocketmanTimeDilation".Translate()))
             {
                 EnableRocketmanRaces();
@@ -134,7 +174,7 @@ namespace RimMisc
             Widgets.Label(workLabelRect, "RimMisc_WorkColumn".Translate());
             Widgets.Label(yieldLabelRect, "RimMisc_YieldColumn".Translate());
 
-            Settings.condenserItems = Settings.condenserItems.Where(item => item != null).ToList();
+            var condenserItems = Settings.GetRealCondenserItems();
 
             var outRect = new Rect(0, workLabelRect.height, scrollSectionRect.width, scrollSectionRect.height);
             outRect.height -= outRect.y;
@@ -143,8 +183,7 @@ namespace RimMisc
 
             // draw each entry
             var currentY = outRect.y;
-            var immutableCondenserItems = new List<CondenserItem>(Settings.condenserItems);
-            foreach (var item in immutableCondenserItems)
+            foreach (var item in condenserItems)
             {
                 DrawCondenserItemRow(item, scrollSectionRect, currentY);
                 currentY += CONDENSER_ITEM_ROW_HEIGHT;
@@ -201,7 +240,7 @@ namespace RimMisc
             Widgets.BeginScrollView(outRect, ref condenserItemSelectScrollPos, viewRect);
 
             // filter out items already in list
-            var condenserItemThingDefNames = Settings.condenserItems.Select(item => item.thingDefName).ToHashSet();
+            var condenserItemThingDefNames = Settings.GetRealCondenserItems().Select(item => item.thingDefName).ToHashSet();
             var thingList = DefDatabase<ThingDef>.AllDefs.Where(d => !condenserItemThingDefNames.Contains(d.defName) &&
             (d.category == ThingCategory.Item || d.category == ThingCategory.Building));
 

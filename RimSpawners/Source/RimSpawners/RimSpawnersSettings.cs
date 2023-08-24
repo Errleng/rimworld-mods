@@ -36,14 +36,14 @@ namespace RimSpawners
             Scribe_Values.Look(ref spawnTime, "spawnTime");
             Scribe_Values.Look(ref spawnTimePointsPerSecond, "spawnTimePointsPerSecond", 1f);
             Scribe_Values.Look(ref spawnTimeSecondsPerSpawn, "spawnTimeSecondsPerSpawn", 1f);
-            Scribe_Values.Look(ref cachePawns, "cachePawns");
+            Scribe_Values.Look(ref cachePawns, "cachePawns", false);
             Scribe_Values.Look(ref useAllyFaction, "useAllyFaction", true);
-            Scribe_Values.Look(ref maxSkills, "maxSkills");
+            Scribe_Values.Look(ref maxSkills, "maxSkills", defaultValue: false);
             Scribe_Values.Look(ref disableCorpses, "disableCorpses", true);
             Scribe_Values.Look(ref disableNeeds, "disableNeeds", true);
-            Scribe_Values.Look(ref doNotAttackFleeing, "doNotAttackFleeing");
-            Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat");
-            Scribe_Values.Look(ref crossMap, "crossMap");
+            Scribe_Values.Look(ref doNotAttackFleeing, "doNotAttackFleeing", false);
+            Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat", false);
+            Scribe_Values.Look(ref crossMap, "crossMap", false);
             Scribe_Collections.Look(ref hediffStatOffsets, "hediffStatOffsets", LookMode.Value, LookMode.Deep);
             Scribe_Collections.Look(ref hediffCapMods, "hediffCapMods", LookMode.Value, LookMode.Deep);
 

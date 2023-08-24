@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -16,6 +15,8 @@ namespace RimMisc
         public bool disableEnemyUninstall;
         public bool killDownedPawns;
         public bool patchBuildingHp;
+        public bool preventSkyfallDestruction;
+        public bool preventRoofCollapse;
         public List<CondenserItem> condenserItems = new List<CondenserItem>();
 
         public override void ExposeData()
@@ -27,25 +28,34 @@ namespace RimMisc
             Scribe_Values.Look(ref disableEnemyUninstall, "disableEnemyUninstall");
             Scribe_Values.Look(ref killDownedPawns, "killDownedPawns");
             Scribe_Values.Look(ref patchBuildingHp, "patchBuildingHp");
+            Scribe_Values.Look(ref preventSkyfallDestruction, "preventSkyfallDestruction");
+            Scribe_Values.Look(ref preventRoofCollapse, "preventRoofCollapse");
             Scribe_Collections.Look(ref condenserItems, "condenserItems", LookMode.Deep);
             base.ExposeData();
         }
 
-        public void ApplySettings()
+        public List<CondenserItem> GetRealCondenserItems()
         {
+            var realCondenserItems = new List<CondenserItem>();
             foreach (var item in condenserItems.ToList())
             {
-                if (item.ThingDef == null)
+                if (item == null || item.ThingDef == null)
                 {
-                    condenserItems.Remove(item);
                     Log.Warning("RimMisc_ItemDoesNotExist".Translate(item.thingDefName));
+                    continue;
                 }
+                realCondenserItems.Add(item);
             }
+            return realCondenserItems;
+        }
 
+        public void ApplySettings()
+        {
+            var realCondenserItems = GetRealCondenserItems();
             var condenserDef = DefDatabase<ThingDef>.GetNamed(RimMisc.CondenserDefName);
             if (condenserDef != null)
             {
-                condenserDef.recipes = RimMisc.Settings.condenserItems.Select(item => item.CreateRecipe()).ToList();
+                condenserDef.recipes = realCondenserItems.Select(item => item.CreateRecipe()).ToList();
                 condenserDef.recipes.ForEach(recipe =>
                 {
                     if (DefDatabase<RecipeDef>.GetNamed(recipe.defName, false) == null)
@@ -55,36 +65,6 @@ namespace RimMisc
                     }
                 });
                 AccessTools.FieldRefAccess<ThingDef, List<RecipeDef>>(condenserDef, "allRecipesCached") = null;
-            }
-
-            if (patchBuildingHp)
-            {
-                var count = 0;
-
-                Predicate<ThingDef> isValidBuilding = delegate (ThingDef def)
-                {
-                    return def.IsBuildingArtificial &&
-                    (def.building.buildingTags.Contains("Production") || def.IsWorkTable);
-                };
-
-                foreach (var def in DefDatabase<ThingDef>.AllDefs)
-                {
-                    if (isValidBuilding(def))
-                    {
-                        def.SetStatBaseValue(StatDefOf.MaxHitPoints, 100000);
-                    }
-                }
-
-                if (Find.CurrentMap != null)
-                {
-                    foreach (var building in Find.CurrentMap.listerBuildings.allBuildingsColonist)
-                    {
-                        if (isValidBuilding(building.def))
-                        {
-                            building.HitPoints = building.MaxHitPoints;
-                        }
-                    }
-                }
             }
         }
     }

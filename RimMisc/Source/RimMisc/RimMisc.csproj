@@ -79,12 +79,14 @@
     <Compile Include="MainTabWindow_ItemInfoTab.cs" />
     <Compile Include="Patch_MakeNewBill.cs" />
     <Compile Include="Patch_JobDriver_TakeInventory_MakeNewToils.cs" />
+    <Compile Include="Patch_RoofCollapse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RimMisc.cs" />
     <Compile Include="RimMiscDefOf.cs" />
     <Compile Include="RimMiscWorldComponent.cs" />
     <Compile Include="RimMiscSettings.cs" />
     <Compile Include="MainTabWindow_WealthTab.cs" />
+    <Compile Include="CompThreatToggle.cs" />
     <Compile Include="UnfinishedCondenserThing.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="WorkGiver_MeleeAttack.cs" />

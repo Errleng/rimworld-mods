@@ -54,9 +54,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefPatches.cs" />
+    <Compile Include="HarmonyPatches.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RimCheatsWorldComp.cs" />
+    <Compile Include="SpawnBuildingInfo.cs" />
     <Compile Include="StatSetting.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using HarmonyLib;
+using RimWorld;
 using RimWorld.Planet;
 using System.Collections.Generic;
 using Verse;
@@ -9,6 +10,7 @@ namespace RimMisc
     {
         public static readonly int AUTO_CLOSE_LETTERS_CHECK_TICKS = GenTicks.SecondsToTicks(10);
         public static readonly int KILL_DOWNED_PAWNS_TICKS = GenTicks.SecondsToTicks(60);
+        public static readonly int CHECK_THREAT_TICKS = GenTicks.SecondsToTicks(15);
 
         private static readonly Dictionary<Letter, int> letterStartTimes = new Dictionary<Letter, int>();
 
@@ -69,6 +71,30 @@ namespace RimMisc
                     if (count > 0)
                     {
                         Log.Message($"Killed {count} downed hostile pawns");
+                    }
+                }
+            }
+
+            if (currentTicks % CHECK_THREAT_TICKS == 0)
+            {
+                foreach (var map in Find.Maps)
+                {
+                    var hasThreat = GenHostility.AnyHostileActiveThreatToPlayer(map);
+                    foreach (var building in map.listerBuildings.allBuildingsColonist)
+                    {
+                        var compThreatToggle = building.GetComp<CompThreatToggle>();
+                        if (compThreatToggle == null || !compThreatToggle.enableOnlyOnThreat)
+                        {
+                            continue;
+                        }
+                        var compFlickable = building.GetComp<CompFlickable>();
+                        if (compFlickable == null)
+                        {
+                            Log.Error($"Found CompThreatToggle but not CompFlickable for {building}");
+                            continue;
+                        }
+                        Traverse.Create(compFlickable).Field("wantSwitchOn").SetValue(hasThreat);
+                        compFlickable.SwitchIsOn = hasThreat;
                     }
                 }
             }

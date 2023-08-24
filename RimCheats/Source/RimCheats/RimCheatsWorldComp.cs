@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using RimWorld.Planet;
 using System;
+using System.Collections.Generic;
 using Verse;
 
 namespace RimCheats
@@ -8,12 +9,23 @@ namespace RimCheats
     internal class RimCheatsWorldComp : WorldComponent
     {
         private static readonly RimCheatsSettings settings = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>();
-        private static readonly int CLEAN_FILTH_TICKS = GenDate.TicksPerDay;
-        private static readonly int REPAIR_TICKS = GenDate.TicksPerDay;
-        private static readonly int UPDATE_PAWNS_TICK = GenDate.TicksPerDay;
+        private static readonly int REPAIR_TICKS = GenDate.TicksPerHour;
+        private static readonly int LONG_UPDATE_TICKS = GenDate.TicksPerDay;
+
+        public List<SpawnBuildingInfo> buildingsToRestore = new List<SpawnBuildingInfo>();
 
         public RimCheatsWorldComp(World world) : base(world)
         {
+        }
+
+        public override void ExposeData()
+        {
+            Scribe_Collections.Look(ref buildingsToRestore, "buildingsToRestore", LookMode.Deep);
+            if (buildingsToRestore == null)
+            {
+                buildingsToRestore = new List<SpawnBuildingInfo>();
+            }
+            base.ExposeData();
         }
 
         public override void WorldComponentTick()
@@ -21,35 +33,6 @@ namespace RimCheats
             base.WorldComponentTick();
 
             var ticks = Find.TickManager.TicksGame;
-
-            if (settings.autoClean && ticks % CLEAN_FILTH_TICKS == 0)
-            {
-                var map = Find.CurrentMap;
-                var filths = map.listerThings.ThingsInGroup(ThingRequestGroup.Filth);
-                int cleaned = 0;
-                for (int i = filths.Count - 1; i >= 0; --i)
-                {
-                    var filth = filths[i] as Filth;
-                    if (filth == null)
-                    {
-                        Log.Error($"Thing {filths[i]} is not filth!");
-                    }
-                    else
-                    {
-                        filth.DeSpawn();
-                        if (!filth.Destroyed)
-                        {
-                            filth.Destroy(DestroyMode.Vanish);
-                        }
-                        if (!filth.Discarded)
-                        {
-                            filth.Discard();
-                        }
-                        ++cleaned;
-                    }
-                }
-                Log.Message($"Cleaned {cleaned} filth");
-            }
 
             if (settings.autoRepair && ticks % REPAIR_TICKS == 0)
             {
@@ -67,8 +50,38 @@ namespace RimCheats
                 }
             }
 
-            if (ticks % UPDATE_PAWNS_TICK == 0)
+            if (ticks % LONG_UPDATE_TICKS == 0)
             {
+                // repair all equipment
+                foreach (var colonist in PawnsFinder.AllMaps_FreeColonists)
+                {
+                    foreach (var thing in colonist.equipment.AllEquipmentListForReading)
+                    {
+                        thing.HitPoints = thing.MaxHitPoints;
+                    }
+
+                    foreach (var thing in colonist.apparel.WornApparel)
+                    {
+                        thing.HitPoints = thing.MaxHitPoints;
+                    }
+                }
+
+                foreach (var info in buildingsToRestore)
+                {
+                    var building = ThingMaker.MakeThing(info.def, info.stuff);
+                    building.SetFactionDirect(Faction.OfPlayer);
+                    var spawnedBuilding = GenSpawn.Spawn(building, info.position, info.map, info.rotation, WipeMode.Vanish, false);
+                    if (info.styleSourcePrecept != null)
+                    {
+                        spawnedBuilding.StyleSourcePrecept = info.styleSourcePrecept;
+                    }
+                    else
+                    {
+                        spawnedBuilding.StyleDef = info.styleDef;
+                    }
+                }
+                buildingsToRestore.Clear();
+
                 if (settings.maxSkills)
                 {
                     foreach (var colonist in PawnsFinder.AllMaps_FreeColonists)
@@ -76,6 +89,34 @@ namespace RimCheats
                         foreach (var skill in colonist.skills.skills)
                         {
                             skill.Level += 20;
+                        }
+                    }
+                }
+
+                if (settings.autoClean)
+                {
+                    var map = Find.CurrentMap;
+                    var filths = map.listerThings.ThingsInGroup(ThingRequestGroup.Filth);
+                    int cleaned = 0;
+                    for (int i = filths.Count - 1; i >= 0; --i)
+                    {
+                        var filth = filths[i] as Filth;
+                        if (filth == null)
+                        {
+                            Log.Error($"Thing {filths[i]} is not filth!");
+                        }
+                        else
+                        {
+                            filth.DeSpawn();
+                            if (!filth.Destroyed)
+                            {
+                                filth.Destroy(DestroyMode.Vanish);
+                            }
+                            if (!filth.Discarded)
+                            {
+                                filth.Discard();
+                            }
+                            ++cleaned;
                         }
                     }
                 }
