@@ -68,17 +68,10 @@ namespace RimCheats
 
                 foreach (var info in buildingsToRestore)
                 {
-                    var building = ThingMaker.MakeThing(info.def, info.stuff);
-                    building.SetFactionDirect(Faction.OfPlayer);
-                    var spawnedBuilding = GenSpawn.Spawn(building, info.position, info.map, info.rotation, WipeMode.Vanish, false);
-                    if (info.styleSourcePrecept != null)
-                    {
-                        spawnedBuilding.StyleSourcePrecept = info.styleSourcePrecept;
-                    }
-                    else
-                    {
-                        spawnedBuilding.StyleDef = info.styleDef;
-                    }
+                    var thing = info.thing;
+                    thing.stackCount = 1;
+                    thing.HitPoints = thing.MaxHitPoints;
+                    GenSpawn.Spawn(thing, thing.Position, info.map, thing.Rotation, WipeMode.Vanish, false);
                 }
                 buildingsToRestore.Clear();
 

@@ -222,7 +222,7 @@ namespace RimCheats
                 if (settings.autoRepair && shouldRebuild)
                 {
                     var worldComp = Find.World.GetComponent<RimCheatsWorldComp>();
-                    worldComp.buildingsToRestore.Add(new SpawnBuildingInfo(thing.def, thing.Stuff, map, thing.Position, thing.Rotation, thing.StyleDef, thing.StyleSourcePrecept));
+                    worldComp.buildingsToRestore.Add(new SpawnBuildingInfo(thing, map));
                     return false;
                 }
                 return true;
