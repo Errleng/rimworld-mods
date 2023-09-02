@@ -14,4 +14,5 @@
     <AutoCleanToggleLabel>Periodically clean filth on the map</AutoCleanToggleLabel>
     <AutoRepairToggleLabel>Periodically repairs colony buildings by {0}% of max HP</AutoRepairToggleLabel>
     <MaxSkillsToggleLabel>Periodically levels up all colonists' skills</MaxSkillsToggleLabel>
+    <PerfectAccuracyToggleLabel>Make your colonists and turrets completely accurate</PerfectAccuracyToggleLabel>
 </LanguageData>

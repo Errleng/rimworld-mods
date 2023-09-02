@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 
@@ -218,14 +219,30 @@ namespace RimCheats
         {
             static bool Prefix(Thing thing, DestroyMode mode, Map map, BuildableDef buildingDef)
             {
-                bool shouldRebuild = Find.PlaySettings.autoRebuild && mode == DestroyMode.KillFinalize && thing.Faction == Faction.OfPlayer && buildingDef.blueprintDef != null && buildingDef.IsResearchFinished && map.areaManager.Home[thing.Position] && GenConstruct.CanPlaceBlueprintAt(buildingDef, thing.Position, thing.Rotation, map, false, null, null, thing.Stuff).Accepted;
-                if (settings.autoRepair && shouldRebuild)
+                bool shouldRestore = Find.PlaySettings.autoRebuild && mode == DestroyMode.KillFinalize && thing.Faction == Faction.OfPlayer && buildingDef.blueprintDef != null && map.areaManager.Home[thing.Position];
+                if (settings.autoRepair && shouldRestore)
                 {
                     var worldComp = Find.World.GetComponent<RimCheatsWorldComp>();
                     worldComp.buildingsToRestore.Add(new SpawnBuildingInfo(thing, map));
                     return false;
                 }
                 return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(Projectile), "Launch", new Type[] { typeof(Thing), typeof(Vector3), typeof(LocalTargetInfo), typeof(LocalTargetInfo), typeof(ProjectileHitFlags), typeof(bool), typeof(Thing), typeof(ThingDef) })]
+        class Patch_Launch
+        {
+            static void Prefix(Projectile __instance, Thing launcher, Vector3 origin, ref LocalTargetInfo usedTarget, LocalTargetInfo intendedTarget, ref ProjectileHitFlags hitFlags, ref bool preventFriendlyFire, Thing equipment, ThingDef targetCoverDef)
+            {
+                if (!settings.perfectAccuracy || launcher?.Faction != Faction.OfPlayer)
+                {
+                    return;
+                }
+
+                usedTarget = intendedTarget;
+                hitFlags = ProjectileHitFlags.IntendedTarget;
+                preventFriendlyFire = true;
             }
         }
     }

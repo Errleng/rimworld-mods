@@ -1,7 +1,9 @@
-﻿using RimWorld;
+﻿using HarmonyLib;
+using RimWorld;
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace RimCheats
@@ -24,6 +26,12 @@ namespace RimCheats
             if (buildingsToRestore == null)
             {
                 buildingsToRestore = new List<SpawnBuildingInfo>();
+            }
+            var numNullBuildings = buildingsToRestore.Where(x => x == null || x.thing == null).Count();
+            if (numNullBuildings > 0)
+            {
+                Log.Error($"Found {numNullBuildings} nulls in list of buildings to restore. Removing.");
+                buildingsToRestore = buildingsToRestore.Where(x => x != null && x.thing != null).ToList();
             }
             base.ExposeData();
         }
@@ -71,6 +79,7 @@ namespace RimCheats
                     var thing = info.thing;
                     thing.stackCount = 1;
                     thing.HitPoints = thing.MaxHitPoints;
+                    Traverse.Create(thing).Field("mapIndexOrState").SetValue((sbyte)-1); // avoids error message in SpawnSetup
                     GenSpawn.Spawn(thing, thing.Position, info.map, thing.Rotation, WipeMode.Vanish, false);
                 }
                 buildingsToRestore.Clear();
