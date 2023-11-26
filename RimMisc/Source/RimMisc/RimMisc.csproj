@@ -78,7 +78,6 @@
     <Compile Include="JobDriver_MeleeAttack.cs" />
     <Compile Include="MainTabWindow_ItemInfoTab.cs" />
     <Compile Include="Patch_MakeNewBill.cs" />
-    <Compile Include="Patch_JobDriver_TakeInventory_MakeNewToils.cs" />
     <Compile Include="Patch_RoofCollapse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RimMisc.cs" />

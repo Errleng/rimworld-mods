@@ -66,6 +66,17 @@ namespace RimMisc
                 });
                 AccessTools.FieldRefAccess<ThingDef, List<RecipeDef>>(condenserDef, "allRecipesCached") = null;
             }
+
+            if (disableEnemyUninstall)
+            {
+                foreach (var thing in DefDatabase<ThingDef>.AllDefsListForReading)
+                {
+                    if (thing.stealable && thing.Minifiable)
+                    {
+                        thing.stealable = false;
+                    }
+                }
+            }
         }
     }
 }
