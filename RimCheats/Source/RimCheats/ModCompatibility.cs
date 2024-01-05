@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using CombatExtended;
+using HarmonyLib;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Verse;
@@ -96,6 +97,59 @@ namespace RimCheats
                         return false;
                     }
                     return true;
+                }
+            }
+        }
+
+        class CombatExtended_Patches
+        {
+            static bool IsModActive()
+            {
+                return ModsConfig.IsActive("CETeam.CombatExtended");
+            }
+
+            [HarmonyPatch(typeof(Verb_LaunchProjectileCE), "ShootingAccuracy", MethodType.Getter)]
+            class Patch_GetShootingAccuracy
+            {
+                static bool Prepare()
+                {
+                    return IsModActive();
+                }
+
+                static void Postfix(Verb_LaunchProjectileCE __instance, ref float __result)
+                {
+                    if (!Settings.perfectAccuracy || !__instance.Caster.Faction.IsPlayer)
+                    {
+                        return;
+                    }
+                    __result = 4.5f;
+                }
+            }
+
+            [HarmonyPatch(typeof(Verb_LaunchProjectileCE), "ShiftTarget")]
+            class Patch_ShiftTarget
+            {
+                static bool Prepare()
+                {
+                    return IsModActive();
+                }
+
+                static void Prefix(Verb_LaunchProjectileCE __instance, ref ShiftVecReport report)
+                {
+                    if (!Settings.perfectAccuracy || !__instance.Caster.Faction.IsPlayer)
+                    {
+                        return;
+                    }
+                    report.swayDegrees = 0;
+                    report.spreadDegrees = 0;
+                    report.weatherShift = 0;
+                    report.lightingShift = 0;
+                    report.sightsEfficiency = 100;
+                    report.aimingAccuracy = 1.5f;
+                    report.circularMissRadius = 0;
+                    report.maxRange = 100000;
+                    report.smokeDensity = 0;
+                    report.blindFiring = false;
                 }
             }
         }

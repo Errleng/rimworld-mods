@@ -17,6 +17,7 @@ namespace RimMisc
         public bool patchBuildingHp;
         public bool preventSkyfallDestruction;
         public bool preventRoofCollapse;
+        public bool myMiscStuff;
         public List<CondenserItem> condenserItems = new List<CondenserItem>();
 
         public override void ExposeData()
@@ -30,6 +31,7 @@ namespace RimMisc
             Scribe_Values.Look(ref patchBuildingHp, "patchBuildingHp");
             Scribe_Values.Look(ref preventSkyfallDestruction, "preventSkyfallDestruction");
             Scribe_Values.Look(ref preventRoofCollapse, "preventRoofCollapse");
+            Scribe_Values.Look(ref myMiscStuff, "myMiscStuff");
             Scribe_Collections.Look(ref condenserItems, "condenserItems", LookMode.Deep);
             base.ExposeData();
         }

@@ -460,7 +460,7 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
             if (IdentifyFriendFoe_Active())
             {
                 var launcher = projectile.Launcher;
-                if (launcher != null && launcher.Faction.IsPlayer)
+                if (launcher != null && launcher.Faction.HostileTo(Faction.OfPlayer))
                 {
                     return false;
                 }

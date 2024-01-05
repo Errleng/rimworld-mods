@@ -1,7 +1,9 @@
-﻿using HarmonyLib;
+﻿using CombatExtended.Compatibility;
+using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace RimMisc
@@ -95,6 +97,63 @@ namespace RimMisc
                         }
                         Traverse.Create(compFlickable).Field("wantSwitchOn").SetValue(hasThreat);
                         compFlickable.SwitchIsOn = hasThreat;
+                    }
+                }
+            }
+
+            if (RimMisc.Settings.myMiscStuff)
+            {
+                // daily
+                if (currentTicks % GenDate.TicksPerDay == 0)
+                {
+                    foreach (var map in Find.Maps)
+                    {
+                        // delete bad quality items
+                        foreach (var thing in map.listerThings.AllThings.ToList())
+                        {
+                            // do not delete installed buildings
+                            // do not delete things that do not belong to the player
+                            if ((thing.def.category == ThingCategory.Building && !(thing is MinifiedThing))
+                                || (thing.Faction != null && thing.Faction.IsPlayer))
+                            {
+                                continue;
+                            }
+                            QualityCategory quality;
+                            if (thing.TryGetQuality(out quality) && quality < QualityCategory.Excellent)
+                            {
+                                thing.Destroy();
+                            }
+                        }
+
+                        // repair equipment
+                        foreach (var pawn in map.mapPawns.FreeColonistsSpawned)
+                        {
+                            foreach (var apparel in pawn.apparel.WornApparel)
+                            {
+                                apparel.HitPoints = apparel.MaxHitPoints;
+                            }
+                            foreach (var equipment in pawn.equipment.AllEquipmentListForReading)
+                            {
+                                equipment.HitPoints = equipment.MaxHitPoints;
+                            }
+                        }
+                    }
+                }
+
+                // hourly
+                if (currentTicks % GenDate.TicksPerHour == 0)
+                {
+                    foreach (var map in Find.Maps)
+                    {
+                        // reload turrets with Combat Extended ammo
+                        if (ModsConfig.IsActive("CETeam.CombatExtended"))
+                        {
+                            foreach (var turret in map.listerBuildings.AllBuildingsColonistOfClass<Building_Turret>())
+                            {
+                                var compReloader = turret.GetAmmo();
+                                compReloader.ResetAmmoCount(compReloader.SelectedAmmo);
+                            }
+                        }
                     }
                 }
             }

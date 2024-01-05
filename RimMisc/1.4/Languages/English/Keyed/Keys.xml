@@ -10,6 +10,8 @@
     <RimMisc_PatchBuildingHp>Give all production buildings huge HP</RimMisc_PatchBuildingHp>
     <RimMisc_PreventSkyfallDestruction>Disable meteorites destroying things</RimMisc_PreventSkyfallDestruction>
     <RimMisc_PreventRoofCollapse>Disable roof collapse</RimMisc_PreventRoofCollapse>
+    <RimMisc_MyMiscStuff>Miscellaneous changes that I personally enjoy
+    </RimMisc_MyMiscStuff>
     <RimMisc_EnableRocketmanTimeDilation>Enable Rocketman time dilation for all safe races</RimMisc_EnableRocketmanTimeDilation>
     <RimMisc_FinishRimatomicsResearch>Finish all Rimatomics research</RimMisc_FinishRimatomicsResearch>
     <RimMisc_CondenserItemsSection>Condenser Items</RimMisc_CondenserItemsSection>

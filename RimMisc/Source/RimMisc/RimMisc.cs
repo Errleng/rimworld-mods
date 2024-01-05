@@ -131,6 +131,8 @@ namespace RimMisc
             settingsSection.CheckboxLabeled("RimMisc_PatchBuildingHp".Translate(), ref Settings.patchBuildingHp);
             settingsSection.CheckboxLabeled("RimMisc_PreventSkyfallDestruction".Translate(), ref Settings.preventSkyfallDestruction);
             settingsSection.CheckboxLabeled("RimMisc_PreventRoofCollapse".Translate(), ref Settings.preventRoofCollapse);
+            settingsSection.CheckboxLabeled("RimMisc_MyMiscStuff".Translate(), ref Settings.myMiscStuff);
+
             if (settingsSection.ButtonText("RimMisc_EnableRocketmanTimeDilation".Translate()))
             {
                 EnableRocketmanRaces();
