@@ -183,7 +183,7 @@ namespace HighDensityHydroCustom
                     {
                         bayStage = BayStage.Harvest;
                     }
-                    var fertilitySensitivity = plantProps.fertilitySensitivity;
+                    var fertilitySensitivity = 1;
                     var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
                     var growthPerDay = 1f / (GenDate.TicksPerDay * plantProps.growDays);
                     var growthAmount = fertilityGrowthRateFactor * growthPerDay * updateInterval;
@@ -285,7 +285,7 @@ namespace HighDensityHydroCustom
                 text += $"\n{"HDHBadTemperature".Translate(temperature, Plant.MinOptimalGrowthTemperature.ToStringTemperature(), Plant.MaxOptimalGrowthTemperature.ToStringTemperature())}";
             }
 
-            var fertilitySensitivity = simPlant.def.plant.fertilitySensitivity;
+            var fertilitySensitivity = 1;
             var fertilityGrowthRateFactor = fertility * fertilitySensitivity + (1 - fertilitySensitivity);
             var growthPerDay = 1f / (GenDate.TicksPerDay * simPlant.def.plant.growDays);
             var growthPerDayAdjusted = fertilityGrowthRateFactor * growthPerDay * GenDate.TicksPerDay;

@@ -1,4 +1,5 @@
-﻿using CombatExtended.Compatibility;
+﻿using CombatExtended;
+using CombatExtended.Compatibility;
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
@@ -145,17 +146,58 @@ namespace RimMisc
                 {
                     foreach (var map in Find.Maps)
                     {
-                        // reload turrets with Combat Extended ammo
+                        // reload friendlies with Combat Extended ammo
                         if (ModsConfig.IsActive("CETeam.CombatExtended"))
                         {
-                            foreach (var turret in map.listerBuildings.AllBuildingsColonistOfClass<Building_Turret>())
-                            {
-                                var compReloader = turret.GetAmmo();
-                                compReloader.ResetAmmoCount(compReloader.SelectedAmmo);
-                            }
+                            ReloadCombatExtendedAmmo(map);
                         }
                     }
                 }
+            }
+        }
+
+        void ReloadCombatExtendedAmmo(Map map)
+        {
+            foreach (var pawn in map.mapPawns.AllPawnsSpawned.ToList())
+            {
+                if (pawn.Faction.HostileTo(Faction.OfPlayer))
+                {
+                    continue;
+                }
+                var inventory = pawn.TryGetComp<CompInventory>();
+                var loadout = pawn.GetLoadout();
+                if (inventory == null || loadout == null)
+                {
+                    continue;
+                }
+
+                var weapons = inventory.rangedWeaponList.ToList();
+                if (pawn.equipment?.Primary != null)
+                {
+                    weapons.Add(pawn.equipment.Primary);
+                }
+
+                foreach (var weapon in weapons)
+                {
+                    var compAmmoUser = weapon.TryGetComp<CompAmmoUser>();
+                    if (compAmmoUser == null)
+                    {
+                        continue;
+                    }
+                    compAmmoUser.ResetAmmoCount(compAmmoUser.SelectedAmmo);
+                    compAmmoUser.CurMagCount = compAmmoUser.MagSize * 4;
+                }
+            }
+
+            foreach (var turret in map.listerBuildings.AllBuildingsColonistOfClass<Building_Turret>().ToList())
+            {
+                var compAmmoUser = turret.GetAmmo();
+                if (compAmmoUser == null)
+                {
+                    continue;
+                }
+                compAmmoUser.ResetAmmoCount(compAmmoUser.SelectedAmmo);
+                compAmmoUser.CurMagCount = compAmmoUser.MagSize * 4;
             }
         }
     }
