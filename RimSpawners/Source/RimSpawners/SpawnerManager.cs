@@ -205,9 +205,22 @@ namespace RimSpawners
             spawnQueue.Clear();
             foreach (var entry in pawnsToSpawn)
             {
-                if (entry.Value.count > 0)
+                if (entry.Value.count == 0)
+                {
+                    continue;
+                }
+                if (settings.groupPawnkinds)
                 {
                     spawnQueue.Add(new SpawnPawnInfo(entry.Value));
+                }
+                else
+                {
+                    for (int i = 0; i < entry.Value.count; i++)
+                    {
+                        var spawnInfo = new SpawnPawnInfo(entry.Value);
+                        spawnInfo.count = 1;
+                        spawnQueue.Add(spawnInfo);
+                    }
                 }
             }
             spawnQueue.Shuffle();
@@ -219,7 +232,12 @@ namespace RimSpawners
             for (int i = spawnQueue.Count - 1; i >= 0; i--)
             {
                 var entry = spawnQueue[i];
-                queueStr.Add($"{entry.GetKindLabel()} x{entry.count}");
+                var spawnInfoLabel = entry.GetKindLabel();
+                if (settings.groupPawnkinds)
+                {
+                    spawnInfoLabel += $" x{entry.count}";
+                }
+                queueStr.Add(spawnInfoLabel);
             }
             var timeToNextSpawn = Math.Round(GenTicks.TicksToSeconds(SPAWN_INTERVAL - Find.TickManager.TicksGame % SPAWN_INTERVAL));
             return "RimSpawners_SpawnerManagerInspectString"
@@ -371,7 +389,7 @@ namespace RimSpawners
                 new LordJob_AssaultColony(
                     Faction.OfAncientsHostile,
                     false,
-                    false,
+                    true,
                     false,
             false,
                     false,

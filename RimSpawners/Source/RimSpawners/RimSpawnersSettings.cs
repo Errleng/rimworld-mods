@@ -26,6 +26,7 @@ namespace RimSpawners
         public float spawnTimePointsPerSecond;
         public float spawnTimeSecondsPerSpawn;
         public bool useAllyFaction;
+        public bool groupPawnkinds;
 
         public Dictionary<string, StatOffset> hediffStatOffsets = new Dictionary<string, StatOffset>();
         public Dictionary<string, CapMod> hediffCapMods = new Dictionary<string, CapMod>();
@@ -44,6 +45,7 @@ namespace RimSpawners
             Scribe_Values.Look(ref doNotAttackFleeing, "doNotAttackFleeing", false);
             Scribe_Values.Look(ref spawnOnlyOnThreat, "spawnOnlyOnThreat", false);
             Scribe_Values.Look(ref crossMap, "crossMap", false);
+            Scribe_Values.Look(ref groupPawnkinds, "groupPawnkinds", true);
             Scribe_Collections.Look(ref hediffStatOffsets, "hediffStatOffsets", LookMode.Value, LookMode.Deep);
             Scribe_Collections.Look(ref hediffCapMods, "hediffCapMods", LookMode.Value, LookMode.Deep);
 

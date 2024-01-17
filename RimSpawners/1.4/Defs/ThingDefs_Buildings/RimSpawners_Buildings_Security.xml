@@ -38,6 +38,7 @@
             <Beauty>0</Beauty>
             <Mass>35</Mass>
             <WorkToBuild>10000</WorkToBuild>
+            <MarketValue>0</MarketValue>
         </statBases>
         <researchPrerequisites>
             <li>VanometricFabrication</li>
@@ -85,9 +86,10 @@
         <statBases>
             <MaxHitPoints>10000</MaxHitPoints>
             <Flammability>0.0</Flammability>
-            <Beauty>0</Beauty>
+            <Beauty>100</Beauty>
             <Mass>25</Mass>
             <WorkToBuild>10000</WorkToBuild>
+            <MarketValue>0</MarketValue>
         </statBases>
         <researchPrerequisites>
             <li>VanometricFabrication</li>
@@ -135,9 +137,10 @@
         <statBases>
             <MaxHitPoints>1000</MaxHitPoints>
             <Flammability>0</Flammability>
-            <Beauty>0</Beauty>
+            <Beauty>10</Beauty>
             <Mass>25</Mass>
             <WorkToBuild>10000</WorkToBuild>
+            <MarketValue>0</MarketValue>
         </statBases>
         <researchPrerequisites>
             <li>VanometricFabrication</li>
@@ -186,9 +189,10 @@
         <statBases>
             <MaxHitPoints>1000</MaxHitPoints>
             <Flammability>0</Flammability>
-            <Beauty>0</Beauty>
+            <Beauty>10</Beauty>
             <Mass>25</Mass>
             <WorkToBuild>10000</WorkToBuild>
+            <MarketValue>0</MarketValue>
         </statBases>
         <researchPrerequisites>
             <li>VanometricFabrication</li>

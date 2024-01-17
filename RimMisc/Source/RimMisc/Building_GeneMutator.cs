@@ -8,7 +8,7 @@ namespace RimMisc
 {
     internal class Building_GeneMutator : Building
     {
-        public static readonly int TICKS_BETWEEN_SPAWNS = GenDate.TicksPerQuadrum;
+        public static readonly int TICKS_BETWEEN_SPAWNS = GenDate.TicksPerDay;
         int ticksToNextSpawn = TICKS_BETWEEN_SPAWNS;
         CompPowerTrader compPowerTrader;
 
