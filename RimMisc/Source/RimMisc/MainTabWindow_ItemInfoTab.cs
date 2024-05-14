@@ -70,7 +70,7 @@ namespace RimMisc
                 { "Name", x => x.LabelCap.ToString() },
                 { "Market value", x => RoundNum(x.GetStatValueAbstract(StatDefOf.MarketValue, GenStuff.DefaultStuffFor(x))).ToString() },
                 { "DPS", x => RoundNum(x.GetStatValueAbstract(StatDefOf.MeleeWeapon_AverageDPS, GenStuff.DefaultStuffFor(x))).ToString()},
-                { "Armor Penetration", x => RoundNum(x.GetStatValueAbstract(StatDefOf.MeleeWeapon_AverageArmorPenetration, GenStuff.DefaultStuffFor(x))).ToStringPercent() },
+                { "Armor Penetration", x => RoundNum(x.GetStatValueAbstract(RimMiscDefOf.MeleeWeapon_AverageArmorPenetration, GenStuff.DefaultStuffFor(x))).ToStringPercent() },
             };
         private static readonly Dictionary<string, Func<ThingDef, string>> APPAREL_INFOS = new Dictionary<string, Func<ThingDef, string>> {
                 { "Name", x => x.LabelCap.ToString() },

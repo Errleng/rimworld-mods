@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-
-using RimWorld;
 using Verse;
 
 namespace Rimternet
@@ -18,26 +14,26 @@ namespace Rimternet
 
         #region Instance Data
 
-		static readonly string HelpPostFix = "_HelpCategoryDef",
+        static readonly string HelpPostFix = "_HelpCategoryDef",
 
-			// items
-			ApparelHelp = "Apparel" + HelpPostFix,
-			BodyPartHelp = "BodyPart" + HelpPostFix,
-			DrugHelp = "Drug" + HelpPostFix,
-			MealHelp = "Meal" + HelpPostFix,
-			WeaponHelp = "Weapon" + HelpPostFix,
+            // items
+            ApparelHelp = "Apparel" + HelpPostFix,
+            BodyPartHelp = "BodyPart" + HelpPostFix,
+            DrugHelp = "Drug" + HelpPostFix,
+            MealHelp = "Meal" + HelpPostFix,
+            WeaponHelp = "Weapon" + HelpPostFix,
 
-			// flora and fauna
-			TerrainHelp = "Terrain" + HelpPostFix,
-			Plants = "Plants" + HelpPostFix,
-			Animals = "Animals" + HelpPostFix,
-			Humanoids = "Humanoids" + HelpPostFix,
-			Mechanoids = "Mechanoids" + HelpPostFix,
-			Biomes = "Biomes" + HelpPostFix,
+            // flora and fauna
+            TerrainHelp = "Terrain" + HelpPostFix,
+            Plants = "Plants" + HelpPostFix,
+            Animals = "Animals" + HelpPostFix,
+            Humanoids = "Humanoids" + HelpPostFix,
+            Mechanoids = "Mechanoids" + HelpPostFix,
+            Biomes = "Biomes" + HelpPostFix,
 
-			// recipes and research
-			RecipeHelp = "Recipe" + HelpPostFix,
-			ResearchHelp = "Research" + HelpPostFix;
+            // recipes and research
+            RecipeHelp = "Recipe" + HelpPostFix,
+            ResearchHelp = "Research" + HelpPostFix;
 
         #endregion
 
@@ -117,7 +113,7 @@ namespace Rimternet
             }
 
             // Get help category
-			var helpCategoryDef = HelpCategoryForKey(ApparelHelp, ResourceBank.String.AutoHelpSubCategoryApparel, ResourceBank.String.AutoHelpCategoryItems);
+            var helpCategoryDef = HelpCategoryForKey(ApparelHelp, ResourceBank.String.AutoHelpSubCategoryApparel, ResourceBank.String.AutoHelpCategoryItems);
 
             // Scan through all possible buildable defs and auto-generate help
             ResolveDefList(
@@ -141,7 +137,7 @@ namespace Rimternet
             }
 
             // Get help category
-			var helpCategoryDef = HelpCategoryForKey(BodyPartHelp, ResourceBank.String.AutoHelpSubCategoryBodyParts, ResourceBank.String.AutoHelpCategoryItems);
+            var helpCategoryDef = HelpCategoryForKey(BodyPartHelp, ResourceBank.String.AutoHelpSubCategoryBodyParts, ResourceBank.String.AutoHelpCategoryItems);
 
             // Scan through all possible buildable defs and auto-generate help
             ResolveDefList(
@@ -245,10 +241,10 @@ namespace Rimternet
                 }
 
                 // Get help category
-                var helpCategoryDef = HelpCategoryForKey (designationCategoryDef.defName + "_Building" + HelpPostFix, designationCategoryDef.label, ResourceBank.String.AutoHelpCategoryBuildings);
+                var helpCategoryDef = HelpCategoryForKey(designationCategoryDef.defName + "_Building" + HelpPostFix, designationCategoryDef.label, ResourceBank.String.AutoHelpCategoryBuildings);
 
                 // Scan through all possible buildable defs and auto-generate help
-                ResolveDefList (
+                ResolveDefList(
                     thingDefs,
                     helpCategoryDef
                 );
@@ -384,8 +380,8 @@ namespace Rimternet
             // Get the thing database of things which ever have recipes
             var thingDefs = (
                 from thing in DefDatabase<ThingDef>.AllDefsListForReading
-                where thing.EverHasRecipes ()
-                && !typeof (Corpse).IsAssignableFrom (thing.thingClass)
+                where thing.EverHasRecipes()
+                && !typeof(Corpse).IsAssignableFrom(thing.thingClass)
                 && thing.category != ThingCategory.Pawn
                 select thing
             ).ToList();
@@ -465,18 +461,22 @@ namespace Rimternet
                 // Check if the def doesn't already have a help entry
                 if (!processedDefs.Contains(def))
                 {
-					// Make a new one
-					HelpDef helpDef = null;
-					try {
-						helpDef = HelpForDef (def, category);
-					} catch (Exception e) {
-						Log.Warning ("Rimternet :: Failed to build help for: " + def + "\n\t" + e);
-					}
+                    // Make a new one
+                    HelpDef helpDef = null;
+                    try
+                    {
+                        helpDef = HelpForDef(def, category);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Warning("Rimternet :: Failed to build help for: " + def + "\n\t" + e);
+                    }
 
-					// Inject the def
-					if (helpDef != null) {
-						DefDatabase<HelpDef>.Add (helpDef);
-					}
+                    // Inject the def
+                    if (helpDef != null)
+                    {
+                        DefDatabase<HelpDef>.Add(helpDef);
+                    }
                 }
             }
         }
@@ -503,8 +503,8 @@ namespace Rimternet
 
         static HelpDef HelpForDef<T>(T def, HelpCategoryDef category) where T : Def
         {
-			// both thingdefs (buildings, items) and terraindefs (floors) are derived from buildableDef
-			if (def is BuildableDef)
+            // both thingdefs (buildings, items) and terraindefs (floors) are derived from buildableDef
+            if (def is BuildableDef)
             {
                 return HelpForBuildable(def as BuildableDef, category);
             }
@@ -651,7 +651,7 @@ namespace Rimternet
                     needDefs.Add(NeedDefOf.Food);
                     if (Math.Abs(thingDef.ingestible.joy) > 1e-3)
                     {
-                        needDefs.Add(NeedDefOf.Joy);
+                        needDefs.Add(RimternetDefOf.Joy);
                     }
 
                     List<string> suffixes = new List<string>();
@@ -814,9 +814,9 @@ namespace Rimternet
                 var compPowerTrader = thingDef.GetCompProperties<CompProperties_Power>();
                 if (compPowerTrader != null)
                 {
-                    if (compPowerTrader.basePowerConsumption > 0)
+                    if (compPowerTrader.PowerConsumption > 0)
                     {
-                        var basePowerConsumption = (int)compPowerTrader.basePowerConsumption;
+                        var basePowerConsumption = (int)compPowerTrader.PowerConsumption;
                         powerSectionList.Add(new StringDescTriplet(ResourceBank.String.AutoHelpRequired, null, basePowerConsumption.ToString()));
 
                         /*
@@ -836,7 +836,7 @@ namespace Rimternet
                         }
                         */
                     }
-                    else if (compPowerTrader.basePowerConsumption < 0)
+                    else if (compPowerTrader.PowerConsumption < 0)
                     {
                         // A14 - check this!
                         if (thingDef.HasComp(typeof(CompPowerPlantWind)))
@@ -845,7 +845,7 @@ namespace Rimternet
                         }
                         else
                         {
-                            var basePowerConsumption = (int)-compPowerTrader.basePowerConsumption;
+                            var basePowerConsumption = (int)-compPowerTrader.PowerConsumption;
                             powerSectionList.Add(new StringDescTriplet(ResourceBank.String.AutoHelpGenerates, null, basePowerConsumption.ToString()));
                         }
                     }
@@ -868,31 +868,34 @@ namespace Rimternet
                     statParts.Add(powerSection);
                 }
 
-				#endregion
+                #endregion
 
-				#region Facilities
+                #region Facilities
 
-				// Get list of buildings effected by it
-				var facilityProperties = thingDef.GetCompProperties<CompProperties_Facility> ();
-				if (facilityProperties != null)
+                // Get list of buildings effected by it
+                var facilityProperties = thingDef.GetCompProperties<CompProperties_Facility>();
+                if (facilityProperties != null)
                 {
                     var effectsBuildings = DefDatabase<ThingDef>.AllDefsListForReading
-					                                            .Where(f => {
-						var compProps = f.GetCompProperties<CompProperties_AffectedByFacilities> ();
-						return compProps != null && compProps.linkableFacilities != null && compProps.linkableFacilities.Contains (f);
-					}).ToList();
+                                                                .Where(f =>
+                                                                {
+                                                                    var compProps = f.GetCompProperties<CompProperties_AffectedByFacilities>();
+                                                                    return compProps != null && compProps.linkableFacilities != null && compProps.linkableFacilities.Contains(f);
+                                                                }).ToList();
                     if (!effectsBuildings.NullOrEmpty())
                     {
                         List<DefStringTriplet> facilityDefs = new List<DefStringTriplet>();
                         List<StringDescTriplet> facilityStrings = new List<StringDescTriplet>();
                         facilityStrings.Add(new StringDescTriplet(ResourceBank.String.AutoHelpMaximumAffected, null, facilityProperties.maxSimultaneous.ToString()));
 
-						// Look at stats modifiers if there is any
-						if (!facilityProperties.statOffsets.NullOrEmpty ()) {
-							foreach (var stat in facilityProperties.statOffsets) {
-								facilityDefs.Add (new DefStringTriplet (stat.stat, null, ": " + stat.stat.ValueToString (stat.value, stat.stat.toStringNumberSense)));
-							}
-						}
+                        // Look at stats modifiers if there is any
+                        if (!facilityProperties.statOffsets.NullOrEmpty())
+                        {
+                            foreach (var stat in facilityProperties.statOffsets)
+                            {
+                                facilityDefs.Add(new DefStringTriplet(stat.stat, null, ": " + stat.stat.ValueToString(stat.value, stat.stat.toStringNumberSense)));
+                            }
+                        }
 
                         HelpDetailSection facilityDetailSection = new HelpDetailSection(
                             ResourceBank.String.AutoHelpFacilityStats,
@@ -985,7 +988,7 @@ namespace Rimternet
             #region Base Stats
 
             helpDef.HelpDetailSections.Add(new HelpDetailSection(null,
-                new[] { recipeDef.WorkAmountTotal((ThingDef)null).ToStringWorkAmount() },
+                new[] { recipeDef.WorkAmountForStuff((ThingDef)null).ToStringWorkAmount() },
                 new[] { ResourceBank.String.WorkAmount + " : " },
                 null));
 
@@ -1223,15 +1226,15 @@ namespace Rimternet
             if (diseases.Count > 0)
             {
 
-                var defs = new List<Def> (diseases.Count);
-                var chances = new List<string> (diseases.Count);
+                var defs = new List<Def>(diseases.Count);
+                var chances = new List<string>(diseases.Count);
 
                 foreach (var disease in diseases)
                 {
                     var diseaseCommonality = biomeDef.CommonalityOfDisease(disease) / (biomeDef.diseaseMtbDays * GenDate.DaysPerYear);
 
                     chances.Add(diseaseCommonality.ToStringPercent());
-                    defs.Add (disease.diseaseIncident);
+                    defs.Add(disease.diseaseIncident);
                 }
 
                 helpDef.HelpDetailSections.Add(new HelpDetailSection(
@@ -1281,7 +1284,7 @@ namespace Rimternet
                 from record in pawnKind.RaceProps.wildBiomes
                 where record.biome == biomeDef && record.commonality > 0
                 select pawnKind as Def
-            ).ToList ();
+            ).ToList();
 
             if (!animals.NullOrEmpty())
             {
@@ -1405,14 +1408,15 @@ namespace Rimternet
             }
 
             // biomes
-            if (!plant.wildBiomes.NullOrEmpty()) {
+            if (!plant.wildBiomes.NullOrEmpty())
+            {
                 var biomes = (
                     from record in plant.wildBiomes
                     where record.commonality > 0
                     select record.biome as Def
-                ).ToList ();
+                ).ToList();
 
-                linkParts.Add (new HelpDetailSection (ResourceBank.String.AutoHelpListAppearsInBiomes, biomes));
+                linkParts.Add(new HelpDetailSection(ResourceBank.String.AutoHelpListAppearsInBiomes, biomes));
             }
         }
 
@@ -1531,7 +1535,7 @@ namespace Rimternet
 
             #region Reproduction
 
-			var eggComp = kindDef.race.GetCompProperties<CompProperties_EggLayer> ();
+            var eggComp = kindDef.race.GetCompProperties<CompProperties_EggLayer>();
             if (eggComp != null)
             {
                 // egglayers

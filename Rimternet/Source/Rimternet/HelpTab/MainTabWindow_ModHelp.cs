@@ -1,8 +1,6 @@
-﻿using System;
+﻿using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
-
-using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -290,7 +288,7 @@ namespace Rimternet
                     Widgets.DrawMenuSection(researchRect);
                     Widgets.Label(researchRect, ResourceBank.String.Finished);
                 }
-                else if (research == Find.ResearchManager.currentProj)
+                else if (research == Find.ResearchManager.GetProject())
                 {
                     Widgets.DrawMenuSection(researchRect);
                     Widgets.Label(researchRect, ResourceBank.String.InProgress);
@@ -303,7 +301,7 @@ namespace Rimternet
                 else if (Widgets.ButtonText(researchRect, ResourceBank.String.Research, true, false, true))
                 {
                     SoundDef.Named("ResearchStart").PlayOneShotOnCamera(null);
-                    Find.ResearchManager.currentProj = research;
+                    Find.ResearchManager.SetCurrentProject(research);
                     TutorSystem.Notify_Event("StartResearchProject");
                 }
 

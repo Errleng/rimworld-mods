@@ -70,10 +70,9 @@ namespace HighDensityHydroCustom
             }
         }
 
-        public override void Draw()
+        public override void DynamicDrawPhaseAt(DrawPhase phase, Vector3 drawLoc, bool flip)
         {
-            base.Draw();
-
+            base.DynamicDrawPhaseAt(phase, drawLoc, flip);
             if (bayStage == BayStage.Growing)
             {
                 var r = default(GenDraw.FillableBarRequest);

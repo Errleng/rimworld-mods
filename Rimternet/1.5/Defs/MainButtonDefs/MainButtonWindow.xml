@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <MainButtonDef>
+        <defName>ModHelp</defName>
+        <label>Help</label>
+        <description>Get help with different mods.</description>
+        <tabWindowClass>Rimternet.MainTabWindow_ModHelp</tabWindowClass>
+        <order>490</order>
+    </MainButtonDef>
+  
+</Defs>

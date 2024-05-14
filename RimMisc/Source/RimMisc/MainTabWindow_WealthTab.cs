@@ -152,13 +152,13 @@ namespace RimMisc
             }
 
             var topGrid = map.terrainGrid.topGrid;
-            var fogGrid = map.fogGrid.fogGrid;
+            var fogGrid = map.fogGrid;
             var size = map.Size;
             var mapSize = size.x * size.z;
 
             for (var i = 0; i < mapSize; i++)
             {
-                if (!fogGrid[i])
+                if (!fogGrid.IsFogged(i))
                 {
                     var terrainDef = topGrid[i];
                     var terrainWealth = terrainMarketValue[terrainDef.index];

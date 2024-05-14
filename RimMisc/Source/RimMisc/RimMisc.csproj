@@ -98,7 +98,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../1.4/Assemblies"
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../1.5/Assemblies"
 (robocopy /mir "$(SolutionDir)../" "D:\SteamLibrary\steamapps\common\RimWorld\Mods\RimMisc" /xd "source")</PostBuildEvent>
   </PropertyGroup>
 </Project>

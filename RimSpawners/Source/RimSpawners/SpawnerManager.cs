@@ -535,7 +535,7 @@ namespace RimSpawners
 
             cachedPawn.Corpse?.Destroy();
 
-            ResurrectionUtility.Resurrect(cachedPawn);
+            ResurrectionUtility.TryResurrect(cachedPawn);
             PawnGenerator.RedressPawn(cachedPawn, request);
             Log.Message($"Using cached pawn {cachedPawn.Name}");
 

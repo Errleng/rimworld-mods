@@ -1,0 +1,57 @@
+<Defs>
+    <ThingDef ParentName="BuildingBase">
+        <defName>GeneMutator</defName>
+        <label>gene mutator</label>
+        <description>Gradually creates genes that you do not possess.</description>
+        <thingClass>RimMisc.Building_GeneMutator</thingClass>
+        <passability>PassThroughOnly</passability>
+        <fillPercent>0.4</fillPercent>
+        <pathCost>14</pathCost>
+        <rotatable>false</rotatable>
+        <tickerType>Rare</tickerType>
+        <graphicData>
+            <texPath>Things/Building/Biotech/GeneMutator</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(2,2)</drawSize>
+            <shadowData>
+                <volume>(1.5, 0.4, 1.5)</volume>
+            </shadowData>
+        </graphicData>
+        <size>(2, 2)</size>
+        <canOverlapZones>false</canOverlapZones>
+        <defaultPlacingRot>North</defaultPlacingRot>
+        <designationCategory>Biotech</designationCategory>
+        <uiOrder>2100</uiOrder>
+        <researchPrerequisites>
+            <li>GeneProcessor</li>
+        </researchPrerequisites>
+        <descriptionHyperlinks>
+            <ThingDef>GeneBank</ThingDef>
+            <ThingDef>Genepack</ThingDef>
+            <ThingDef>Xenogerm</ThingDef>
+        </descriptionHyperlinks>
+        <statBases>
+            <MaxHitPoints>350</MaxHitPoints>
+            <WorkToBuild>9000</WorkToBuild>
+            <Mass>85</Mass>
+            <Flammability>0.5</Flammability>
+        </statBases>
+        <costList>
+            <Steel>100</Steel>
+            <Plasteel>10</Plasteel>
+            <ComponentIndustrial>2</ComponentIndustrial>
+        </costList>
+        <building>
+            <buildingTags>
+                <li>Biotech</li>
+            </buildingTags>
+        </building>
+        <comps>
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+                <basePowerConsumption>100</basePowerConsumption>
+            </li>
+            <li Class="CompProperties_Flickable" />
+        </comps>
+    </ThingDef>
+</Defs>

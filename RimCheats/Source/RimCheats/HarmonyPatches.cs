@@ -3,7 +3,6 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using UnityEngine;
 using Verse;
@@ -20,8 +19,11 @@ namespace RimCheats
         {
             settings = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>();
             var harmony = new Harmony("com.rimcheats.rimworld.mod");
-            var assembly = Assembly.GetExecutingAssembly();
-            harmony.PatchAll(assembly);
+            foreach (var type in typeof(HarmonyPatches).GetNestedTypes(AccessTools.all))
+            {
+                new PatchClassProcessor(harmony, type).Patch();
+            }
+            ModCompatibility.Apply(harmony);
             foreach (var method in harmony.GetPatchedMethods())
             {
                 Log.Message($"RimCheats patched {method.DeclaringType.FullName}.{method.Name}");
@@ -81,7 +83,7 @@ namespace RimCheats
         {
             private static IntVec3 lastPos;
 
-            static void Postfix(Pawn_PathFollower __instance, Pawn pawn, IntVec3 c, ref int __result)
+            static void Postfix(Pawn_PathFollower __instance, Pawn pawn, IntVec3 c, ref float __result)
             {
                 bool appliesToPawn = false;
                 if (settings.disableTerrainCost)
@@ -95,7 +97,7 @@ namespace RimCheats
                 if (appliesToPawn)
                 {
                     // based off floating pawn code from Alpha Animals
-                    int cost = __result;
+                    float cost = __result;
                     if (cost < 10000)
                     {
                         if (c.x == pawn.Position.x || c.z == pawn.Position.z)
