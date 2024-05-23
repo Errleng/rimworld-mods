@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
 using Verse;
 using Verse.AI;
 
@@ -155,6 +157,81 @@ namespace RimSpawners
         //        }
         //    }
         //}
+
+        [HarmonyPatch(typeof(JobGiver_AITrashColonyClose), "TryGiveJob")]
+        private class JobGiver_AITrashColonyClose_Patch
+        {
+            public static bool Prefix(JobGiver_AITrashBuildingsDistant __instance, Pawn pawn, ref Job __result)
+            {
+                if (!pawn.HasComp<RimSpawnersPawnComp>() || pawn.HostileTo(Faction.OfPlayer))
+                {
+                    return true;
+                }
+                CellRect cellRect = CellRect.CenteredOn(pawn.Position, 5);
+                for (int i = 0; i < 35; i++)
+                {
+                    IntVec3 randomCell = cellRect.RandomCell;
+                    if (randomCell.InBounds(pawn.Map))
+                    {
+                        Building edifice = randomCell.GetEdifice(pawn.Map);
+                        if (edifice != null && edifice.HostileTo(Faction.OfPlayer) && TrashUtility.ShouldTrashBuilding(pawn, edifice, true) && GenSight.LineOfSight(pawn.Position, randomCell, pawn.Map))
+                        {
+                            if (DebugViewSettings.drawDestSearch && Find.CurrentMap == pawn.Map)
+                            {
+                                Find.CurrentMap.debugDrawer.FlashCell(randomCell, 1f, "trash bld", 50);
+                            }
+                            Job job = TrashUtility.TrashJob(pawn, edifice, true, false);
+                            if (job != null)
+                            {
+                                __result = job;
+                                return false;
+                            }
+                        }
+                        if (DebugViewSettings.drawDestSearch && Find.CurrentMap == pawn.Map)
+                        {
+                            Find.CurrentMap.debugDrawer.FlashCell(randomCell, 0f, "trash no", 50);
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(JobGiver_AITrashBuildingsDistant), "TryGiveJob")]
+        private class JobGiver_AITrashBuildingsDistant_Patch
+        {
+            public static bool Prefix(JobGiver_AITrashBuildingsDistant __instance, Pawn pawn, ref Job __result)
+            {
+                if (!pawn.HasComp<RimSpawnersPawnComp>() || pawn.HostileTo(Faction.OfPlayer))
+                {
+                    return true;
+                }
+                List<Building> possibleTargets = pawn.Map.listerBuildings.allBuildingsNonColonist.Where(x => x.HostileTo(Faction.OfPlayer)).ToList();
+                //Log.Message($"Found {possibleTargets.Count} enemy buildings");
+                if (possibleTargets.Count == 0)
+                {
+                    return true;
+                }
+                //for (int i = 0; i < Math.Min(possibleTargets.Count, 5); i++)
+                //{
+                //    Log.Message($"Building {i}: {possibleTargets[i]}");
+                //}
+                for (int i = 0; i < 75; i++)
+                {
+                    Building target = possibleTargets.RandomElement();
+                    if (TrashUtility.ShouldTrashBuilding(pawn, target, true))
+                    {
+                        Job job = TrashUtility.TrashJob(pawn, target, true, false);
+                        if (job != null)
+                        {
+                            __result = job;
+                            //Log.Message($"{pawn} can attack enemy building {target}, job {__result}");
+                        }
+                    }
+                }
+                return false;
+            }
+        }
 
         //[HarmonyPatch(typeof(AttackTargetsCache), "GetPotentialTargetsFor")]
         //private class AttackTargetsCache_GetPotentialTargetsFor_Patch

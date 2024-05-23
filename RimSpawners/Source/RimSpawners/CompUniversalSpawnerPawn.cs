@@ -810,7 +810,7 @@ namespace RimSpawners
                 text += "RimSpawners_VanometricFabricatorInspectDebug".Translate(ticksToNextSpawn);
             }
 
-            return text;
+            return text.Trim();
         }
 
         public override void PostExposeData()

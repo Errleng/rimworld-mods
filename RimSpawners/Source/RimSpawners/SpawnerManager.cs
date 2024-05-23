@@ -249,7 +249,7 @@ namespace RimSpawners
                 , SpawnedPawnPoints >= maxPoints ? "all" : SpawnedPawnPoints.ToString()
                 , timeToNextSpawn
                 , string.Join(", ", queueStr),
-                active ? "" : "PAUSED");
+                active ? "" : "PAUSED").Trim();
         }
 
         public string[] GetSpawnedPawnCounts()
@@ -389,7 +389,7 @@ namespace RimSpawners
                 new LordJob_AssaultColony(
                     Faction.OfAncientsHostile,
                     false,
-                    true,
+                    false,
                     false,
             false,
                     false,

@@ -91,6 +91,7 @@ namespace RimSpawners
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDoNotAttackFleeing".Translate(), ref settings.doNotAttackFleeing);
 
             listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnOnThreats".Translate(), ref settings.spawnOnlyOnThreat);
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsCrossMap".Translate(), ref settings.crossMap);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsGroupSpawns".Translate(), ref settings.groupPawnkinds);
 
             listingStandard.GapLine();
