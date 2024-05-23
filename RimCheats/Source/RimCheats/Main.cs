@@ -45,6 +45,7 @@ namespace RimCheats
             listingStandard.CheckboxLabeled("MaxSkillsToggleLabel".Translate(), ref settings.maxSkills);
             listingStandard.CheckboxLabeled("CarryingCapacityMassToggleLabel".Translate(), ref settings.enableCarryingCapacityMass);
             listingStandard.CheckboxLabeled("PerfectAccuracyToggleLabel".Translate(), ref settings.perfectAccuracy);
+            listingStandard.CheckboxLabeled("InfiniteTurretAmmoToggleLabel".Translate(), ref settings.infiniteTurretAmmo);
 
             listingStandard.GapLine();
             foreach (var key in settings.statDefMults.Keys.OrderBy(x => x))
@@ -87,6 +88,7 @@ namespace RimCheats
         public bool maxSkills;
         public bool cheapRecipes;
         public bool perfectAccuracy;
+        public bool infiniteTurretAmmo;
         public float toilSpeedMultiplier;
         public Dictionary<string, StatSetting> statDefMults = new Dictionary<string, StatSetting>();
 
@@ -104,6 +106,7 @@ namespace RimCheats
             Scribe_Values.Look(ref maxSkills, "maxSkills");
             Scribe_Values.Look(ref cheapRecipes, "cheapRecipes");
             Scribe_Values.Look(ref perfectAccuracy, "accurateTurrets");
+            Scribe_Values.Look(ref infiniteTurretAmmo, "infiniteTurretAmmo");
             Scribe_Values.Look(ref toilSpeedMultiplier, "toilSpeedMultiplier", 1f);
             Scribe_Collections.Look(ref statDefMults, "statMultipliers", LookMode.Value, LookMode.Deep);
 

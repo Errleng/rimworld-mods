@@ -17,11 +17,20 @@ namespace RimCheats
         {
             if (ModsConfig.IsActive("Haplo.Miscellaneous.TurretBaseAndObjects"))
             {
+                Log.Message("RimCheats compatibility patches for Misc Turretbases");
+                foreach (var type in typeof(MiscTurretBase_Patches).GetNestedTypes(AccessTools.all))
+                {
+                    new PatchClassProcessor(harmony, type).Patch();
+                }
                 new PatchClassProcessor(harmony, typeof(MiscTurretBase_Patches)).Patch();
             }
             if (ModsConfig.IsActive("CETeam.CombatExtended"))
             {
-                new PatchClassProcessor(harmony, typeof(CombatExtended_Patches)).Patch();
+                Log.Message("RimCheats compatibility patches for Combat Extended");
+                foreach (var type in typeof(CombatExtended_Patches).GetNestedTypes(AccessTools.all))
+                {
+                    new PatchClassProcessor(harmony, type).Patch();
+                }
             }
         }
 
@@ -51,6 +60,7 @@ namespace RimCheats
             [HarmonyPatch]
             class Patch_Destroy
             {
+                // Avoid errors from unloaded types
                 static MethodBase TargetMethod()
                 {
                     return AccessTools.Method("Building_TurretWeaponBase:Destroy");
@@ -58,6 +68,7 @@ namespace RimCheats
 
                 static bool Prefix(object __instance, DestroyMode mode)
                 {
+                    Log.Message($"Disable destroy for turret base: {Settings.autoRepair}");
                     if (Settings.autoRepair)
                     {
                         ReversePatch_Building_Destroy.Destroy(__instance, mode);
@@ -77,6 +88,7 @@ namespace RimCheats
 
                 static bool Prefix(object __instance, DestroyMode mode)
                 {
+                    Log.Message($"Disable despawn for turret base: {Settings.autoRepair}");
                     if (Settings.autoRepair)
                     {
                         ReversePatch_Building_DeSpawn.DeSpawn(__instance, mode);
@@ -89,10 +101,15 @@ namespace RimCheats
 
         class CombatExtended_Patches
         {
-            [HarmonyPatch(typeof(Verb_LaunchProjectileCE), "ShootingAccuracy", MethodType.Getter)]
+            [HarmonyPatch]
             class Patch_GetShootingAccuracy
             {
-                static void Postfix(Verb_LaunchProjectileCE __instance, ref float __result)
+                static MethodBase TargetMethod()
+                {
+                    return AccessTools.Method("Verb_LaunchProjectileCE:ShootingAccuracy");
+                }
+
+                static void Postfix(Verb __instance, ref float __result)
                 {
                     if (!Settings.perfectAccuracy || !__instance.Caster.Faction.IsPlayer)
                     {
@@ -102,15 +119,21 @@ namespace RimCheats
                 }
             }
 
-            [HarmonyPatch(typeof(Verb_LaunchProjectileCE), "ShiftTarget")]
+            [HarmonyPatch]
             class Patch_ShiftTarget
             {
-                static void Prefix_ShiftTarget(Verb_LaunchProjectileCE __instance, ref ShiftVecReport report)
+                static MethodBase TargetMethod()
+                {
+                    return AccessTools.Method("Verb_LaunchProjectileCE:ShiftTarget");
+                }
+
+                static void Prefix(Verb __instance, ref object reportObj)
                 {
                     if (!Settings.perfectAccuracy || !__instance.Caster.Faction.IsPlayer)
                     {
                         return;
                     }
+                    var report = (ShiftVecReport)reportObj;
                     report.swayDegrees = 0;
                     report.spreadDegrees = 0;
                     report.weatherShift = 0;

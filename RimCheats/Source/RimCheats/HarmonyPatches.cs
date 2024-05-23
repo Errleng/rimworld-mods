@@ -43,9 +43,9 @@ namespace RimCheats
                 bool appliesToPawn = false;
                 if (settings.enablePathing)
                 {
-                    appliesToPawn = ___pawn.IsColonistPlayerControlled;
+                    appliesToPawn = ___pawn.IsPlayerControlled;
                 }
-                if (!appliesToPawn && settings.enablePathingNonHuman && !___pawn.IsColonistPlayerControlled)
+                if (!appliesToPawn && settings.enablePathingNonHuman && !___pawn.IsPlayerControlled)
                 {
                     appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.IsPlayer;
                 }
@@ -88,9 +88,9 @@ namespace RimCheats
                 bool appliesToPawn = false;
                 if (settings.disableTerrainCost)
                 {
-                    appliesToPawn = pawn.IsColonistPlayerControlled;
+                    appliesToPawn = pawn.IsPlayerControlled;
                 }
-                if (settings.disableTerrainCostNonHuman && !pawn.IsColonistPlayerControlled)
+                if (settings.disableTerrainCostNonHuman && !pawn.IsPlayerControlled)
                 {
                     appliesToPawn = pawn.Faction != null && pawn.Faction.IsPlayer;
                 }
@@ -146,7 +146,7 @@ namespace RimCheats
             static void Postfix(Thing thing, StatDef stat, bool applyPostProcess, ref float __result)
             {
                 Pawn pawn = thing as Pawn;
-                if ((pawn != null) && (pawn.IsColonistPlayerControlled))
+                if ((pawn != null) && (pawn.IsPlayerControlled))
                 {
                     string key = stat.defName;
                     if (!settings.statDefMults.ContainsKey(key))
@@ -216,8 +216,8 @@ namespace RimCheats
             }
         }
 
-        [HarmonyPatch(typeof(ThingUtility), "CheckAutoRebuildOnDestroyed")]
-        class Patch_CheckAutoRebuildOnDestroyed
+        [HarmonyPatch(typeof(ThingUtility), "CheckAutoRebuildOnDestroyed_NewTemp")]
+        class Patch_CheckAutoRebuildOnDestroyed_NewTemp
         {
             static bool Prefix(Thing thing, DestroyMode mode, Map map, BuildableDef buildingDef)
             {
@@ -245,6 +245,21 @@ namespace RimCheats
                 usedTarget = intendedTarget;
                 hitFlags = ProjectileHitFlags.IntendedTarget;
                 preventFriendlyFire = true;
+            }
+        }
+
+        [HarmonyPatch(typeof(CompRefuelable), "ConsumeFuel")]
+        class Patch_ConsumeFuel
+        {
+            static bool Prefix(CompRefuelable __instance, float amount)
+            {
+                if (settings.infiniteTurretAmmo &&
+                    (__instance.parent.def.building != null && __instance.parent.def.building.IsTurret))
+                {
+                    return false;
+                }
+
+                return true;
             }
         }
     }
