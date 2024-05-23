@@ -63,7 +63,8 @@ namespace RimMisc
                             !pawn.Faction.IsPlayer &&
                             !pawn.IsPrisonerOfColony &&
                             pawn.Faction.HostileTo(Faction.OfPlayer) &&
-                            pawn.Downed
+                            pawn.Downed &&
+                            !pawn.IsEntity
                             )
                         {
                             pawn.Kill(null);

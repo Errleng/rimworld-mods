@@ -101,6 +101,10 @@ namespace RimMisc
             Settings = GetSettings<RimMiscSettings>();
             var harmony = new Harmony("com.rimmisc.rimworld.mod");
             harmony.PatchAll();
+            foreach (var method in harmony.GetPatchedMethods())
+            {
+                Log.Message($"RimMisc patched {method.Name}");
+            }
             Log.Message("RimMisc loaded");
         }
 

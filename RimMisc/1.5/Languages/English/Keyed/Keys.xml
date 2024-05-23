@@ -36,4 +36,6 @@
     <RimMisc_GeneMutationComplete>{0} gene mutation complete</RimMisc_GeneMutationComplete>
     <RimMisc_ThreatToggleLabel>Toggle on threat</RimMisc_ThreatToggleLabel>
     <RimMisc_ThreatToggleDesc>Automatically enables this only if there is a threat</RimMisc_ThreatToggleDesc>
+    <ImplantXenogermAll>Implant for all colonists</ImplantXenogermAll>
+    <ImplantXenogermAllDesc>Instantly implants this xenogerm to all colonists, if possible.</ImplantXenogermAllDesc>
 </LanguageData>
