@@ -460,7 +460,7 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
             if (IdentifyFriendFoe_Active())
             {
                 var launcher = projectile.Launcher;
-                if (launcher != null && launcher.Faction.HostileTo(Faction.OfPlayer))
+                if (launcher != null && !launcher.Faction.HostileTo(Faction.OfPlayer))
                 {
                     return false;
                 }
@@ -817,32 +817,16 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
                                                 .Map
                                                 .listerBuildings
                                                 .allBuildingsColonist
-                                                //Add adjacent including diagonally.
-                                                .Where(x => x.Position.InHorDistOf(parent.Position, 1.6f))
+                                                .Where(x => x.Position.InHorDistOf(parent.Position, 4.6f))
                                                 .Where(x => x.TryGetComp<Comp_ShieldUpgrade>() != null);
-
-
-
-            var _BuildingToAdd = _PotentialUpgradeBuildings.FirstOrDefault(x => IsAvalableUpgrade(x));
-            if (_BuildingToAdd != null)
+            if (_PotentialUpgradeBuildings.Count() == 0)
             {
-                m_AppliedUpgrades.Add(_BuildingToAdd);
-                _BuildingToAdd.DeSpawn();
-                Messages.Message("Applying Shield Upgrade: " + _BuildingToAdd.def.label, parent, MessageTypeDefOf.PositiveEvent);
+                return;
             }
-            else
-            {
 
-                var _InvalidBuildings = _PotentialUpgradeBuildings.Where(x => !IsAvalableUpgrade(x, true));
-                if (_InvalidBuildings.Any())
-                {
-                    Messages.Message("No Valid Shield Upgrades Found.", parent, MessageTypeDefOf.RejectInput);
-                }
-                else
-                {
-                    Messages.Message("No Shield Upgrades Found.", parent, MessageTypeDefOf.RejectInput);
-                }
-            }
+            Messages.Message($"Applied shield upgrades: {string.Join(", ", _PotentialUpgradeBuildings.Select(x => x.def.label))}", parent, MessageTypeDefOf.PositiveEvent);
+            m_AppliedUpgrades.AddRange(_PotentialUpgradeBuildings);
+            _PotentialUpgradeBuildings.ToList().ForEach(x => x.DeSpawn());
         }
 
         private bool IsAvalableUpgrade(Building buildingToCheck, bool ResultMessages = false)

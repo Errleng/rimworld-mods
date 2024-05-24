@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
+using System.Collections.Generic;
 using Verse;
 
 namespace RimMisc
@@ -47,7 +47,7 @@ namespace RimMisc
                     effectWorking = EffecterDefOf.Research,
                     workAmount = work,
                     workSkill = SkillDefOf.Intellectual,
-                    workSpeedStat = StatDefOf.ResearchSpeed,
+                    workSpeedStat = StatDefOf.DeepDrillingSpeed,
                     workSkillLearnFactor = 1f,
                     soundWorking = DefDatabase<SoundDef>.GetNamed("Interact_Research"),
                     products = new List<ThingDefCountClass> { new ThingDefCountClass(thing, yield) },

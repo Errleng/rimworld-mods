@@ -33,7 +33,7 @@
         <rotatable>false</rotatable>
         <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
         <holdsRoof>false</holdsRoof>
-        <specialDisplayRadius>1.6</specialDisplayRadius>
+        <specialDisplayRadius>4.6</specialDisplayRadius>
         <statBases>
             <MaxHitPoints>500</MaxHitPoints>
             <WorkToBuild>2000</WorkToBuild>
@@ -90,6 +90,9 @@
 
 
     <!-- Shield Upgrade Modules -->
+    <DesignatorDropdownGroupDef>
+        <defName>ShieldUpgrades</defName>
+    </DesignatorDropdownGroupDef>
 
     <ThingDef Name="ShieldUpgradeModuleBase" ParentName="BuildingBase_Shield" Abstract="True">
         <defName>ShieldUpgrade</defName>
@@ -109,6 +112,7 @@
         </researchPrerequisites>
         <size>(1,1)</size>
         <rotatable>false</rotatable>
+        <designatorDropdown>ShieldUpgrades</designatorDropdown>
         <altitudeLayer>Building</altitudeLayer>
         <passability>PassThroughOnly</passability>
         <castEdgeShadows>true</castEdgeShadows>
@@ -228,22 +232,6 @@
                 <PowerUsage_Increase>0</PowerUsage_Increase>
                 <DropPodIntercept>false</DropPodIntercept>
                 <SlowDischarge>true</SlowDischarge>
-            </li>
-        </comps>
-    </ThingDef>
-
-    <ThingDef ParentName="ShieldUpgradeModuleBase">
-        <defName>ShieldUpgradeModuleCapacitor</defName>
-        <label>Shield Upgrade: Capacitor</label>
-        <description>Shield Module: Capacitor
-            This increases the maximum Shield Field Integrity of a Shield Generator. This allows it to absorb a greater number of impacts before going offline.</description>
-        <comps>
-            <li Class="Jaxxa.EnhancedDevelopment.Shields.Shields.CompProperties_ShieldUpgrade">
-                <FieldIntegrity_Increase>500</FieldIntegrity_Increase>
-                <FieldRegenRate_Increase>0</FieldRegenRate_Increase>
-                <Range_Increase>0</Range_Increase>
-                <PowerUsage_Increase>100</PowerUsage_Increase>
-                <DropPodIntercept>false</DropPodIntercept>
             </li>
         </comps>
     </ThingDef>
