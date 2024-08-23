@@ -232,6 +232,22 @@ namespace RimCheats
             }
         }
 
+        [HarmonyPatch(typeof(Building_Trap), "CheckAutoRebuild")]
+        class Patch_Building_Trap_CheckAutoRebuild
+        {
+            static bool Prefix(Building_Trap __instance, Map map)
+            {
+                bool shouldRestore = Find.PlaySettings.autoRebuild && __instance.Faction == Faction.OfPlayer && __instance.def.blueprintDef != null && GenConstruct.CanPlaceBlueprintAt(__instance.def, __instance.Position, __instance.Rotation, map, false, null, null, __instance.Stuff, false, false).Accepted;
+                if (settings.autoRepair && shouldRestore)
+                {
+                    var worldComp = Find.World.GetComponent<RimCheatsWorldComp>();
+                    worldComp.buildingsToRestore.Add(new SpawnBuildingInfo(__instance, map));
+                    return false;
+                }
+                return true;
+            }
+        }
+
         [HarmonyPatch(typeof(Projectile), "Launch", new Type[] { typeof(Thing), typeof(Vector3), typeof(LocalTargetInfo), typeof(LocalTargetInfo), typeof(ProjectileHitFlags), typeof(bool), typeof(Thing), typeof(ThingDef) })]
         class Patch_Launch
         {
