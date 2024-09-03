@@ -15,6 +15,8 @@
     <RimSpawners_SettingsSpawnOnThreats>Spawn pawns only when threats are detected</RimSpawners_SettingsSpawnOnThreats>
     <RimSpawners_SettingsCrossMap>Spawn pawns near threats on different maps</RimSpawners_SettingsCrossMap>
     <RimSpawners_SettingsGroupSpawns>Group pawns of the same kind together</RimSpawners_SettingsGroupSpawns>
+    <RimSpawners_SettingsDoNotDamagePlayerBuildings>Spawned pawns do not damage player buildings</RimSpawners_SettingsDoNotDamagePlayerBuildings>
+    <RimSpawners_SettingsMassivelyDamageEnemyBuildings>Spawned pawns deal massive damage to enemy buildings</RimSpawners_SettingsMassivelyDamageEnemyBuildings>
     <RimSpawners_SettingsHediffStatOffset>Hediff stat offset (/100): {0}</RimSpawners_SettingsHediffStatOffset>
     <RimSpawners_SettingsHediffCapMod>Hediff capacity mod (/100): {0}</RimSpawners_SettingsHediffCapMod>
 

@@ -140,28 +140,10 @@ namespace RimSpawners
             }
         }
 
-        //[HarmonyPatch(typeof(JobGiver_AIFightEnemy), "FindAttackTarget")]
-        //private class JobGiver_AIFightEnemy_FindAttackTarget_Patch
-        //{
-        //    public static void Postfix(ref Thing __result, Pawn pawn)
-        //    {
-        //        if (Settings.useAllyFaction)
-        //        {
-        //            if (RimSpawners.spawnedPawnFaction != null)
-        //            {
-        //                if (pawn.Faction == RimSpawners.spawnedPawnFaction)
-        //                {
-        //                    Log.Message($"{pawn.Name} FindAttackTarget {__result.ToStringNullable()}");
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
         [HarmonyPatch(typeof(JobGiver_AITrashColonyClose), "TryGiveJob")]
         private class JobGiver_AITrashColonyClose_Patch
         {
-            public static bool Prefix(JobGiver_AITrashBuildingsDistant __instance, Pawn pawn, ref Job __result)
+            public static bool Prefix(JobGiver_AITrashColonyClose __instance, Pawn pawn, ref Job __result)
             {
                 if (!pawn.HasComp<RimSpawnersPawnComp>() || pawn.HostileTo(Faction.OfPlayer))
                 {
@@ -207,15 +189,10 @@ namespace RimSpawners
                     return true;
                 }
                 List<Building> possibleTargets = pawn.Map.listerBuildings.allBuildingsNonColonist.Where(x => x.HostileTo(Faction.OfPlayer)).ToList();
-                //Log.Message($"Found {possibleTargets.Count} enemy buildings");
                 if (possibleTargets.Count == 0)
                 {
                     return true;
                 }
-                //for (int i = 0; i < Math.Min(possibleTargets.Count, 5); i++)
-                //{
-                //    Log.Message($"Building {i}: {possibleTargets[i]}");
-                //}
                 for (int i = 0; i < 75; i++)
                 {
                     Building target = possibleTargets.RandomElement();
@@ -225,11 +202,41 @@ namespace RimSpawners
                         if (job != null)
                         {
                             __result = job;
-                            //Log.Message($"{pawn} can attack enemy building {target}, job {__result}");
                         }
                     }
                 }
                 return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(DamageWorker), "Apply")]
+        private class DamageWorker_Apply_Patch
+        {
+            static void Prefix(ref DamageInfo dinfo, Thing victim)
+            {
+                Pawn pawn = dinfo.Instigator as Pawn;
+                if (pawn == null)
+                {
+                    return;
+                }
+                if (!pawn.HasComp<RimSpawnersPawnComp>() || pawn.HostileTo(Faction.OfPlayer))
+                {
+                    return;
+                }
+                if (victim.def.category != ThingCategory.Building)
+                {
+                    return;
+                }
+                if (victim.Faction == Faction.OfPlayer && Settings.doNotDamagePlayerBuildings)
+                {
+                    dinfo.SetAmount(0);
+                    return;
+                }
+                if (victim.Faction.HostileTo(Faction.OfPlayer) && Settings.massivelyDamageEnemyBuildings)
+                {
+                    dinfo.SetAmount(dinfo.Amount * 10);
+                    return;
+                }
             }
         }
 

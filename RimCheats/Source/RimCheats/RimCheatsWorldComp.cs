@@ -80,7 +80,16 @@ namespace RimCheats
                     thing.stackCount = 1;
                     thing.HitPoints = thing.MaxHitPoints;
                     Traverse.Create(thing).Field("mapIndexOrState").SetValue((sbyte)-1); // avoids error message in SpawnSetup
-                    GenSpawn.Spawn(thing, thing.Position, info.map, thing.Rotation, WipeMode.Vanish, false);
+                    try
+                    {
+                        GenSpawn.Spawn(thing, thing.Position, info.map, thing.Rotation, WipeMode.Vanish, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        var message = $"Failed to restore building {thing} on map {info.map}: {ex.Message}";
+                        Log.Error(message);
+                        Messages.Message(message, MessageTypeDefOf.NegativeEvent);
+                    }
                 }
                 buildingsToRestore.Clear();
 

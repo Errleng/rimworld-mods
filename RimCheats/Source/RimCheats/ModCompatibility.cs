@@ -106,7 +106,7 @@ namespace RimCheats
             {
                 static MethodBase TargetMethod()
                 {
-                    return AccessTools.Method("Verb_LaunchProjectileCE:ShootingAccuracy");
+                    return AccessTools.PropertyGetter("Verb_LaunchProjectileCE:ShootingAccuracy");
                 }
 
                 static void Postfix(Verb __instance, ref float __result)
@@ -127,23 +127,23 @@ namespace RimCheats
                     return AccessTools.Method("Verb_LaunchProjectileCE:ShiftTarget");
                 }
 
-                static void Prefix(Verb __instance, ref object reportObj)
+                static void Prefix(Verb __instance, ref object report)
                 {
                     if (!Settings.perfectAccuracy || !__instance.Caster.Faction.IsPlayer)
                     {
                         return;
                     }
-                    var report = (ShiftVecReport)reportObj;
-                    report.swayDegrees = 0;
-                    report.spreadDegrees = 0;
-                    report.weatherShift = 0;
-                    report.lightingShift = 0;
-                    report.sightsEfficiency = 100;
-                    report.aimingAccuracy = 1.5f;
-                    report.circularMissRadius = 0;
-                    report.maxRange = 100000;
-                    report.smokeDensity = 0;
-                    report.blindFiring = false;
+                    var shiftVecReport = (ShiftVecReport)report;
+                    shiftVecReport.swayDegrees = 0;
+                    shiftVecReport.spreadDegrees = 0;
+                    shiftVecReport.weatherShift = 0;
+                    shiftVecReport.lightingShift = 0;
+                    shiftVecReport.sightsEfficiency = 100;
+                    shiftVecReport.aimingAccuracy = 1.5f;
+                    shiftVecReport.circularMissRadius = 0;
+                    shiftVecReport.maxRange = 100000;
+                    shiftVecReport.smokeDensity = 0;
+                    shiftVecReport.blindFiring = false;
                 }
             }
         }

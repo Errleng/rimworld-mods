@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using Verse;
+using Verse.AI;
 
 namespace RimSpawners
 {
@@ -10,5 +11,6 @@ namespace RimSpawners
         public static ThingDef MatterSiphon;
         public static ThingDef ControlNode;
         public static ThingDef SpawnMarker;
+        public static DutyDef SearchAndDestroy;
     }
 }

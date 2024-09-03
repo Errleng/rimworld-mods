@@ -386,15 +386,7 @@ namespace RimSpawners
 
             // setup pawn lord and AI
             var lord = LordMaker.MakeNewLord(faction,
-                new LordJob_AssaultColony(
-                    Faction.OfAncientsHostile,
-                    false,
-                    false,
-                    false,
-            false,
-                    false,
-                    false,
-                    false),
+                new LordJob_SearchAndDestroy(),
                 spawnInfo.Map);
             lord.AddPawn(pawn);
 
