@@ -29,7 +29,7 @@ namespace RimCheats
             {
                 return 0;
             }
-            return GenDate.DaysPassedFloat;
+            return GenDate.DaysPassedFloat * 2;
         }
 
         public override void DoSettingsWindowContents(Rect inRect)

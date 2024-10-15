@@ -38,6 +38,48 @@ namespace RimCheats
         [HarmonyPatch(typeof(Pawn_PathFollower), "TrySetNewPath")]
         class Patch_Pawn_PathFollower_TrySetNewPath
         {
+            static bool Prefix(Pawn_PathFollower __instance, ref bool __result, Pawn ___pawn)
+            {
+                bool appliesToPawn = false;
+                if (settings.enablePathing)
+                {
+                    appliesToPawn = ___pawn.IsPlayerControlled;
+                }
+                if (!appliesToPawn && settings.enablePathingNonHuman && !___pawn.IsPlayerControlled)
+                {
+                    appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.IsPlayer;
+                }
+                if (!appliesToPawn && settings.enablePathingAlly)
+                {
+                    appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.RelationWith(Faction.OfPlayer).kind == FactionRelationKind.Ally;
+                }
+                if (!appliesToPawn)
+                {
+                    return true;
+                }
+                // Disable speed on wander or waiting for better idle pawn performance
+                if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander))
+                {
+                    return true;
+                }
+
+
+                IntVec3 originalPos = ___pawn.Position;
+                ___pawn.Position = __instance.Destination.Cell;
+
+                IntVec3 nearDest = CellFinder.StandableCellNear(___pawn.Position, ___pawn.Map, 10, null);
+                if (nearDest != null)
+                {
+                    //Log.Message($"Instantly moving {___pawn.LabelCap} from {originalPos} to {nearDest} near destination {__instance.Destination.Cell}");
+                    ___pawn.Position = nearDest;
+                }
+                else
+                {
+                    Log.Warning($"Could not find cell near {___pawn.LabelCap}'s destination {__instance.Destination.Cell}");
+                }
+                return true;
+            }
+
             static void Postfix(Pawn_PathFollower __instance, bool __result, Pawn ___pawn)
             {
                 if (!__result)
@@ -233,7 +275,6 @@ namespace RimCheats
             static bool Prefix(Thing thing, DestroyMode mode, Map map, BuildableDef buildingDef)
             {
                 bool shouldRestore = Find.PlaySettings.autoRebuild && mode == DestroyMode.KillFinalize && thing.Faction == Faction.OfPlayer && map.areaManager.Home[thing.Position];
-                Log.Message($"Saving {thing} to restore later: {shouldRestore}");
                 if (settings.autoRepair && shouldRestore)
                 {
                     var worldComp = Find.World.GetComponent<RimCheatsWorldComp>();
