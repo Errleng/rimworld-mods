@@ -17,6 +17,7 @@
     <RimSpawners_SettingsGroupSpawns>Group pawns of the same kind together</RimSpawners_SettingsGroupSpawns>
     <RimSpawners_SettingsDoNotDamagePlayerBuildings>Spawned pawns do not damage player buildings</RimSpawners_SettingsDoNotDamagePlayerBuildings>
     <RimSpawners_SettingsMassivelyDamageEnemyBuildings>Spawned pawns deal massive damage to enemy buildings</RimSpawners_SettingsMassivelyDamageEnemyBuildings>
+    <RimSpawners_SettingsRandomizeLoadouts>Randomize equipment of spawned pawns</RimSpawners_SettingsRandomizeLoadouts>
     <RimSpawners_SettingsHediffStatOffset>Hediff stat offset (/100): {0}</RimSpawners_SettingsHediffStatOffset>
     <RimSpawners_SettingsHediffCapMod>Hediff capacity mod (/100): {0}</RimSpawners_SettingsHediffCapMod>
 

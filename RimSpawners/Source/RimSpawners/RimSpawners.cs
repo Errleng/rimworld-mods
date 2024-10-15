@@ -23,12 +23,14 @@ namespace RimSpawners
         private Vector2 scrollPos = new Vector2(0, 0);
         public static FactionDef spawnedPawnFactionDef;
         public static Faction spawnedPawnFaction;
+        public static System.Random rng;
 
         public RimSpawners(ModContentPack content) : base(content)
         {
             settings = GetSettings<RimSpawnersSettings>();
             var harmony = new Harmony("com.rimspawners.rimworld.mod");
             harmony.PatchAll();
+            rng = new System.Random();
             Log.Message("RimSpawners loaded");
         }
 
@@ -95,6 +97,7 @@ namespace RimSpawners
             listingStandard.CheckboxLabeled("RimSpawners_SettingsGroupSpawns".Translate(), ref settings.groupPawnkinds);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDoNotDamagePlayerBuildings".Translate(), ref settings.doNotDamagePlayerBuildings);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsMassivelyDamageEnemyBuildings".Translate(), ref settings.massivelyDamageEnemyBuildings);
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsRandomizeLoadouts".Translate(), ref settings.randomizeLoadouts);
 
             listingStandard.GapLine();
 

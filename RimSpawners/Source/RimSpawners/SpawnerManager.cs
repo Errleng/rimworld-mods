@@ -337,6 +337,11 @@ namespace RimSpawners
                         }
                     }
                 }
+
+                if (settings.randomizeLoadouts)
+                {
+                    RandomizeLoadout(pawn);
+                }
             }
 
             AddCustomCompToPawn(pawn);
@@ -529,6 +534,12 @@ namespace RimSpawners
 
             ResurrectionUtility.TryResurrect(cachedPawn);
             PawnGenerator.RedressPawn(cachedPawn, request);
+
+            if (settings.randomizeLoadouts)
+            {
+                RandomizeLoadout(cachedPawn);
+            }
+
             Log.Message($"Using cached pawn {cachedPawn.Name}");
 
             if (cachedPawn.Dead)
@@ -542,6 +553,58 @@ namespace RimSpawners
             }
 
             return cachedPawn;
+        }
+
+        private void RandomizeLoadout(Pawn pawn)
+        {
+            if (pawn.kindDef.weaponTags == null || pawn.kindDef.weaponTags.Count == 0)
+            {
+                return;
+            }
+            if (!pawn.RaceProps.ToolUser)
+            {
+                return;
+            }
+            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
+            {
+                return;
+            }
+            if (pawn.WorkTagIsDisabled(WorkTags.Violent))
+            {
+                return;
+            }
+
+            pawn.equipment.DestroyAllEquipment();
+
+            Predicate<ThingDef> isWeapon = (ThingDef td) => td.equipmentType == EquipmentType.Primary && !td.weaponTags.NullOrEmpty();
+            var allWeapons = ThingStuffPair.AllWith(isWeapon);
+            var meleeWeapons = allWeapons.Where(x => x.thing.IsMeleeWeapon);
+            var rangedWeapons = allWeapons.Where(x => !x.thing.IsMeleeWeapon);
+
+            // Let's give a bias for ranged weapons, maybe 80/20 ranged/melee split
+            var weaponPool = rangedWeapons;
+            if (RimSpawners.rng.Next(100) < 20)
+            {
+                weaponPool = meleeWeapons;
+            }
+
+            var thingStuffPair = weaponPool.RandomElement();
+            var thingWithComps = (ThingWithComps)ThingMaker.MakeThing(thingStuffPair.thing, thingStuffPair.stuff);
+            PawnGenerator.PostProcessGeneratedGear(thingWithComps, pawn);
+            CompEquippable compEquippable = thingWithComps.TryGetComp<CompEquippable>();
+            if (compEquippable != null)
+            {
+                if (pawn.kindDef.weaponStyleDef != null)
+                {
+                    compEquippable.parent.StyleDef = pawn.kindDef.weaponStyleDef;
+                }
+                else if (pawn.Ideo != null)
+                {
+                    compEquippable.parent.StyleDef = pawn.Ideo.GetStyleFor(thingWithComps.def);
+                }
+            }
+
+            pawn.equipment.AddEquipment(thingWithComps);
         }
     }
 }

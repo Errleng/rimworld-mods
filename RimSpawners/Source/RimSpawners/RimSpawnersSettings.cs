@@ -23,6 +23,7 @@ namespace RimSpawners
         public bool crossMap;
         public bool doNotDamagePlayerBuildings;
         public bool massivelyDamageEnemyBuildings;
+        public bool randomizeLoadouts;
 
         public SpawnTimeSetting spawnTime;
         public float spawnTimePointsPerSecond;
@@ -50,6 +51,7 @@ namespace RimSpawners
             Scribe_Values.Look(ref groupPawnkinds, "groupPawnkinds", true);
             Scribe_Values.Look(ref doNotDamagePlayerBuildings, "doNotDamagePlayerBuildings", false);
             Scribe_Values.Look(ref massivelyDamageEnemyBuildings, "massivelyDamageEnemyBuildings", false);
+            Scribe_Values.Look(ref randomizeLoadouts, "randomizeLoadouts", false);
             Scribe_Collections.Look(ref hediffStatOffsets, "hediffStatOffsets", LookMode.Value, LookMode.Deep);
             Scribe_Collections.Look(ref hediffCapMods, "hediffCapMods", LookMode.Value, LookMode.Deep);
 
