@@ -13,7 +13,7 @@ namespace RimMisc
     {
         public static readonly int AUTO_CLOSE_LETTERS_CHECK_TICKS = GenTicks.SecondsToTicks(10);
         public static readonly int KILL_DOWNED_PAWNS_TICKS = GenTicks.SecondsToTicks(60);
-        public static readonly int CHECK_THREAT_TICKS = GenTicks.SecondsToTicks(15);
+        public static readonly int CHECK_THREAT_TICKS = GenTicks.SecondsToTicks(5);
 
         private static readonly Dictionary<Letter, int> letterStartTimes = new Dictionary<Letter, int>();
 
@@ -64,7 +64,7 @@ namespace RimMisc
                             !pawn.IsPrisonerOfColony &&
                             pawn.Faction.HostileTo(Faction.OfPlayer) &&
                             pawn.Downed &&
-                            !pawn.IsEntity
+                            !pawn.IsOnHoldingPlatform
                             )
                         {
                             pawn.Kill(null);
@@ -186,7 +186,7 @@ namespace RimMisc
                         continue;
                     }
                     compAmmoUser.ResetAmmoCount(compAmmoUser.SelectedAmmo);
-                    compAmmoUser.CurMagCount = compAmmoUser.MagSize * 4;
+                    compAmmoUser.CurMagCount = compAmmoUser.MagSize * 10;
                 }
             }
 
