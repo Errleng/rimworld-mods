@@ -15,6 +15,10 @@ namespace RimCheats
     {
         static readonly RimCheatsSettings settings;
 
+        static readonly HashSet<string> increaseOverTimeStats = new HashSet<string>{
+            StatDefOf.WorkSpeedGlobal.defName,
+        };
+
         static HarmonyPatches()
         {
             settings = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>();
@@ -149,16 +153,23 @@ namespace RimCheats
                 if ((pawn != null) && (pawn.IsPlayerControlled))
                 {
                     string key = stat.defName;
-                    if (!settings.statDefMults.ContainsKey(key))
+                    if (settings.statDefMults.ContainsKey(key))
                     {
-                        Log.Warning($"No stat setting found for stat {stat.defName} in {String.Join(", ", settings.statDefMults.Keys.ToArray())}");
-                        settings.statDefMults.Add(key, new StatSetting(key));
-                        return;
+                        var statSetting = settings.statDefMults[key];
+                        if (statSetting.enabled)
+                        {
+                            __result *= (statSetting.multiplier / 100);
+                        }
                     }
-                    var statSetting = settings.statDefMults[key];
-                    if (statSetting.enabled)
+                    else
                     {
-                        __result *= (statSetting.multiplier / 100);
+                        Log.Warning($"No stat setting found for stat {stat.defName} in {string.Join(", ", settings.statDefMults.Keys.ToArray())}");
+                        settings.statDefMults.Add(key, new StatSetting(key));
+                    }
+
+                    if (settings.accelerateOverTime && increaseOverTimeStats.Contains(key))
+                    {
+                        __result *= (1 + RimCheats.GetAccelerateOverTimePercentageIncrease() / 100);
                     }
                 }
             }
@@ -221,7 +232,8 @@ namespace RimCheats
         {
             static bool Prefix(Thing thing, DestroyMode mode, Map map, BuildableDef buildingDef)
             {
-                bool shouldRestore = Find.PlaySettings.autoRebuild && mode == DestroyMode.KillFinalize && thing.Faction == Faction.OfPlayer && buildingDef.blueprintDef != null && map.areaManager.Home[thing.Position];
+                bool shouldRestore = Find.PlaySettings.autoRebuild && mode == DestroyMode.KillFinalize && thing.Faction == Faction.OfPlayer && map.areaManager.Home[thing.Position];
+                Log.Message($"Saving {thing} to restore later: {shouldRestore}");
                 if (settings.autoRepair && shouldRestore)
                 {
                     var worldComp = Find.World.GetComponent<RimCheatsWorldComp>();

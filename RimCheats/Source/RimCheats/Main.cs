@@ -23,6 +23,15 @@ namespace RimCheats
             listingStandard.TextFieldNumericLabeled(label, ref value, ref buffer, min, max);
         }
 
+        public static float GetAccelerateOverTimePercentageIncrease()
+        {
+            if (Current.Game == null)
+            {
+                return 0;
+            }
+            return GenDate.DaysPassedFloat;
+        }
+
         public override void DoSettingsWindowContents(Rect inRect)
         {
             Listing_Standard listingStandard = new Listing_Standard();
@@ -46,6 +55,7 @@ namespace RimCheats
             listingStandard.CheckboxLabeled("CarryingCapacityMassToggleLabel".Translate(), ref settings.enableCarryingCapacityMass);
             listingStandard.CheckboxLabeled("PerfectAccuracyToggleLabel".Translate(), ref settings.perfectAccuracy);
             listingStandard.CheckboxLabeled("InfiniteTurretAmmoToggleLabel".Translate(), ref settings.infiniteTurretAmmo);
+            listingStandard.CheckboxLabeled("AccelerateOverTimeToggleLabel".Translate((int)GetAccelerateOverTimePercentageIncrease()), ref settings.accelerateOverTime);
 
             listingStandard.GapLine();
             foreach (var key in settings.statDefMults.Keys.OrderBy(x => x))
@@ -89,6 +99,7 @@ namespace RimCheats
         public bool cheapRecipes;
         public bool perfectAccuracy;
         public bool infiniteTurretAmmo;
+        public bool accelerateOverTime;
         public float toilSpeedMultiplier;
         public Dictionary<string, StatSetting> statDefMults = new Dictionary<string, StatSetting>();
 
@@ -107,6 +118,7 @@ namespace RimCheats
             Scribe_Values.Look(ref cheapRecipes, "cheapRecipes");
             Scribe_Values.Look(ref perfectAccuracy, "accurateTurrets");
             Scribe_Values.Look(ref infiniteTurretAmmo, "infiniteTurretAmmo");
+            Scribe_Values.Look(ref accelerateOverTime, "accelerateOverTime");
             Scribe_Values.Look(ref toilSpeedMultiplier, "toilSpeedMultiplier", 1f);
             Scribe_Collections.Look(ref statDefMults, "statMultipliers", LookMode.Value, LookMode.Deep);
 
