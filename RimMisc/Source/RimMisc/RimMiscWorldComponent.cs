@@ -1,6 +1,4 @@
-﻿using CombatExtended;
-using CombatExtended.Compatibility;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
 using System.Collections.Generic;
@@ -12,7 +10,6 @@ namespace RimMisc
     internal class RimMiscWorldComponent : WorldComponent
     {
         public static readonly int AUTO_CLOSE_LETTERS_CHECK_TICKS = GenTicks.SecondsToTicks(10);
-        public static readonly int KILL_DOWNED_PAWNS_TICKS = GenTicks.SecondsToTicks(60);
         public static readonly int CHECK_THREAT_TICKS = GenTicks.SecondsToTicks(5);
 
         private static readonly Dictionary<Letter, int> letterStartTimes = new Dictionary<Letter, int>();
@@ -48,33 +45,6 @@ namespace RimMisc
                                 letterStartTimes.Remove(letter);
                             }
                         }
-                    }
-                }
-            }
-            if (RimMisc.Settings.killDownedPawns)
-            {
-                if (currentTicks % KILL_DOWNED_PAWNS_TICKS == 0)
-                {
-                    var pawns = PawnsFinder.AllMapsAndWorld_Alive;
-                    int count = 0;
-                    foreach (var pawn in pawns)
-                    {
-                        if (pawn.Faction != null &&
-                            !pawn.Faction.IsPlayer &&
-                            !pawn.IsPrisonerOfColony &&
-                            pawn.Faction.HostileTo(Faction.OfPlayer) &&
-                            pawn.Downed &&
-                            !pawn.IsOnHoldingPlatform
-                            )
-                        {
-                            pawn.Kill(null);
-                            ++count;
-                        }
-                    }
-
-                    if (count > 0)
-                    {
-                        Log.Message($"Killed {count} downed hostile pawns");
                     }
                 }
             }
@@ -141,64 +111,6 @@ namespace RimMisc
                         }
                     }
                 }
-
-                // hourly
-                if (currentTicks % GenDate.TicksPerHour == 0)
-                {
-                    foreach (var map in Find.Maps)
-                    {
-                        // reload friendlies with Combat Extended ammo
-                        if (ModsConfig.IsActive("CETeam.CombatExtended"))
-                        {
-                            ReloadCombatExtendedAmmo(map);
-                        }
-                    }
-                }
-            }
-        }
-
-        void ReloadCombatExtendedAmmo(Map map)
-        {
-            foreach (var pawn in map.mapPawns.AllPawnsSpawned.ToList())
-            {
-                if (pawn.Faction.HostileTo(Faction.OfPlayer))
-                {
-                    continue;
-                }
-                var inventory = pawn.TryGetComp<CompInventory>();
-                var loadout = pawn.GetLoadout();
-                if (inventory == null || loadout == null)
-                {
-                    continue;
-                }
-
-                var weapons = inventory.rangedWeaponList.ToList();
-                if (pawn.equipment?.Primary != null)
-                {
-                    weapons.Add(pawn.equipment.Primary);
-                }
-
-                foreach (var weapon in weapons)
-                {
-                    var compAmmoUser = weapon.TryGetComp<CompAmmoUser>();
-                    if (compAmmoUser == null)
-                    {
-                        continue;
-                    }
-                    compAmmoUser.ResetAmmoCount(compAmmoUser.SelectedAmmo);
-                    compAmmoUser.CurMagCount = compAmmoUser.MagSize * 10;
-                }
-            }
-
-            foreach (var turret in map.listerBuildings.AllBuildingsColonistOfClass<Building_Turret>().ToList())
-            {
-                var compAmmoUser = turret.GetAmmo();
-                if (compAmmoUser == null)
-                {
-                    continue;
-                }
-                compAmmoUser.ResetAmmoCount(compAmmoUser.SelectedAmmo);
-                compAmmoUser.CurMagCount = compAmmoUser.MagSize * 4;
             }
         }
     }

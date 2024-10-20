@@ -1,4 +1,6 @@
-﻿using HarmonyLib;
+﻿using CombatExtended;
+using CombatExtended.Compatibility;
+using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
 using System;
@@ -11,7 +13,7 @@ namespace RimCheats
     internal class RimCheatsWorldComp : WorldComponent
     {
         private static readonly RimCheatsSettings settings = LoadedModManager.GetMod<RimCheats>().GetSettings<RimCheatsSettings>();
-        private static readonly int REPAIR_TICKS = GenDate.TicksPerHour;
+        private static readonly int SHORT_UPDATE_TICKS = GenDate.TicksPerHour;
         private static readonly int LONG_UPDATE_TICKS = GenDate.TicksPerDay;
 
         public List<SpawnBuildingInfo> buildingsToRestore = new List<SpawnBuildingInfo>();
@@ -42,7 +44,7 @@ namespace RimCheats
 
             var ticks = Find.TickManager.TicksGame;
 
-            if (settings.autoRepair && ticks % REPAIR_TICKS == 0)
+            if (settings.autoRepair && ticks % SHORT_UPDATE_TICKS == 0)
             {
                 var map = Find.CurrentMap;
                 var buildings = map.listerBuildings.allBuildingsColonist;
@@ -55,6 +57,18 @@ namespace RimCheats
                     building.HitPoints += (int)Math.Ceiling(building.MaxHitPoints * RimCheatsSettings.REPAIR_PERCENT);
                     building.HitPoints = Math.Min(building.HitPoints, building.MaxHitPoints);
                     map.listerBuildingsRepairable.Notify_BuildingRepaired(building);
+                }
+            }
+
+            if (settings.infiniteTurretAmmo && ticks % SHORT_UPDATE_TICKS == 0)
+            {
+                if (ModsConfig.IsActive("CETeam.CombatExtended"))
+                {
+                    foreach (var map in Find.Maps)
+                    {
+                        // reload friendlies with Combat Extended ammo
+                        ReloadCombatExtendedAmmo(map);
+                    }
                 }
             }
 
@@ -131,6 +145,51 @@ namespace RimCheats
                         }
                     }
                 }
+            }
+        }
+
+        void ReloadCombatExtendedAmmo(Map map)
+        {
+            foreach (var pawn in map.mapPawns.AllPawnsSpawned.ToList())
+            {
+                if (pawn.Faction.HostileTo(Faction.OfPlayer))
+                {
+                    continue;
+                }
+                var inventory = pawn.TryGetComp<CompInventory>();
+                var loadout = pawn.GetLoadout();
+                if (inventory == null || loadout == null)
+                {
+                    continue;
+                }
+
+                var weapons = inventory.rangedWeaponList.ToList();
+                if (pawn.equipment?.Primary != null)
+                {
+                    weapons.Add(pawn.equipment.Primary);
+                }
+
+                foreach (var weapon in weapons)
+                {
+                    var compAmmoUser = weapon.TryGetComp<CompAmmoUser>();
+                    if (compAmmoUser == null)
+                    {
+                        continue;
+                    }
+                    compAmmoUser.ResetAmmoCount(compAmmoUser.SelectedAmmo);
+                    compAmmoUser.CurMagCount = compAmmoUser.MagSize * 10;
+                }
+            }
+
+            foreach (var turret in map.listerBuildings.AllBuildingsColonistOfClass<Building_Turret>().ToList())
+            {
+                var compAmmoUser = turret.GetAmmo();
+                if (compAmmoUser == null)
+                {
+                    continue;
+                }
+                compAmmoUser.ResetAmmoCount(compAmmoUser.SelectedAmmo);
+                compAmmoUser.CurMagCount = compAmmoUser.MagSize * 4;
             }
         }
     }

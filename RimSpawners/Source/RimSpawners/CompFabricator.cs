@@ -55,6 +55,15 @@ namespace RimSpawners
                 }
             };
 
+            yield return new Command_Toggle
+            {
+                defaultLabel = "RimSpawners_SpawnAllAtOnce".Translate(),
+                defaultDesc = "RimSpawners_SpawnAllAtOnceDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/Commands/Attack"),
+                isActive = () => spawnerManager.spawnAllAtOnce,
+                toggleAction = () => { spawnerManager.spawnAllAtOnce = !spawnerManager.spawnAllAtOnce; }
+            };
+
             yield return new Command_Action
             {
                 defaultLabel = "RimSpawners_KillSwitch".Translate(),

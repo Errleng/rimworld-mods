@@ -1,5 +1,6 @@
 ﻿using CombatExtended;
 using HarmonyLib;
+using RimWorld;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Verse;
@@ -144,6 +145,47 @@ namespace RimCheats
                     shiftVecReport.maxRange = 100000;
                     shiftVecReport.smokeDensity = 0;
                     shiftVecReport.blindFiring = false;
+                }
+            }
+
+            [HarmonyPatch]
+            class Patch_TryReduceAmmoCount
+            {
+                static MethodBase TargetMethod()
+                {
+                    return AccessTools.Method("CompAmmoUser:DoOutOfAmmoAction");
+                }
+
+                static bool Prefix(CompAmmoUser __instance)
+                {
+                    if (!Settings.infiniteTurretAmmo)
+                    {
+                        return true;
+                    }
+
+                    if (__instance.IsEquippedGun)
+                    {
+                        if (__instance.Wielder.Faction.HostileTo(Faction.OfPlayer))
+                        {
+                            return true;
+                        }
+                        __instance.ResetAmmoCount(__instance.SelectedAmmo);
+                        __instance.CurMagCount = __instance.MagSize * 10;
+                        return false;
+                    }
+
+                    if (__instance.turret != null)
+                    {
+                        if (__instance.turret.Faction.HostileTo(Faction.OfPlayer))
+                        {
+                            return true;
+                        }
+                        __instance.ResetAmmoCount(__instance.SelectedAmmo);
+                        __instance.CurMagCount = __instance.MagSize * 10;
+                        return false;
+                    }
+
+                    return true;
                 }
             }
         }

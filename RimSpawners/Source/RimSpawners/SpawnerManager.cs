@@ -21,6 +21,7 @@ namespace RimSpawners
 
         public bool useDropPod = true;
         public bool spawnNearEnemy;
+        public bool spawnAllAtOnce;
         public bool active = true;
 
         public int points;
@@ -48,6 +49,13 @@ namespace RimSpawners
             Scribe_Collections.Look(ref pawnsToSpawn, "pawnsToSpawn", LookMode.Value, LookMode.Deep);
             Scribe_Collections.Look(ref spawnedPawns, "spawnedPawns", LookMode.Reference, Array.Empty<object>());
             Scribe_Collections.Look(ref spawnQueue, "spawnQueue", LookMode.Deep);
+
+            var nullPawns = spawnedPawns.Where(x => x == null).ToList();
+            if (nullPawns.Count > 0)
+            {
+                Log.Error($"Spawner manager is tracking {nullPawns.Count}/{spawnedPawns.Count} null spawned pawns. Spawned pawns list: {string.Join(", ", spawnedPawns.Select(x => x == null ? "Null" : x.LabelCap))}");
+            }
+            spawnedPawns.RemoveAll(x => x == null);
 
             cachedPawns.Clear();
             foreach (var pawnKind in DefDatabase<PawnKindDef>.AllDefsListForReading)
@@ -106,6 +114,12 @@ namespace RimSpawners
         private void SpawnRound()
         {
             if (!active || dormant)
+            {
+                return;
+            }
+
+            int nextPoints = points + (int)(pointsPerSecond * GenTicks.TicksToSeconds(SPAWN_INTERVAL));
+            if (spawnAllAtOnce && nextPoints < maxPoints)
             {
                 return;
             }
@@ -338,10 +352,11 @@ namespace RimSpawners
                     }
                 }
 
-                if (settings.randomizeLoadouts)
-                {
-                    RandomizeLoadout(pawn);
-                }
+            }
+
+            if (settings.randomizeLoadouts)
+            {
+                RandomizeLoadout(pawn);
             }
 
             AddCustomCompToPawn(pawn);
@@ -408,6 +423,11 @@ namespace RimSpawners
 
         private void AddCustomCompToPawn(Pawn pawn)
         {
+            if (pawn == null)
+            {
+                Log.Error($"Tried to add RimSpawners spawned pawn comp to a null pawn");
+                return;
+            }
             var existingSpawnedPawnComp = pawn.GetComp<RimSpawnersPawnComp>();
             if (existingSpawnedPawnComp == null)
             {
@@ -557,20 +577,19 @@ namespace RimSpawners
 
         private void RandomizeLoadout(Pawn pawn)
         {
-            if (pawn.kindDef.weaponTags == null || pawn.kindDef.weaponTags.Count == 0)
-            {
-                return;
-            }
             if (!pawn.RaceProps.ToolUser)
             {
+                Log.Message($"Cannot randomize loadout for {pawn} because it is not a tool user");
                 return;
             }
             if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
             {
+                Log.Message($"Cannot randomize loadout for {pawn} because it is incapable of manipulation");
                 return;
             }
             if (pawn.WorkTagIsDisabled(WorkTags.Violent))
             {
+                Log.Message($"Cannot randomize loadout for {pawn} because it is incapable of violence");
                 return;
             }
 

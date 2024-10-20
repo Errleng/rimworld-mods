@@ -81,6 +81,7 @@
     <Compile Include="Patch_Genes.cs" />
     <Compile Include="JobDriver_MeleeAttack.cs" />
     <Compile Include="MainTabWindow_ItemInfoTab.cs" />
+    <Compile Include="Patch_HealthTracker.cs" />
     <Compile Include="Patch_MakeNewBill.cs" />
     <Compile Include="Patch_RoofCollapse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
