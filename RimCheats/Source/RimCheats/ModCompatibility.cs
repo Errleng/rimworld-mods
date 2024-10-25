@@ -156,32 +156,33 @@ namespace RimCheats
                     return AccessTools.Method("CompAmmoUser:DoOutOfAmmoAction");
                 }
 
-                static bool Prefix(CompAmmoUser __instance)
+                static bool Prefix(object __instance)
                 {
+                    CompAmmoUser compAmmoUser = __instance as CompAmmoUser;
                     if (!Settings.infiniteTurretAmmo)
                     {
                         return true;
                     }
 
-                    if (__instance.IsEquippedGun)
+                    if (compAmmoUser.IsEquippedGun)
                     {
-                        if (__instance.Wielder.Faction.HostileTo(Faction.OfPlayer))
+                        if (compAmmoUser.Wielder.Faction.HostileTo(Faction.OfPlayer))
                         {
                             return true;
                         }
-                        __instance.ResetAmmoCount(__instance.SelectedAmmo);
-                        __instance.CurMagCount = __instance.MagSize * 10;
+                        compAmmoUser.ResetAmmoCount(compAmmoUser.SelectedAmmo);
+                        compAmmoUser.CurMagCount = compAmmoUser.MagSize * 10;
                         return false;
                     }
 
-                    if (__instance.turret != null)
+                    if (compAmmoUser.turret != null)
                     {
-                        if (__instance.turret.Faction.HostileTo(Faction.OfPlayer))
+                        if (compAmmoUser.turret.Faction.HostileTo(Faction.OfPlayer))
                         {
                             return true;
                         }
-                        __instance.ResetAmmoCount(__instance.SelectedAmmo);
-                        __instance.CurMagCount = __instance.MagSize * 10;
+                        compAmmoUser.ResetAmmoCount(compAmmoUser.SelectedAmmo);
+                        compAmmoUser.CurMagCount = compAmmoUser.MagSize * 10;
                         return false;
                     }
 

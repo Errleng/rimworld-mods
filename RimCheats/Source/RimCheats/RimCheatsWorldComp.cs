@@ -148,7 +148,7 @@ namespace RimCheats
             }
         }
 
-        void ReloadCombatExtendedAmmo(Map map)
+        private void ReloadCombatExtendedAmmo(Map map)
         {
             foreach (var pawn in map.mapPawns.AllPawnsSpawned.ToList())
             {
