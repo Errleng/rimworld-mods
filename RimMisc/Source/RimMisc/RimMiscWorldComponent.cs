@@ -3,7 +3,9 @@ using RimWorld;
 using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Verse;
+using Verse.AI;
 
 namespace RimMisc
 {
@@ -11,8 +13,10 @@ namespace RimMisc
     {
         public static readonly int AUTO_CLOSE_LETTERS_CHECK_TICKS = GenTicks.SecondsToTicks(10);
         public static readonly int CHECK_THREAT_TICKS = GenTicks.SecondsToTicks(5);
+        public static readonly string SAFE_AREA_SUFFIX = "#safe";
 
         private static readonly Dictionary<Letter, int> letterStartTimes = new Dictionary<Letter, int>();
+        private static readonly Dictionary<Map, bool> mapPrevHasThreat = new Dictionary<Map, bool>();
 
         public RimMiscWorldComponent(World world) : base(world)
         {
@@ -54,6 +58,61 @@ namespace RimMisc
                 foreach (var map in Find.Maps)
                 {
                     var hasThreat = GenHostility.AnyHostileActiveThreatToPlayer(map);
+
+                    if (RimMisc.Settings.changeAreaOnThreat && (!mapPrevHasThreat.ContainsKey(map) || hasThreat != mapPrevHasThreat[map]))
+                    {
+                        // Does not work with Better Pawn Control
+                        if (hasThreat)
+                        {
+                            foreach (Pawn pawn in map.mapPawns.FreeColonists.ToList())
+                            {
+                                pawn.mindState.priorityWork.ClearPrioritizedWorkAndJobQueue();
+                                if (pawn.Spawned && !pawn.Downed && !pawn.InMentalState && !pawn.Drafted)
+                                {
+                                    pawn.Map.pawnDestinationReservationManager.ReleaseAllClaimedBy(pawn);
+                                }
+                                pawn.jobs.ClearQueuedJobs(true);
+                                if (pawn.jobs.curJob != null && pawn.jobs.IsCurrentJobPlayerInterruptible() && !pawn.Downed && !pawn.InMentalState && !pawn.Drafted)
+                                {
+                                    pawn.jobs.EndCurrentJob(JobCondition.InterruptForced, true, true);
+                                }
+                                var curArea = pawn.playerSettings.AreaRestrictionInPawnCurrentMap;
+                                if (curArea == null)
+                                {
+                                    continue;
+                                }
+                                var safeAreaName = curArea.Label + SAFE_AREA_SUFFIX;
+                                var safeArea = map.areaManager.AllAreas.Where((Area x) => x is Area_Allowed && Regex.IsMatch(x.Label, safeAreaName, RegexOptions.IgnoreCase | RegexOptions.ECMAScript)).Cast<Area_Allowed>().FirstOrDefault();
+                                if (safeArea == null)
+                                {
+                                    continue;
+                                }
+                                pawn.playerSettings.AreaRestrictionInPawnCurrentMap = safeArea;
+                                Messages.Message("ToggleSafeArea".Translate(pawn.LabelCap, safeArea.Label, map.Parent.LabelCap), MessageTypeDefOf.SilentInput, false);
+                            }
+                        }
+                        else
+                        {
+                            foreach (Pawn pawn in map.mapPawns.FreeColonists.ToList())
+                            {
+                                var curArea = pawn.playerSettings.AreaRestrictionInPawnCurrentMap;
+                                if (curArea == null)
+                                {
+                                    continue;
+                                }
+                                var unsafeAreaName = Regex.Replace(curArea.Label, $@"{SAFE_AREA_SUFFIX}$", string.Empty);
+                                var unsafeArea = map.areaManager.AllAreas.Where((Area x) => x is Area_Allowed && Regex.IsMatch(x.Label, unsafeAreaName, RegexOptions.IgnoreCase | RegexOptions.ECMAScript)).Cast<Area_Allowed>().FirstOrDefault();
+                                if (unsafeArea == null)
+                                {
+                                    continue;
+                                }
+                                pawn.playerSettings.AreaRestrictionInPawnCurrentMap = unsafeArea;
+                                Messages.Message("ToggleUnsafeArea".Translate(pawn.LabelCap, unsafeArea.Label, map.Parent.LabelCap), MessageTypeDefOf.SilentInput, false);
+                            }
+                        }
+                    }
+                    mapPrevHasThreat[map] = hasThreat;
+
                     foreach (var building in map.listerBuildings.allBuildingsColonist)
                     {
                         var compThreatToggle = building.GetComp<CompThreatToggle>();

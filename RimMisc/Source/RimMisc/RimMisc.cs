@@ -134,6 +134,8 @@ namespace RimMisc
             settingsSection.CheckboxLabeled("RimMisc_KillDownedPawns".Translate(), ref Settings.killDownedPawns);
             settingsSection.CheckboxLabeled("RimMisc_PatchBuildingHp".Translate(), ref Settings.patchBuildingHp);
             settingsSection.CheckboxLabeled("RimMisc_PreventSkyfallDestruction".Translate(), ref Settings.preventSkyfallDestruction);
+            settingsSection.CheckboxLabeled("RimMisc_ConstructEvenIfNotEnough".Translate(), ref Settings.constructEvenIfNotEnough);
+            settingsSection.CheckboxLabeled("RimMisc_ChangeAreaOnThreat".Translate(), ref Settings.changeAreaOnThreat);
             settingsSection.CheckboxLabeled("RimMisc_PreventRoofCollapse".Translate(), ref Settings.preventRoofCollapse);
             settingsSection.CheckboxLabeled("RimMisc_MyMiscStuff".Translate(), ref Settings.myMiscStuff);
 
