@@ -16,6 +16,9 @@ namespace RimSpawners
         private readonly RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
         private int SpawnedPawnPoints => (int)spawnedPawns.Select(x => x.kindDef.combatPower).Sum();
         private List<TargetInfo> spawnLocations = new List<TargetInfo>();
+        private List<ThingStuffPair> allWeapons = null;
+        private List<ThingStuffPair> meleeWeapons = null;
+        private List<ThingStuffPair> rangedWeapons = null;
 
         private bool dormant;
 
@@ -71,6 +74,11 @@ namespace RimSpawners
             {
                 AddCustomCompToPawn(pawn);
             }
+
+            Predicate<ThingDef> isWeapon = (ThingDef td) => td.equipmentType == EquipmentType.Primary && !td.weaponTags.NullOrEmpty();
+            allWeapons = ThingStuffPair.AllWith(isWeapon);
+            meleeWeapons = allWeapons.Where(x => x.thing.IsMeleeWeapon).ToList();
+            rangedWeapons = allWeapons.Where(x => !x.thing.IsMeleeWeapon).ToList();
         }
 
         public override void WorldComponentTick()
@@ -594,11 +602,6 @@ namespace RimSpawners
             }
 
             pawn.equipment.DestroyAllEquipment();
-
-            Predicate<ThingDef> isWeapon = (ThingDef td) => td.equipmentType == EquipmentType.Primary && !td.weaponTags.NullOrEmpty();
-            var allWeapons = ThingStuffPair.AllWith(isWeapon);
-            var meleeWeapons = allWeapons.Where(x => x.thing.IsMeleeWeapon);
-            var rangedWeapons = allWeapons.Where(x => !x.thing.IsMeleeWeapon);
 
             // Let's give a bias for ranged weapons, maybe 80/20 ranged/melee split
             var weaponPool = rangedWeapons;
