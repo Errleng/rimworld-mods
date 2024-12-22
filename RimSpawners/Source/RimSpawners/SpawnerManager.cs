@@ -93,23 +93,49 @@ namespace RimSpawners
 
                 spawnedPawns.RemoveAll(x => x == null || !x.Spawned);
 
+                // Create dictionary of (map, hostiles)
+                var mapsToHostilePawns = new Dictionary<Map, List<Pawn>>();
+                foreach (var map in Find.Maps)
+                {
+                    var activeHostilePawns = Utils.GetActiveHostilesOnMap(map);
+                    if (activeHostilePawns.Count > 0)
+                    {
+                        mapsToHostilePawns.Add(map, activeHostilePawns);
+                    }
+                }
+
                 if (settings.spawnOnlyOnThreat)
                 {
-                    if (Utils.OtherMapsHostile(new List<Map>(), Faction.OfPlayer))
+                    // Remove all pawns on maps without threats
+                    var spawnedPawnsOnMapsWithoutHostiles = spawnedPawns
+                        .Where(x => !mapsToHostilePawns.ContainsKey(x.Map))
+                        .Select(x => x.ThingID)
+                        .ToHashSet();
+                    RemoveSpawnedPawns(spawnedPawnsOnMapsWithoutHostiles);
+
+                    if (mapsToHostilePawns.Count == 0)
                     {
-                        dormant = false;
-                        SpawnRound();
+                        // If there are no maps with hostiles, then go to sleep
+                        dormant = true;
                     }
                     else
                     {
-                        dormant = true;
-                        RemoveAllSpawnedPawns();
+                        dormant = false;
+                        SpawnRound(mapsToHostilePawns);
                     }
                 }
                 else
                 {
                     dormant = false;
-                    SpawnRound();
+                    if (mapsToHostilePawns.Count == 0)
+                    {
+                        // If there are no maps with hostiles, then spawn on every map
+                        SpawnRound(Find.Maps.ToDictionary(x => x, x => new List<Pawn>()));
+                    }
+                    else
+                    {
+                        SpawnRound(mapsToHostilePawns);
+                    }
                 }
             }
 
@@ -119,7 +145,7 @@ namespace RimSpawners
             }
         }
 
-        private void SpawnRound()
+        private void SpawnRound(Dictionary<Map, List<Pawn>> mapsToHostilePawns)
         {
             if (!active || dormant)
             {
@@ -132,6 +158,13 @@ namespace RimSpawners
                 return;
             }
 
+            // Spawn pawns on maps with hostile pawns
+            PlacePawns(GeneratePawns(), mapsToHostilePawns);
+        }
+
+        private List<Pawn> GeneratePawns()
+        {
+            var generatedPawns = new List<Pawn>();
             while (points > 0)
             {
                 while (spawnQueue.Count > 0)
@@ -143,22 +176,16 @@ namespace RimSpawners
                     {
                         if (points < kind.combatPower || SpawnedPawnPoints > maxPoints)
                         {
-                            return;
+                            return generatedPawns;
                         }
-                        Pawn pawn;
-                        if (TrySpawnPawn(kind, out pawn))
+                        Pawn pawn = GeneratePawn(kind);
+                        if (pawn.caller != null)
                         {
-                            if (pawn.caller != null)
-                            {
-                                pawn.caller.DoCall();
-                            }
-                            points -= (int)kind.combatPower;
-                            --entry.count;
+                            pawn.caller.DoCall();
                         }
-                        else
-                        {
-                            return;
-                        }
+                        points -= (int)kind.combatPower;
+                        --entry.count;
+                        generatedPawns.Add(pawn);
                     }
                     spawnQueue.Pop();
                 }
@@ -170,6 +197,7 @@ namespace RimSpawners
                     break;
                 }
             }
+            return generatedPawns;
         }
 
         public void CalculateCache()
@@ -290,8 +318,17 @@ namespace RimSpawners
 
         public void RemoveAllSpawnedPawns()
         {
+            RemoveSpawnedPawns(spawnedPawns.Select(x => x.ThingID).ToHashSet());
+        }
+
+        public void RemoveSpawnedPawns(HashSet<string> pawnIds)
+        {
             foreach (var pawn in spawnedPawns)
             {
+                if (!pawnIds.Contains(pawn.ThingID))
+                {
+                    continue;
+                }
                 if (settings.cachePawns)
                 {
                     // make it like the pawn never existed
@@ -311,8 +348,7 @@ namespace RimSpawners
                     pawn.Destroy();
                 }
             }
-
-            spawnedPawns.Clear();
+            spawnedPawns.RemoveAll(pawn => pawnIds.Contains(pawn.ThingID));
         }
 
         public void ClearCachedPawns()
@@ -336,9 +372,9 @@ namespace RimSpawners
             cachedPawns[pawn.kindDef.defName].Add(pawn);
         }
 
-        private bool TrySpawnPawn(PawnKindDef kind, out Pawn pawn)
+        private Pawn GeneratePawn(PawnKindDef kind)
         {
-            pawn = GenerateNewPawn(kind);
+            Pawn pawn = GenerateNewPawn(kind);
 
             var spawningHumanlike = kind.RaceProps.Humanlike;
             if (spawningHumanlike)
@@ -371,54 +407,107 @@ namespace RimSpawners
 
             spawnedPawns.Add(pawn);
 
-            var faction = pawn.Faction;
+            return pawn;
+        }
 
-            TargetInfo spawnInfo = null;
-            if (spawnLocations.Count > 0)
+        private void PlacePawns(List<Pawn> pawns, Dictionary<Map, List<Pawn>> mapsToHostilePawns)
+        {
+            // Create dictionary of (map, spawn marker locations)
+            var mapSpawnLocations = new Dictionary<Map, List<TargetInfo>>();
+            foreach (var spawnLocation in spawnLocations)
             {
-                var hostileSpawnLocations = spawnLocations.Where(x => GenHostility.AnyHostileActiveThreatTo(x.Map, faction)).ToList();
-                if (hostileSpawnLocations.Count > 0)
+                if (!mapSpawnLocations.ContainsKey(spawnLocation.Map))
                 {
-                    spawnInfo = hostileSpawnLocations.RandomElement();
+                    mapSpawnLocations.Add(spawnLocation.Map, new List<TargetInfo>());
                 }
-            }
-            if (spawnInfo == null)
-            {
-                spawnInfo = Utils.FindSpawnCenter(useDropPod, spawnNearEnemy);
+                mapSpawnLocations[spawnLocation.Map].Add(spawnLocation);
             }
 
-            if (spawnInfo.Map == null || spawnInfo.Cell == IntVec3.Invalid)
+            // Spawn pawns Round Robin on each map with hostiles
+            var mapsWithHostiles = new List<Map>(mapsToHostilePawns.Keys);
+            for (int i = 0; i < pawns.Count; i++)
             {
-                Log.Error($"Could not find location for spawning {kind.defName}");
-                return false;
+                var map = mapsWithHostiles[i % mapsToHostilePawns.Count];
+                TargetInfo spawnInfo = null;
+
+                if (mapSpawnLocations.ContainsKey(map))
+                {
+                    // Prioritize the spawn locations on the map
+                    spawnInfo = mapSpawnLocations[map].RandomElement();
+                }
+                else
+                {
+                    // Choose where to spawn on the map
+                    spawnInfo = FindSpawnLocation(mapsToHostilePawns, map);
+                }
+
+                var pawn = pawns[i];
+                if (spawnInfo.Map == null || spawnInfo.Cell == IntVec3.Invalid)
+                {
+                    Log.Error($"Could not find location for spawning {pawn.kindDef.defName} on map {map}");
+                    continue;
+                }
+
+                //Log.Message($"Dropping {pawn} near {dropInfo.Item1}, {dropInfo.Item2}");
+
+                if (useDropPod)
+                {
+                    DropPodUtility.DropThingsNear(spawnInfo.Cell,
+                    spawnInfo.Map,
+                    Gen.YieldSingle<Thing>(pawn),
+                    60,
+                    false,
+                    false,
+                    false);
+                }
+                else
+                {
+                    GenSpawn.Spawn(pawn, spawnInfo.Cell, spawnInfo.Map);
+                }
+
+                SendMessage(spawnInfo.Cell, spawnInfo.Map, pawn.kindDef);
+
+                // setup pawn lord and AI
+                var lord = LordMaker.MakeNewLord(
+                    pawn.Faction,
+                    new LordJob_SearchAndDestroy(),
+                    spawnInfo.Map);
+                lord.AddPawn(pawn);
             }
+        }
 
-            //Log.Message($"Dropping {pawn} near {dropInfo.Item1}, {dropInfo.Item2}");
-
-            if (useDropPod)
+        private TargetInfo FindSpawnLocation(Dictionary<Map, List<Pawn>> mapsToHostilePawns, Map map)
+        {
+            var spawnCenter = IntVec3.Invalid;
+            var hostiles = mapsToHostilePawns[map];
+            if (spawnNearEnemy && hostiles.Count > 0)
             {
-                DropPodUtility.DropThingsNear(spawnInfo.Cell,
-                spawnInfo.Map,
-                Gen.YieldSingle<Thing>(pawn),
-                60,
-                false,
-                false,
-                false);
+                // Pick a random enemy
+                var target = hostiles.RandomElement();
+                var targetCell = target.Position;
+                if (useDropPod)
+                {
+                    DropCellFinder.TryFindDropSpotNear(targetCell, map, out spawnCenter, true, false, false);
+                }
+                else
+                {
+                    spawnCenter = CellFinder.RandomClosewalkCellNear(targetCell, map, 20);
+                }
             }
             else
             {
-                GenSpawn.Spawn(pawn, spawnInfo.Cell, spawnInfo.Map);
+                // Do not spawn near enemy OR there are no hostiles on the map
+                if (useDropPod)
+                {
+                    spawnCenter = DropCellFinder.FindRaidDropCenterDistant(map);
+                }
+                else
+                {
+                    spawnCenter = CellFinder.RandomCell(map);
+                }
             }
 
-            SendMessage(spawnInfo.Cell, spawnInfo.Map, kind);
-
-            // setup pawn lord and AI
-            var lord = LordMaker.MakeNewLord(faction,
-                new LordJob_SearchAndDestroy(),
-                spawnInfo.Map);
-            lord.AddPawn(pawn);
-
-            return true;
+            return new TargetInfo(spawnCenter, map);
         }
 
         void SendMessage(IntVec3 pos, Map map, PawnKindDef kind)
