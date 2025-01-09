@@ -98,7 +98,7 @@ namespace RimSpawners
                 foreach (var map in Find.Maps)
                 {
                     var activeHostilePawns = Utils.GetActiveHostilesOnMap(map);
-                    if (activeHostilePawns.Count > 0)
+                    if (activeHostilePawns.Count > 0 || GenHostility.AnyHostileActiveThreatTo(map, Faction.OfPlayer))
                     {
                         mapsToHostilePawns.Add(map, activeHostilePawns);
                     }

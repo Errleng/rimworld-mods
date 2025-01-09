@@ -75,12 +75,11 @@
     <ThingDef ParentName="BuildingBase">
         <defName>CoreFabricator</defName>
         <label>core fabricator</label>
-        <description>An ultra-tech fabricator used to automatically create any creature from pets to mechanoids to other humans. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats.</description>
+        <description>An ultra-tech fabricator control center used to automatically create any creature from pets to mechanoids to other humans. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats. It requires Matter Siphons and Control Nodes to function.</description>
         <costList>
-            <Plasteel>500</Plasteel>
             <Steel>1000</Steel>
-            <ComponentIndustrial>50</ComponentIndustrial>
-            <ComponentSpacer>20</ComponentSpacer>
+            <ComponentIndustrial>10</ComponentIndustrial>
+            <ComponentSpacer>1</ComponentSpacer>
         </costList>
         <altitudeLayer>Building</altitudeLayer>
         <statBases>
@@ -128,10 +127,9 @@
         <label>matter siphon</label>
         <description>Generates matter using vanometrics for use in a fabricator.</description>
         <costList>
-            <Plasteel>500</Plasteel>
-            <Steel>1000</Steel>
-            <ComponentIndustrial>10</ComponentIndustrial>
-            <ComponentSpacer>5</ComponentSpacer>
+            <Plasteel>10</Plasteel>
+            <Steel>100</Steel>
+            <ComponentIndustrial>5</ComponentIndustrial>
         </costList>
         <altitudeLayer>Building</altitudeLayer>
         <statBases>
@@ -148,13 +146,13 @@
         <graphicData>
             <texPath>Things/Building/Security/MatterSiphon</texPath>
             <graphicClass>Graphic_Single</graphicClass>
-            <drawSize>(2,2)</drawSize>
+            <drawSize>(1,1)</drawSize>
             <shadowData>
                 <volume>(1.5, 0.35, 1.2)</volume>
                 <offset>(0, 0, -0.15)</offset>
             </shadowData>
         </graphicData>
-        <size>(2, 2)</size>
+        <size>(1, 1)</size>
         <fillPercent>1.0</fillPercent>
         <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
         <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
@@ -171,7 +169,7 @@
         <designationCategory>Security</designationCategory>
         <comps>
             <li Class="RimSpawners.CompProperties_PointGenerator">
-                <pointsPerSecond>2</pointsPerSecond>
+                <pointsPerSecond>1</pointsPerSecond>
             </li>
         </comps>
     </ThingDef>
@@ -181,9 +179,8 @@
         <label>control node</label>
         <description>Allows more fabricated creatures to be controlled.</description>
         <costList>
-            <Steel>1000</Steel>
-            <ComponentIndustrial>20</ComponentIndustrial>
-            <ComponentSpacer>5</ComponentSpacer>
+            <Steel>200</Steel>
+            <ComponentIndustrial>2</ComponentIndustrial>
         </costList>
         <altitudeLayer>Building</altitudeLayer>
         <statBases>
@@ -200,13 +197,13 @@
         <graphicData>
             <texPath>Things/Building/Security/ControlNode</texPath>
             <graphicClass>Graphic_Single</graphicClass>
-            <drawSize>(2,2)</drawSize>
+            <drawSize>(1,1)</drawSize>
             <shadowData>
                 <volume>(1.5, 0.35, 1.2)</volume>
                 <offset>(0, 0, -0.15)</offset>
             </shadowData>
         </graphicData>
-        <size>(2, 2)</size>
+        <size>(1, 1)</size>
         <fillPercent>1.0</fillPercent>
         <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
         <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
@@ -223,7 +220,7 @@
         <designationCategory>Security</designationCategory>
         <comps>
             <li Class="RimSpawners.CompProperties_PointStorage">
-                <pointsStored>500</pointsStored>
+                <pointsStored>100</pointsStored>
             </li>
         </comps>
     </ThingDef>
