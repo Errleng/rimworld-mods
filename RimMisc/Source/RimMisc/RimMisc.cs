@@ -110,7 +110,7 @@ namespace RimMisc
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            var settingsRect = inRect.TopPart(0.5f).Rounded();
+            var settingsRect = inRect.TopPart(0.6f).Rounded();
             var condenserItemsRect = inRect.BottomPart(0.5f).Rounded();
             var condenserItemsSelectRect = inRect.BottomPart(0.3f).Rounded();
             var condenserItemsScrollRect = new Rect(condenserItemsRect)
@@ -143,10 +143,6 @@ namespace RimMisc
             {
                 EnableRocketmanRaces();
             }
-            if (settingsSection.ButtonText("RimMisc_FinishRimatomicsResearch".Translate()))
-            {
-                FinishRimatomicsResearch();
-            }
 
             settingsSection.Label("RimMisc_AutoCloseLettersSeconds".Translate(Settings.autoCloseLettersSeconds));
             Settings.autoCloseLettersSeconds = settingsSection.Slider(Settings.autoCloseLettersSeconds, MIN_AUTOCLOSE_SECONDS, MAX_AUTOCLOSE_SECONDS);
@@ -165,6 +161,7 @@ namespace RimMisc
         {
             Settings.ApplySettings();
             base.WriteSettings();
+            FinishRimatomicsResearch();
         }
 
         public override string SettingsCategory()

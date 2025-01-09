@@ -13,10 +13,13 @@ namespace RimMisc
     {
         public static readonly int AUTO_CLOSE_LETTERS_CHECK_TICKS = GenTicks.SecondsToTicks(10);
         public static readonly int CHECK_THREAT_TICKS = GenTicks.SecondsToTicks(5);
+        public static readonly int KILL_DOWNED_TICKS = GenTicks.SecondsToTicks(30);
         public static readonly string SAFE_AREA_SUFFIX = "#safe";
 
         private static readonly Dictionary<Letter, int> letterStartTimes = new Dictionary<Letter, int>();
         private static readonly Dictionary<Map, bool> mapPrevHasThreat = new Dictionary<Map, bool>();
+        // If the pawn is in the cache, then kill them. Else add them to the cache
+        private static readonly HashSet<Pawn> downedPawnCache = new HashSet<Pawn>();
 
         public RimMiscWorldComponent(World world) : base(world)
         {
@@ -132,6 +135,28 @@ namespace RimMisc
                 }
             }
 
+            if (RimMisc.Settings.killDownedPawns && currentTicks % KILL_DOWNED_TICKS == 0)
+            {
+                foreach (var pawn in downedPawnCache)
+                {
+                    if (isPawnValidToKill(pawn))
+                    {
+                        pawn.Kill(null);
+                    }
+                }
+                downedPawnCache.Clear();
+                foreach (var map in Find.Maps)
+                {
+                    foreach (var pawn in map.mapPawns.AllPawnsSpawned)
+                    {
+                        if (isPawnValidToKill(pawn))
+                        {
+                            downedPawnCache.Add(pawn);
+                        }
+                    }
+                }
+            }
+
             if (RimMisc.Settings.myMiscStuff)
             {
                 // daily
@@ -171,6 +196,15 @@ namespace RimMisc
                     }
                 }
             }
+        }
+
+        private bool isPawnValidToKill(Pawn pawn)
+        {
+            return pawn.Faction != null &&
+                !pawn.Faction.IsPlayer &&
+                !pawn.IsPrisonerOfColony &&
+                pawn.Faction.HostileTo(Faction.OfPlayer) &&
+                !pawn.IsOnHoldingPlatform;
         }
     }
 }
