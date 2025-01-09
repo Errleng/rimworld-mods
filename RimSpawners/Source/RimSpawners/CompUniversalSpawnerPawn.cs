@@ -320,7 +320,7 @@ namespace RimSpawners
             return null;
         }
 
-        private IntVec3 GetTargetCellFromHostile(Pawn target)
+        private IntVec3 GetTargetCellFromHostile(Thing target)
         {
             if (SpawnInDropPodsNearEnemy)
             {
@@ -694,10 +694,10 @@ namespace RimSpawners
             }
         }
 
-        private Pawn FindRandomActiveHostile(Map map)
+        private Thing FindRandomActiveHostile(Map map)
         {
-            Pawn hostilePawn = null;
-            var hostilePawns = new List<Pawn>();
+            Thing hostile = null;
+            var hostiles = new List<Thing>();
 
             var pawnsOnMap = map.mapPawns.AllPawnsSpawned;
             foreach (var pawn in pawnsOnMap)
@@ -707,17 +707,20 @@ namespace RimSpawners
                     var dormantComp = pawn.GetComp<CompCanBeDormant>();
                     if (dormantComp == null || dormantComp.Awake)
                     {
-                        hostilePawns.Add(pawn);
+                        hostiles.Add(pawn);
                     }
                 }
             }
 
-            if (hostilePawns.Count > 0)
+            var hostileBuildings = map.listerBuildings.allBuildingsNonColonist.Where(x => x.HostileTo(Faction.OfPlayer));
+            hostiles.AddRange(hostileBuildings);
+
+            if (hostiles.Count > 0)
             {
-                hostilePawn = hostilePawns[Rand.Range(0, hostilePawns.Count)];
+                hostile = hostiles[Rand.Range(0, hostiles.Count)];
             }
 
-            return hostilePawn;
+            return hostile;
         }
 
         public override void CompTick()

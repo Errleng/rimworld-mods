@@ -45,6 +45,7 @@ namespace RimSpawners
             base.ExposeData();
             Scribe_Values.Look(ref useDropPod, "useDropPod");
             Scribe_Values.Look(ref spawnNearEnemy, "spawnNearEnemy");
+            Scribe_Values.Look(ref spawnAllAtOnce, "spawnAllAtOnce");
             Scribe_Values.Look(ref active, "active");
 
             Scribe_Values.Look(ref points, "points");
