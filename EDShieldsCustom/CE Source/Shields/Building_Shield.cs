@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using CombatExtended;
+using RimWorld;
 using Verse;
 
 //using EnhancedDevelopment.Shields.ShieldUtils;
@@ -26,6 +27,11 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
             return GetComp<Comp_ShieldGenerator>().WillProjectileBeBlocked(projectileToCheck);
         }
 
+        public bool WillProjectileBeBlocked(ProjectileCE projectileToCheck)
+        {
+            return GetComp<Comp_ShieldGenerator>().WillProjectileBeBlocked(projectileToCheck);
+        }
+
         public bool WillProjectileBeReflected()
         {
             return GetComp<Comp_ShieldGenerator>().reflectProjectiles;
@@ -35,6 +41,11 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
         {
             GetComp<Comp_ShieldGenerator>().FieldIntegrity_Current -= projectile.DamageAmount;
         }
+        public void TakeDamageFromProjectile(ProjectileCE projectile)
+        {
+            GetComp<Comp_ShieldGenerator>().FieldIntegrity_Current -= (int)projectile.DamageAmount;
+        }
+
 
         public void RecalculateStatistics()
         {

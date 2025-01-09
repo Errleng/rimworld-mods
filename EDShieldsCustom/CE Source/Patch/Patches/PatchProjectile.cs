@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using CombatExtended;
+using HarmonyLib;
 using Jaxxa.EnhancedDevelopment.Shields.Shields;
 using System.Reflection;
 using Verse;
@@ -39,6 +40,15 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Patch.Patches
             //Apply the Prefix Patches
             harmony.Patch(_ProjectileTick, new HarmonyMethod(_ProjectileTickPrefix), null);
 
+            if (ModsConfig.IsActive("CETeam.CombatExtended"))
+            {
+                Log.Message("ED Shields compatibility patches for Combat Extended");
+                foreach (var type in typeof(CombatExtended_Patches).GetNestedTypes(AccessTools.all))
+                {
+                    new PatchClassProcessor(harmony, type).Patch();
+                }
+            }
+
             foreach (var method in harmony.GetPatchedMethods())
             {
                 Log.Message($"ED Shields patched {method.DeclaringType.FullName}.{method.Name}");
@@ -57,6 +67,27 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Patch.Patches
                 return false;
             }
             return true;
+        }
+
+        class CombatExtended_Patches
+        {
+            [HarmonyPatch]
+            class Patch_ProjectileCE_Tick
+            {
+                static MethodBase TargetMethod()
+                {
+                    return AccessTools.Method("ProjectileCE:Tick");
+                }
+
+                public static bool Prefix(ref ProjectileCE __instance)
+                {
+                    if (__instance.Map.GetComponent<ShieldManagerMapComp>().WillProjectileBeBlocked(__instance))
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+            }
         }
 
         #endregion

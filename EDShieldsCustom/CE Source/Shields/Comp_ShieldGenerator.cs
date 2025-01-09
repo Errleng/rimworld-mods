@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using CombatExtended;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -465,6 +466,22 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
         public bool WillProjectileBeBlocked(Verse.Projectile projectile)
         {
             if (!InterceptCheckBasic(projectile.def.projectile, projectile.Position, projectile.Launcher))
+            {
+                return false;
+            }
+
+            //Check Angle
+            if (!CorrectAngleToIntercept(projectile.ExactRotation, projectile.ExactPosition, parent))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool WillProjectileBeBlocked(ProjectileCE projectile)
+        {
+            if (!InterceptCheckBasic(projectile.def.projectile, projectile.Position, projectile.launcher))
             {
                 return false;
             }

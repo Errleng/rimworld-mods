@@ -18,6 +18,12 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
             this.map = map;
         }
 
+        public override void FinalizeInit()
+        {
+            base.FinalizeInit();
+            _ShieldBuildings = map.listerBuildings.AllBuildingsColonistOfClass<Building_Shield>().ToList();
+        }
+
         public override void MapComponentTick()
         {
             base.MapComponentTick();
@@ -30,18 +36,18 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
 
         private void ReflectProjectile(Building_Shield shield, Projectile projectile)
         {
-            if (projectile.Launcher == null || !projectile.Launcher.HostileTo(Faction.OfPlayer) || !shield.WillProjectileBeReflected())
+            var launcher = projectile.Launcher;
+            if (launcher == null || launcher.HostileTo(Faction.OfPlayer) || !shield.WillProjectileBeReflected())
             {
                 return;
             }
             //Spawn and launch a projectile
-            var launcher = projectile.Launcher;
             Projectile reflectedProj = (Projectile)GenSpawn.Spawn(projectile.def, projectile.Position, projectile.Map);
             reflectedProj.Launch(
                 shield,
                 projectile.ExactPosition,
                 new LocalTargetInfo(launcher.Position),
-                projectile.Launcher,
+                launcher,
                 ProjectileHitFlags.IntendedTarget,
                 false,
                 launcher
@@ -88,6 +94,5 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
         {
             _ShieldBuildings.ForEach(x => x.RecalculateStatistics());
         }
-
     }
 }
