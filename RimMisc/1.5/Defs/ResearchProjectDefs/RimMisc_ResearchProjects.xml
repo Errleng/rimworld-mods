@@ -8,15 +8,11 @@
 		<defName>VanometricCondensation</defName>
 		<label>Energy-to-Mass Condensation</label>
 		<description>Build vanometric condensers to create anything by converting energy to mass.</description>
-		<baseCost>10000</baseCost>
+		<baseCost>1000</baseCost>
 		<techLevel>Ultra</techLevel>
 		<prerequisites>
-			<li>MicroelectronicsBasics</li>
 		</prerequisites>
 		<requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
-		<requiredResearchFacilities>
-			<li>MultiAnalyzer</li>
-		</requiredResearchFacilities>
 		<tab>VanometricTechnology</tab>
 		<researchViewX>2.5</researchViewX>
 		<researchViewY>0</researchViewY>

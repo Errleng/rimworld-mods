@@ -37,7 +37,7 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
         private void ReflectProjectile(Building_Shield shield, Projectile projectile)
         {
             var launcher = projectile.Launcher;
-            if (launcher == null || launcher.HostileTo(Faction.OfPlayer) || !shield.WillProjectileBeReflected())
+            if (launcher == null || !launcher.HostileTo(Faction.OfPlayer) || !shield.WillProjectileBeReflected())
             {
                 return;
             }

@@ -22,6 +22,7 @@ namespace RimSpawners
         public bool spawnOnlyOnThreat;
         public bool crossMap;
         public bool doNotDamagePlayerBuildings;
+        public bool doNotDamageFriendlies;
         public bool massivelyDamageEnemyBuildings;
         public bool randomizeLoadouts;
 
@@ -50,6 +51,7 @@ namespace RimSpawners
             Scribe_Values.Look(ref crossMap, "crossMap", false);
             Scribe_Values.Look(ref groupPawnkinds, "groupPawnkinds", true);
             Scribe_Values.Look(ref doNotDamagePlayerBuildings, "doNotDamagePlayerBuildings", false);
+            Scribe_Values.Look(ref doNotDamageFriendlies, "doNotDamageFriendlies", false);
             Scribe_Values.Look(ref massivelyDamageEnemyBuildings, "massivelyDamageEnemyBuildings", false);
             Scribe_Values.Look(ref randomizeLoadouts, "randomizeLoadouts", false);
             Scribe_Collections.Look(ref hediffStatOffsets, "hediffStatOffsets", LookMode.Value, LookMode.Deep);

@@ -48,6 +48,7 @@ namespace RimCheats
             listingStandard.CheckboxLabeled("PathingAllyToggleLabel".Translate(), ref settings.enablePathingAlly);
             listingStandard.CheckboxLabeled("IgnoreTerrainCostToggleLabel".Translate(), ref settings.disableTerrainCost);
             listingStandard.CheckboxLabeled("IgnoreTerrainCostNonHumanToggleLabel".Translate(), ref settings.disableTerrainCostNonHuman);
+            listingStandard.CheckboxLabeled("DisableFriendlyFire".Translate(), ref settings.disableFriendlyFire);
             listingStandard.CheckboxLabeled("ToilSpeedToggleLabel".Translate(), ref settings.enableToilSpeed);
             listingStandard.CheckboxLabeled("AutoCleanToggleLabel".Translate(), ref settings.autoClean);
             listingStandard.CheckboxLabeled("AutoRepairToggleLabel".Translate((int)Math.Round(RimCheatsSettings.REPAIR_PERCENT * 100)), ref settings.autoRepair);
@@ -91,6 +92,7 @@ namespace RimCheats
         public bool enablePathingAlly;
         public bool disableTerrainCost;
         public bool disableTerrainCostNonHuman;
+        public bool disableFriendlyFire;
         public bool enableCarryingCapacityMass;
         public bool enableToilSpeed;
         public bool autoClean;
@@ -111,6 +113,7 @@ namespace RimCheats
             Scribe_Values.Look(ref enableToilSpeed, "enableToilSpeed");
             Scribe_Values.Look(ref disableTerrainCost, "disableTerrainCost");
             Scribe_Values.Look(ref disableTerrainCostNonHuman, "disableTerrainCostNonHuman");
+            Scribe_Values.Look(ref disableFriendlyFire, "disableFriendlyFire");
             Scribe_Values.Look(ref enableCarryingCapacityMass, "enableCarryingCapacityMass");
             Scribe_Values.Look(ref autoClean, "autoClean");
             Scribe_Values.Look(ref autoRepair, "autoRepair");

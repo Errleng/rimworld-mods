@@ -16,6 +16,7 @@
     <RimSpawners_SettingsCrossMap>Spawn pawns near threats on different maps</RimSpawners_SettingsCrossMap>
     <RimSpawners_SettingsGroupSpawns>Group pawns of the same kind together</RimSpawners_SettingsGroupSpawns>
     <RimSpawners_SettingsDoNotDamagePlayerBuildings>Spawned pawns do not damage player buildings</RimSpawners_SettingsDoNotDamagePlayerBuildings>
+    <RimSpawners_SettingsDoNotDamageFriendlies>Spawned pawns do not damage friendlies</RimSpawners_SettingsDoNotDamageFriendlies>
     <RimSpawners_SettingsMassivelyDamageEnemyBuildings>Spawned pawns deal massive damage to enemy buildings</RimSpawners_SettingsMassivelyDamageEnemyBuildings>
     <RimSpawners_SettingsRandomizeLoadouts>Randomize equipment of spawned pawns</RimSpawners_SettingsRandomizeLoadouts>
     <RimSpawners_SettingsHediffStatOffset>Hediff stat offset (/100): {0}</RimSpawners_SettingsHediffStatOffset>

@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -91,7 +92,7 @@ namespace RimMisc
                                     continue;
                                 }
                                 pawn.playerSettings.AreaRestrictionInPawnCurrentMap = safeArea;
-                                Messages.Message("ToggleSafeArea".Translate(pawn.LabelCap, safeArea.Label, map.Parent.LabelCap), MessageTypeDefOf.SilentInput, false);
+                                //Messages.Message("ToggleSafeArea".Translate(pawn.LabelCap, safeArea.Label, map.Parent.LabelCap), MessageTypeDefOf.SilentInput, false);
                             }
                         }
                         else
@@ -110,7 +111,7 @@ namespace RimMisc
                                     continue;
                                 }
                                 pawn.playerSettings.AreaRestrictionInPawnCurrentMap = unsafeArea;
-                                Messages.Message("ToggleUnsafeArea".Translate(pawn.LabelCap, unsafeArea.Label, map.Parent.LabelCap), MessageTypeDefOf.SilentInput, false);
+                                //Messages.Message("ToggleUnsafeArea".Translate(pawn.LabelCap, unsafeArea.Label, map.Parent.LabelCap), MessageTypeDefOf.SilentInput, false);
                             }
                         }
                     }
@@ -141,7 +142,14 @@ namespace RimMisc
                 {
                     if (isPawnValidToKill(pawn))
                     {
-                        pawn.Kill(null);
+                        try
+                        {
+                            pawn.Kill(null);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"RimMisc failed to kill downed pawn: {pawn.LabelCap}. {ex.Message}");
+                        }
                     }
                 }
                 downedPawnCache.Clear();
@@ -200,7 +208,8 @@ namespace RimMisc
 
         private bool isPawnValidToKill(Pawn pawn)
         {
-            return pawn.Faction != null &&
+            return pawn.Downed &&
+                pawn.Faction != null &&
                 !pawn.Faction.IsPlayer &&
                 !pawn.IsPrisonerOfColony &&
                 pawn.Faction.HostileTo(Faction.OfPlayer) &&

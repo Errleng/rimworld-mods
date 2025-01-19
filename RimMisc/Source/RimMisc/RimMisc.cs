@@ -110,7 +110,7 @@ namespace RimMisc
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            var settingsRect = inRect.TopPart(0.6f).Rounded();
+            var settingsRect = inRect.TopPart(0.5f).Rounded();
             var condenserItemsRect = inRect.BottomPart(0.5f).Rounded();
             var condenserItemsSelectRect = inRect.BottomPart(0.3f).Rounded();
             var condenserItemsScrollRect = new Rect(condenserItemsRect)

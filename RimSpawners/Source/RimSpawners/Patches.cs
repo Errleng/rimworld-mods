@@ -209,11 +209,15 @@ namespace RimSpawners
             }
         }
 
-        [HarmonyPatch(typeof(DamageWorker), "Apply")]
-        private class DamageWorker_Apply_Patch
+        [HarmonyPatch(typeof(Thing), "TakeDamage")]
+        private class Thing_TakeDamage_Patch
         {
-            static void Prefix(ref DamageInfo dinfo, Thing victim)
+            static void Prefix(ref DamageInfo dinfo, Thing __instance)
             {
+                if (dinfo.Instigator == null)
+                {
+                    return;
+                }
                 Pawn pawn = dinfo.Instigator as Pawn;
                 if (pawn == null)
                 {
@@ -223,16 +227,19 @@ namespace RimSpawners
                 {
                     return;
                 }
-                if (victim.def.category != ThingCategory.Building)
-                {
-                    return;
-                }
-                if (victim.Faction == Faction.OfPlayer && Settings.doNotDamagePlayerBuildings)
+
+                Thing victim = __instance;
+                if (Settings.doNotDamagePlayerBuildings && victim.def.category == ThingCategory.Building && victim.Faction == Faction.OfPlayer)
                 {
                     dinfo.SetAmount(0);
                     return;
                 }
-                if (victim.Faction.HostileTo(Faction.OfPlayer) && Settings.massivelyDamageEnemyBuildings)
+                if (Settings.doNotDamageFriendlies && !victim.HostileTo(dinfo.Instigator))
+                {
+                    dinfo.SetAmount(0);
+                    return;
+                }
+                if (Settings.massivelyDamageEnemyBuildings && victim.Faction.HostileTo(Faction.OfPlayer))
                 {
                     dinfo.SetAmount(dinfo.Amount * 10);
                     return;

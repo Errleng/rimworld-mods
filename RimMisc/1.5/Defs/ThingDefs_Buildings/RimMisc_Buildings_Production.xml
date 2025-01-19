@@ -34,9 +34,9 @@
             <destroySound>BuildingDestroyed_Metal_Big</destroySound>
         </building>
         <costList>
-            <Steel>5000</Steel>
-            <ComponentIndustrial>25</ComponentIndustrial>
-            <ComponentSpacer>10</ComponentSpacer>
+            <Steel>1000</Steel>
+            <ComponentIndustrial>20</ComponentIndustrial>
+            <ComponentSpacer>2</ComponentSpacer>
         </costList>
         <placeWorkers>
             <li>PlaceWorker_ReportWorkSpeedPenalties</li>
@@ -58,7 +58,7 @@
             <li Class="CompProperties_Flickable" />
             <li Class="CompProperties_Power">
                 <compClass>CompPowerTrader</compClass>
-                <basePowerConsumption>5000</basePowerConsumption>
+                <basePowerConsumption>2000</basePowerConsumption>
             </li>
         </comps>
     </ThingDef>

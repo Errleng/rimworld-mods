@@ -5,6 +5,7 @@
     <PathingAllyToggleLabel>Enable instant movement for allied pawns</PathingAllyToggleLabel>
     <IgnoreTerrainCostToggleLabel>Enable colonists to ignore terrain cost</IgnoreTerrainCostToggleLabel>
     <IgnoreTerrainCostNonHumanToggleLabel>Enable colony non-humans to ignore terrain cost</IgnoreTerrainCostNonHumanToggleLabel>
+    <DisableFriendlyFire>Disable friendly fire damage</DisableFriendlyFire>
     <ToilSpeedToggleLabel>Enable general toil speed multiplier for colonists</ToilSpeedToggleLabel>
     <CarryingCapacityMassToggleLabel>Enable carrying capacity affecting caravan capacity</CarryingCapacityMassToggleLabel>
     <StatMultiplierToggleLabel>Enable {0} multiplier (%)</StatMultiplierToggleLabel>

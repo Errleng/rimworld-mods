@@ -90,7 +90,7 @@ namespace RimSpawners
 
             if (ticks % SPAWN_INTERVAL == 0)
             {
-                points = Math.Min(points + (int)(pointsPerSecond * GenTicks.TicksToSeconds(SPAWN_INTERVAL)), maxPoints);
+                points = points + (int)(pointsPerSecond * GenTicks.TicksToSeconds(SPAWN_INTERVAL));
 
                 spawnedPawns.RemoveAll(x => x == null || !x.Spawned);
 
@@ -138,6 +138,8 @@ namespace RimSpawners
                         SpawnRound(mapsToHostilePawns);
                     }
                 }
+
+                points = Math.Min(points, maxPoints);
             }
 
             if (ticks % LONG_UPDATE_INTERVAL == 0)
@@ -153,14 +155,20 @@ namespace RimSpawners
                 return;
             }
 
-            int nextPoints = points + (int)(pointsPerSecond * GenTicks.TicksToSeconds(SPAWN_INTERVAL));
-            if (spawnAllAtOnce && nextPoints < maxPoints)
+            if (spawnAllAtOnce && points < maxPoints)
             {
                 return;
             }
 
+            // Save excess points
+            int excessPoints = Math.Max(0, points - maxPoints);
+            // Cap the points to use in spawning
+            points = Math.Min(points, maxPoints);
             // Spawn pawns on maps with hostile pawns
             PlacePawns(GeneratePawns(), mapsToHostilePawns);
+
+            // Restore excess points
+            points += excessPoints;
         }
 
         private List<Pawn> GeneratePawns()
@@ -369,7 +377,7 @@ namespace RimSpawners
 
         public void RecyclePawn(Pawn pawn)
         {
-            Log.Message($"Recycling pawn {pawn.kindDef.defName} {pawn.Name}");
+            //Log.Message($"Recycling pawn {pawn.kindDef.defName} {pawn.Name}");
             cachedPawns[pawn.kindDef.defName].Add(pawn);
         }
 

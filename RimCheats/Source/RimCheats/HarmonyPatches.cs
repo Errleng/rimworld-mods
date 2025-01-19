@@ -331,5 +331,30 @@ namespace RimCheats
                 return true;
             }
         }
+
+        [HarmonyPatch(typeof(Thing), "TakeDamage")]
+        private class Thing_TakeDamage_Patch
+        {
+            static void Prefix(ref DamageInfo dinfo, Thing __instance)
+            {
+                // Disable damage from allies to player
+                if (!settings.disableFriendlyFire)
+                {
+                    return;
+                }
+                if (dinfo.Instigator == null)
+                {
+                    return;
+                }
+
+                Thing victim = __instance;
+                if (victim.Faction == Faction.OfPlayer && !victim.HostileTo(dinfo.Instigator))
+                {
+                    // If the instigator and victim factions are not hostile, then do no damage
+                    dinfo.SetAmount(0);
+                    return;
+                }
+            }
+        }
     }
 }

@@ -5,7 +5,7 @@
         <defName>DoBillsVanometricCondenser</defName>
         <label>condense energy into matter</label>
         <giverClass>WorkGiver_DoBill</giverClass>
-        <workType>Research</workType>
+        <workType>Mining</workType>
         <priorityInType>150</priorityInType>
         <verb>condense</verb>
         <gerund>condensing</gerund>
