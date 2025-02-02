@@ -66,9 +66,10 @@ namespace RimMisc
                     if (RimMisc.Settings.changeAreaOnThreat && (!mapPrevHasThreat.ContainsKey(map) || hasThreat != mapPrevHasThreat[map]))
                     {
                         // Does not work with Better Pawn Control
+                        var pawns = map.mapPawns.FreeColonists.Concat(map.mapPawns.SpawnedColonyMechs).Concat(map.mapPawns.SpawnedColonyAnimals).ToList();
                         if (hasThreat)
                         {
-                            foreach (Pawn pawn in map.mapPawns.FreeColonists.ToList())
+                            foreach (Pawn pawn in pawns)
                             {
                                 pawn.mindState.priorityWork.ClearPrioritizedWorkAndJobQueue();
                                 if (pawn.Spawned && !pawn.Downed && !pawn.InMentalState && !pawn.Drafted)
@@ -97,7 +98,7 @@ namespace RimMisc
                         }
                         else
                         {
-                            foreach (Pawn pawn in map.mapPawns.FreeColonists.ToList())
+                            foreach (Pawn pawn in pawns)
                             {
                                 var curArea = pawn.playerSettings.AreaRestrictionInPawnCurrentMap;
                                 if (curArea == null)
