@@ -65,7 +65,26 @@ namespace RimCheats
 
 
                 IntVec3 originalPos = ___pawn.Position;
-                ___pawn.Position = __instance.Destination.Cell;
+                var dest = __instance.Destination.Cell;
+
+                // Open door so it can defog the adjacent area
+                Building_Door door = dest.GetDoor(___pawn.Map);
+                if (door != null)
+                {
+                    door.Notify_PawnApproaching(___pawn, 1f);
+                }
+
+                // Extinguish fire or else the pawn will be standing on it
+                foreach (var thing in dest.GetThingList(___pawn.Map))
+                {
+                    var fire = thing as Fire;
+                    if (fire != null && fire.parent == null)
+                    {
+                        fire.Destroy(DestroyMode.Vanish);
+                    }
+                }
+
+                ___pawn.Position = dest;
 
                 IntVec3 nearDest = CellFinder.StandableCellNear(___pawn.Position, ___pawn.Map, 100, null);
                 if (nearDest != null)
