@@ -71,7 +71,8 @@ namespace RimCheats
                 Building_Door door = dest.GetDoor(___pawn.Map);
                 if (door != null)
                 {
-                    door.Notify_PawnApproaching(___pawn, 1f);
+                    door.StartManualOpenBy(___pawn);
+                    ___pawn.Map.fogGrid.FloodUnfogAdjacent(door.Position, false);
                 }
 
                 // Extinguish fire or else the pawn will be standing on it
@@ -367,8 +368,12 @@ namespace RimCheats
                 }
 
                 Thing victim = __instance;
-                if (victim.Faction == Faction.OfPlayer && !victim.HostileTo(dinfo.Instigator))
+                if (victim.Faction == Faction.OfPlayer && !victim.Faction.HostileTo(dinfo.Instigator.Faction))
                 {
+                    if (dinfo.Def == DamageDefOf.Flame)
+                    {
+                        Log.Message($"Fire started by {dinfo.Instigator} from faction {dinfo.Instigator.Faction} is not considered hostile to {victim.Faction}");
+                    }
                     // If the instigator and victim factions are not hostile, then do no damage
                     dinfo.SetAmount(0);
                     return;
