@@ -234,12 +234,13 @@ namespace RimSpawners
                     dinfo.SetAmount(0);
                     return;
                 }
-                if (Settings.doNotDamageFriendlies && !victim.HostileTo(dinfo.Instigator))
+                if (Settings.doNotDamageFriendlies && victim.Faction != null && !victim.Faction.HostileTo(dinfo.Instigator.Faction))
                 {
                     dinfo.SetAmount(0);
                     return;
                 }
-                if (Settings.massivelyDamageEnemyBuildings && victim.Faction.HostileTo(Faction.OfPlayer))
+                // Massive melee damage to buildings
+                if (Settings.massivelyDamageEnemyBuildings && victim.Faction.HostileTo(Faction.OfPlayer) && !dinfo.Def.isRanged)
                 {
                     dinfo.SetAmount(dinfo.Amount * 10);
                     return;

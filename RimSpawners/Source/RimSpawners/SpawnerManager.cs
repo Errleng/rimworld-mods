@@ -11,7 +11,7 @@ namespace RimSpawners
     internal class SpawnerManager : WorldComponent
     {
         private static readonly int LONG_UPDATE_INTERVAL = GenTicks.SecondsToTicks(60);
-        private static readonly int SPAWN_INTERVAL = GenTicks.SecondsToTicks(15);
+        private static readonly int SPAWN_INTERVAL = GenTicks.SecondsToTicks(10);
 
         private readonly RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
         private int SpawnedPawnPoints => (int)spawnedPawns.Select(x => x.kindDef.combatPower).Sum();
