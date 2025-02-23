@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+	<TerrainDef Name="SS_TerrainBase" Abstract="True">
+		<edgeType>FadeRough</edgeType>
+		<renderPrecedence>335</renderPrecedence>
+		<designationCategory>Floors</designationCategory>
+		<constructEffect>ConstructDirt</constructEffect>
+		<affordances>
+			<li>Light</li>
+			<li>Medium</li>
+			<li>Heavy</li>
+			<li>Light</li>
+			<li>Diggable</li>
+		</affordances>
+		<filthAcceptanceMask>
+			<li>Unnatural</li>
+		</filthAcceptanceMask>
+		<generatedFilth>Filth_Dirt</generatedFilth>
+		<takeFootprints>True</takeFootprints>
+		<tools>
+			<li>
+				<label>dirt</label>
+				<capacities>
+					<li>KickMaterialInEyes</li>
+				</capacities>
+				<hediff>DirtInEyes</hediff>
+				<cooldownTime>1.5</cooldownTime>
+			</li>
+		</tools>
+	</TerrainDef>
+
+	<TerrainDef ParentName="SS_TerrainBase">
+		<defName>SoilSuper</defName>
+		<label>Super Soil</label>
+		<description>Grow things faster with this mycelium network prototype.</description>
+		<texturePath>SoilSuper</texturePath>
+		<pathCost>5</pathCost>
+		<layerable>true</layerable>
+		<statBases>
+			<Beauty>1</Beauty>
+			<WorkToBuild>500</WorkToBuild>
+		</statBases>
+		<costList>
+			<Cloth>2</Cloth>
+		</costList>
+		<fertility>3.0</fertility>
+		<avoidWander>true</avoidWander>
+		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+		<researchPrerequisites>
+			<li>supersoil</li>
+		</researchPrerequisites>
+	</TerrainDef>
+
+	<TerrainDef ParentName="SS_TerrainBase">
+		<defName>SoilMega</defName>
+		<label>Mega Soil</label>
+		<description>Grow things very fast with the help of this bioengineered mycelium network.</description>
+		<texturePath>SoilMega</texturePath>
+		<pathCost>2</pathCost>
+		<layerable>true</layerable>
+		<statBases>
+			<Beauty>2</Beauty>
+			<WorkToBuild>1000</WorkToBuild>
+		</statBases>
+		<costList>
+			<MedicineHerbal>5</MedicineHerbal>
+			<Neutroamine>3</Neutroamine>
+			<Steel>3</Steel>
+		</costList>
+		<fertility>9.0</fertility>
+		<avoidWander>true</avoidWander>
+		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+		<researchPrerequisites>
+			<li>megasoil</li>
+		</researchPrerequisites>
+	</TerrainDef>
+
+	<TerrainDef ParentName="SS_TerrainBase">
+		<defName>SoilHyper</defName>
+		<label>Hyper Soil</label>
+		<description>Grow things unnaturally fast by using this vastly improved mycelium network.</description>
+		<texturePath>SoilHyper</texturePath>
+		<pathCost>0</pathCost>
+		<layerable>true</layerable>
+		<statBases>
+			<Beauty>3</Beauty>
+			<WorkToBuild>1500</WorkToBuild>
+		</statBases>
+		<costList>
+			<Neutroamine>5</Neutroamine>
+			<Plasteel>25</Plasteel>
+			<MedicineIndustrial>1</MedicineIndustrial>
+		</costList>
+		<fertility>27.0</fertility>
+		<avoidWander>true</avoidWander>
+		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+		<researchPrerequisites>
+			<li>hypersoil</li>
+		</researchPrerequisites>
+	</TerrainDef>
+
+	<TerrainDef ParentName="SS_TerrainBase">
+		<defName>SoilUltra</defName>
+		<label>Ultra Soil</label>
+		<description>It grows fast, very fast and the plants should be fine...we just need to get used to the process of making it. Right? RIGHT?!?</description>
+		<texturePath>SoilUltra</texturePath>
+		<pathCost>0</pathCost>
+		<layerable>true</layerable>
+		<statBases>
+			<Beauty>5</Beauty>
+			<Cleanliness>0.3</Cleanliness>
+			<WorkToBuild>2000</WorkToBuild>
+		</statBases>
+		<costList>
+			<Plasteel>30</Plasteel>
+			<Steel>30</Steel>
+			<Neutroamine>10</Neutroamine>
+			<ComponentIndustrial>3</ComponentIndustrial>
+			<Gold>5</Gold>
+			<Yayo>3</Yayo>
+		</costList>
+		<fertility>81.0</fertility>
+		<avoidWander>true</avoidWander>
+		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+		<researchPrerequisites>
+			<li>ultrasoil</li>
+		</researchPrerequisites>
+	</TerrainDef>
+
+
+</Defs>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+    <name>AgriWorld</name>
+    <author>Daze</author>
+    <supportedVersions>
+        <li>1.5</li>
+    </supportedVersions>
+    <packageId>com.agriworld.rimworld.mod</packageId>
+    <description>An Agri-World or α-class is world classification defined as being devoted to food production. The majority of its surface is given over to producing food for other worlds reliant on such imports - the food itself forms part of the planet's required tithe.</description>
+</ModMetaData>
