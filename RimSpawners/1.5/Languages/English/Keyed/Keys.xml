@@ -29,7 +29,7 @@
     <RimSpawners_PawnSelectionButtonUnselected>Select</RimSpawners_PawnSelectionButtonUnselected>
     <RimSpawners_PawnSelectionButtonSelected>Current</RimSpawners_PawnSelectionButtonSelected>
     <RimSpawners_PawnSelectionListEntry>{0} ({1} points)</RimSpawners_PawnSelectionListEntry>
-    <RimSpawners_PawnSelectionToolTip>Def name: {0}\nWeapons: {1}\nApparel: {2}\nRequired Apparel: {3}\nDisallowed Apparel: {4}\nProsthetics: {5}</RimSpawners_PawnSelectionToolTip>
+    <RimSpawners_PawnSelectionToolTip>Mod: {0}\nDef name: {1}\nWeapons: {2}\nApparel: {3}\nRequired Apparel: {4}\nDisallowed Apparel: {5}\nProsthetics: {6}</RimSpawners_PawnSelectionToolTip>
 
     <!-- COMPSPAWNERPAWN GIZMOS -->
     <RimSpawners_Pause>Pause</RimSpawners_Pause>

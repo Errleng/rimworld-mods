@@ -52,7 +52,7 @@ namespace RimSpawners
             // setup scrolling menu
             var yOffset = 30;
             var outRect = new Rect(5f, ROW_HEIGHT + yOffset + 5f, WINDOW_SIZE.x - 30, WINDOW_SIZE.y - yOffset - 30f);
-            var viewRect = new Rect(0f, 0f, outRect.width - 16f, scrollViewHeight + 10);
+            var viewRect = new Rect(0f, 0f, outRect.width - 30f, scrollViewHeight + 10);
             Widgets.BeginScrollView(outRect, ref scrollPos, viewRect);
 
             // draw each entry
@@ -111,33 +111,8 @@ namespace RimSpawners
 
         private void DrawRow(PawnKindDef pawnKind, float currentY, float width)
         {
-            // pawn kind image
-            if (pawnKind.IconTexture() != null)
-            {
-                var iconRect = new Rect(0, currentY, 30, ROW_HEIGHT);
-                pawnKind.DrawColouredIcon(iconRect);
-            }
-
-            // pawn kind name and point cost
-            var labelRect = new Rect(60, currentY, width, ROW_HEIGHT);
-
-            var label = pawnKind.LabelCap.ToString() ?? pawnKind.defName;
-
-            Widgets.Label(labelRect, "RimSpawners_PawnSelectionListEntry".Translate(label, pawnKind.combatPower));
-
-            var tip = new TipSignal("RimSpawners_PawnSelectionToolTip".Translate(
-                pawnKind.defName,
-                pawnKind.weaponTags.ToStringNullable(),
-                pawnKind.apparelTags.ToStringNullable(),
-                (pawnKind.apparelRequired?.Select(thing => thing.LabelCap.ToString()).ToList()).ToStringNullable(),
-                pawnKind.apparelDisallowTags.ToStringNullable(),
-                pawnKind.techHediffsTags.ToStringNullable()));
-            tip.delay = 0.1f;
-
-            TooltipHandler.TipRegion(labelRect, tip);
-
             // button for selecting a new pawn kind
-            var spawnCountButtonRect = new Rect(350, currentY, 100, ROW_HEIGHT);
+            var spawnCountButtonRect = new Rect(0, currentY, 50, ROW_HEIGHT);
 
             if (!spawnerManager.pawnsToSpawn.ContainsKey(pawnKind.defName))
             {
@@ -148,6 +123,33 @@ namespace RimSpawners
             var info = spawnerManager.pawnsToSpawn[pawnKind.defName];
             string buffer = null;
             Widgets.TextFieldNumeric(spawnCountButtonRect, ref info.count, ref buffer, 0, 1000);
+
+            // pawn kind image
+            if (pawnKind.IconTexture() != null)
+            {
+                var iconRect = new Rect(80, currentY, 30, ROW_HEIGHT);
+                pawnKind.DrawColouredIcon(iconRect);
+            }
+
+            // pawn kind name and point cost
+            var labelRect = new Rect(140, currentY, width, ROW_HEIGHT);
+
+            var label = pawnKind.LabelCap.ToString() ?? pawnKind.defName;
+
+            Widgets.Label(labelRect, "RimSpawners_PawnSelectionListEntry".Translate(label, pawnKind.combatPower));
+
+            var modName = pawnKind.modContentPack?.Name ?? "Unknown";
+            var tip = new TipSignal("RimSpawners_PawnSelectionToolTip".Translate(
+                modName,
+                pawnKind.defName,
+                pawnKind.weaponTags.ToStringNullable(),
+                pawnKind.apparelTags.ToStringNullable(),
+                (pawnKind.apparelRequired?.Select(thing => thing.LabelCap.ToString()).ToList()).ToStringNullable(),
+                pawnKind.apparelDisallowTags.ToStringNullable(),
+                pawnKind.techHediffsTags.ToStringNullable()));
+            tip.delay = 0.1f;
+
+            TooltipHandler.TipRegion(labelRect, tip);
         }
     }
 }
