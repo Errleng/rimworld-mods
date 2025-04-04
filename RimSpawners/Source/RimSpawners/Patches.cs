@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
@@ -68,6 +69,40 @@ namespace RimSpawners
                 {
                     __instance.Corpse?.Destroy();
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(ThingOwner))]
+        private class ThingOwner_TryDrop_Patch
+        {
+            // It turns out that pawns drop their equipment when their manipulation drops too much, so a Kill() patch is insufficient
+
+            static bool SharedPrefix(ThingOwner __instance, Thing thing)
+            {
+                Pawn pawn = __instance.Owner.ParentHolder as Pawn;
+                if (pawn == null)
+                {
+                    return true;
+                }
+                if (!pawn.HasComp<RimSpawnersPawnComp>())
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch("TryDrop", new[] { typeof(Thing), typeof(IntVec3), typeof(Map), typeof(ThingPlaceMode), typeof(int), typeof(Thing), typeof(Action<Thing, int>), typeof(Predicate<IntVec3>) }, new[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref, ArgumentType.Normal, ArgumentType.Normal })]
+            static bool Prefix1(ThingOwner __instance, Thing thing)
+            {
+                return SharedPrefix(__instance, thing);
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch("TryDrop", new[] { typeof(Thing), typeof(IntVec3), typeof(Map), typeof(ThingPlaceMode), typeof(Thing), typeof(Action<Thing, int>), typeof(Predicate<IntVec3>), typeof(bool) }, new[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal })]
+            static bool Prefix2(ThingOwner __instance, Thing thing)
+            {
+                return SharedPrefix(__instance, thing);
             }
         }
 
