@@ -64,7 +64,7 @@ namespace RimSpawners
             listingStandard.Begin(listingRect);
 
             var outRect = new Rect(0, 0, inRect.width, inRect.height - 20);
-            var viewRect = new Rect(0, 0, inRect.width, listingRect.height);
+            var viewRect = new Rect(0, 0, inRect.width + 30, listingRect.height);
             Widgets.BeginScrollView(outRect, ref scrollPos, viewRect);
 
             TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsMaximumPoints".Translate(), ref settings.maxSpawnerPoints);

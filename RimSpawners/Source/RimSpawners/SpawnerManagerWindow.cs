@@ -11,7 +11,7 @@ namespace RimSpawners
         private static SpawnerManager spawnerManager;
 
 
-        private static readonly Vector2 WINDOW_SIZE = new Vector2(500f, 500f);
+        private static readonly Vector2 WINDOW_SIZE = new Vector2(800f, 500f);
         private static readonly float ROW_HEIGHT = 30f;
         private static string searchKeyword;
         private static float scrollViewHeight;
@@ -51,8 +51,8 @@ namespace RimSpawners
 
             // setup scrolling menu
             var yOffset = 30;
-            var outRect = new Rect(5f, ROW_HEIGHT + yOffset + 5f, WINDOW_SIZE.x - 30, WINDOW_SIZE.y - yOffset - 30f);
-            var viewRect = new Rect(0f, 0f, outRect.width - 30f, scrollViewHeight + 10);
+            var outRect = new Rect(5f, ROW_HEIGHT + yOffset + 5f, WINDOW_SIZE.x - 50, WINDOW_SIZE.y - yOffset - 30f);
+            var viewRect = new Rect(0f, 0f, outRect.width + 50, scrollViewHeight + 10);
             Widgets.BeginScrollView(outRect, ref scrollPos, viewRect);
 
             // draw each entry
@@ -135,6 +135,7 @@ namespace RimSpawners
             var labelRect = new Rect(140, currentY, width, ROW_HEIGHT);
 
             var label = pawnKind.LabelCap.ToString() ?? pawnKind.defName;
+            label = label.Substring(0, Math.Min(50, label.Length));
 
             Widgets.Label(labelRect, "RimSpawners_PawnSelectionListEntry".Translate(label, pawnKind.combatPower));
 
