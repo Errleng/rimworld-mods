@@ -32,12 +32,21 @@ namespace RimSpawners
         public int pointsPerSecond;
         public Dictionary<string, SpawnPawnInfo> pawnsToSpawn = new Dictionary<string, SpawnPawnInfo>();
         public List<Pawn> spawnedPawns = new List<Pawn>();
-        Dictionary<string, List<Pawn>> cachedPawns = new Dictionary<string, List<Pawn>>();
+        public Dictionary<string, List<Pawn>> cachedPawns = new Dictionary<string, List<Pawn>>();
         public List<SpawnPawnInfo> spawnQueue = new List<SpawnPawnInfo>();
 
 
         public SpawnerManager(World world) : base(world)
         {
+            cachedPawns.Clear();
+            foreach (var pawnKind in DefDatabase<PawnKindDef>.AllDefsListForReading)
+            {
+                if (!pawnsToSpawn.ContainsKey(pawnKind.defName))
+                {
+                    pawnsToSpawn.Add(pawnKind.defName, new SpawnPawnInfo(pawnKind.defName, pawnKind.LabelCap));
+                }
+                cachedPawns.Add(pawnKind.defName, new List<Pawn>());
+            }
         }
 
         public override void ExposeData()
@@ -92,7 +101,8 @@ namespace RimSpawners
             {
                 points = points + (int)(pointsPerSecond * GenTicks.TicksToSeconds(SPAWN_INTERVAL));
 
-                spawnedPawns.RemoveAll(x => x == null || !x.Spawned);
+                // Don't use x.spawned because the Devourer will despawn a pawn when it eats it, then spawn it later
+                spawnedPawns.RemoveAll(x => x == null || x.Dead);
 
                 // Create dictionary of (map, hostiles)
                 var mapsToHostilePawns = new Dictionary<Map, List<Pawn>>();
@@ -109,7 +119,7 @@ namespace RimSpawners
                 {
                     // Remove all pawns on maps without threats
                     var spawnedPawnsOnMapsWithoutHostiles = spawnedPawns
-                        .Where(x => !mapsToHostilePawns.ContainsKey(x.Map))
+                        .Where(x => x.Map != null && !mapsToHostilePawns.ContainsKey(x.Map))
                         .Select(x => x.ThingID)
                         .ToHashSet();
                     RemoveSpawnedPawns(spawnedPawnsOnMapsWithoutHostiles);

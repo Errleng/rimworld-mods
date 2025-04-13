@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,7 +80,7 @@ namespace RimSpawners
 
             static bool SharedPrefix(ThingOwner __instance, Thing thing)
             {
-                Pawn pawn = __instance.Owner.ParentHolder as Pawn;
+                Pawn pawn = __instance.Owner?.ParentHolder as Pawn;
                 if (pawn == null)
                 {
                     return true;
@@ -280,6 +281,55 @@ namespace RimSpawners
                     dinfo.SetAmount(dinfo.Amount * 10);
                     return;
                 }
+            }
+        }
+
+        // Prevent spawned pawns from becoming WorldPawns
+        [HarmonyPatch(typeof(WorldPawns), "PassToWorld")]
+        private class WorldPawns_PassToWorld_Patch
+        {
+            static void Prefix(Pawn pawn, ref PawnDiscardDecideMode discardMode)
+            {
+                if (!Settings.disableCorpses)
+                {
+                    return;
+                }
+                if (!pawn.HasComp<RimSpawnersPawnComp>())
+                {
+                    return;
+                }
+                if (Settings.cachePawns)
+                {
+                    var spawnerManager = Find.World.GetComponent<SpawnerManager>();
+                    if (spawnerManager == null)
+                    {
+                        Log.Warning($"Could not find RimSpawners world component in PassToWorld patch");
+                        return;
+                    }
+                    if (spawnerManager.cachedPawns.ContainsKey(pawn.kindDef.defName) && spawnerManager.cachedPawns[pawn.kindDef.defName].Contains(pawn))
+                    {
+                        return;
+                    }
+                    // Not part of the cached pawns list, so we should discard it
+                }
+
+                Log.Message($"Discarding spawned pawn {pawn.LabelCap}");
+                discardMode = PawnDiscardDecideMode.Discard;
+            }
+        }
+
+        // Prevent pawns from going berserk
+        [HarmonyPatch(typeof(MentalStateHandler), "TryStartMentalState")]
+        private class MentalStateHandler_TryStartMentalState_Patch
+        {
+            static bool Prefix(ref bool __result, Pawn ___pawn)
+            {
+                if (!___pawn.HasComp<RimSpawnersPawnComp>())
+                {
+                    return true;
+                }
+                __result = false;
+                return false;
             }
         }
 
