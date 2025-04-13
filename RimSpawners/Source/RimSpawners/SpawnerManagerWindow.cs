@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
@@ -8,18 +9,24 @@ namespace RimSpawners
 {
     internal class SpawnerManagerWindow : Window
     {
-        private static SpawnerManager spawnerManager;
-
-
         private static readonly Vector2 WINDOW_SIZE = new Vector2(800f, 500f);
         private static readonly float ROW_HEIGHT = 30f;
-        private static string searchKeyword;
-        private static float scrollViewHeight;
-        private static Vector2 scrollPos;
+
+        private SpawnerManager spawnerManager;
+        private string searchKeyword;
+        private float scrollViewHeight;
+        private Vector2 scrollPos;
+        private List<PawnKindDef> pawnKindDefs;
 
         public SpawnerManagerWindow()
         {
             spawnerManager = Find.World.GetComponent<SpawnerManager>();
+
+            // Display pawn kinds in order of mod name, then in order of name
+            pawnKindDefs = DefDatabase<PawnKindDef>.AllDefsListForReading
+                .OrderBy(x => getModName(x))
+                .ThenBy(x => getName(x))
+                .ToList();
 
             forcePause = false;
             absorbInputAroundWindow = false;
@@ -55,25 +62,42 @@ namespace RimSpawners
             var viewRect = new Rect(0f, 0f, outRect.width + 50, scrollViewHeight + 10);
             Widgets.BeginScrollView(outRect, ref scrollPos, viewRect);
 
-            // draw each entry
             float currY = 0;
 
-            foreach (var pawnKind in DefDatabase<PawnKindDef>.AllDefsListForReading)
+            // Draw a list of all pawn kinds to be selected to spawn
+            string prevMod = "";
+            foreach (var pawnKind in pawnKindDefs)
             {
-                var textToSearch = pawnKind.label ?? pawnKind.defName;
+                var textToSearch = getName(pawnKind);
+                // Filter out rows that do not match the search 
                 if (searchKeyword.NullOrEmpty() || textToSearch.IndexOf(searchKeyword, StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
+                    // Draw section header if new section started
+                    if (getModName(pawnKind) != prevMod)
+                    {
+                        currY += ROW_HEIGHT;
+                        if (ShouldDrawRow(currY, scrollPos.y, outRect.height))
+                        {
+                            var labelRect = new Rect(140, currY, viewRect.width, ROW_HEIGHT);
+                            Widgets.Label(labelRect, getModName(pawnKind));
+                        }
+                        currY += ROW_HEIGHT * 2;
+                    }
+
+                    // Draw pawn kind row
                     if (ShouldDrawRow(currY, scrollPos.y, outRect.height))
                     {
                         DrawRow(pawnKind, currY, viewRect.width);
                     }
-
                     currY += ROW_HEIGHT;
+
+                    prevMod = getModName(pawnKind);
                 }
             }
 
             currY += 10;
 
+            // Draw a list of the currently selected pawns to spawn
             foreach (var entry in spawnerManager.pawnsToSpawn)
             {
                 if (entry.Value.count == 0)
@@ -134,14 +158,13 @@ namespace RimSpawners
             // pawn kind name and point cost
             var labelRect = new Rect(140, currentY, width, ROW_HEIGHT);
 
-            var label = pawnKind.LabelCap.ToString() ?? pawnKind.defName;
+            var label = getName(pawnKind);
             label = label.Substring(0, Math.Min(50, label.Length));
 
             Widgets.Label(labelRect, "RimSpawners_PawnSelectionListEntry".Translate(label, pawnKind.combatPower));
 
-            var modName = pawnKind.modContentPack?.Name ?? "Unknown";
             var tip = new TipSignal("RimSpawners_PawnSelectionToolTip".Translate(
-                modName,
+                getModName(pawnKind),
                 pawnKind.defName,
                 pawnKind.weaponTags.ToStringNullable(),
                 pawnKind.apparelTags.ToStringNullable(),
@@ -151,6 +174,16 @@ namespace RimSpawners
             tip.delay = 0.1f;
 
             TooltipHandler.TipRegion(labelRect, tip);
+        }
+
+        private string getName(PawnKindDef pawnKind)
+        {
+            return pawnKind.LabelCap.ToString() ?? pawnKind.defName;
+        }
+
+        private string getModName(PawnKindDef pawnKind)
+        {
+            return pawnKind.modContentPack?.Name ?? "Unknown";
         }
     }
 }
