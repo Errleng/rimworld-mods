@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Verse;
-using RimWorld;
+﻿using Verse;
 
 namespace Jaxxa.EnhancedDevelopment.Shields.Shields
 {
@@ -17,18 +12,18 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
             base.PostSpawnSetup(respawningAfterLoad);
 
             Properties = ((CompProperties_ShieldUpgrade)props);
-            
+
             parent.Map.GetComponent<ShieldManagerMapComp>().RecalaculateAll();
 
         }
 
-        public override void PostDeSpawn(Map map)
+        public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
         {
             base.PostDeSpawn(map);
 
             map.GetComponent<ShieldManagerMapComp>().RecalaculateAll();
 
         }
-        
+
     }
 }

@@ -15,7 +15,6 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Shields
 
         public ShieldManagerMapComp(Map map) : base(map)
         {
-            this.map = map;
         }
 
         public override void FinalizeInit()
