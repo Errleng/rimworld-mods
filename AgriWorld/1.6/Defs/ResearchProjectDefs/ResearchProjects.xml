@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+	<ResearchProjectDef>
+		<defName>supersoil</defName>
+		<label>Super Soil</label>
+		<description>Grow things faster with this mycelium network prototype which adds some nutrients to the soil.</description>
+		<baseCost>1000</baseCost>
+		<techLevel>Industrial</techLevel>
+		<researchViewX>0</researchViewX>
+		<researchViewY>2.5</researchViewY>
+	</ResearchProjectDef>
+
+	<ResearchProjectDef>
+		<defName>megasoil</defName>
+		<label>Mega Soil</label>
+		<description>Grow things very fast with the help of this bioengineered mycelium network which actively fertilizes your plants.</description>
+		<baseCost>3000</baseCost>
+		<techLevel>Spacer</techLevel>
+		<prerequisites>
+			<li>supersoil</li>
+		</prerequisites>
+		<requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+		<researchViewX>1</researchViewX>
+		<researchViewY>2.5</researchViewY>
+	</ResearchProjectDef>
+
+	<ResearchProjectDef>
+		<defName>hypersoil</defName>
+		<label>Hyper Soil</label>
+		<description>Grow things unnaturally fast by using this vastly improved mycelium network which drills into the xylem of the plants to release nutrients and enzymes into the host.</description>
+		<baseCost>7000</baseCost>
+		<techLevel>Spacer</techLevel>
+		<prerequisites>
+			<li>megasoil</li>
+		</prerequisites>
+		<requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+		<requiredResearchFacilities>
+			<li>MultiAnalyzer</li>
+		</requiredResearchFacilities>
+		<researchViewX>2</researchViewX>
+		<researchViewY>2.5</researchViewY>
+	</ResearchProjectDef>
+
+	<ResearchProjectDef>
+		<defName>ultrasoil</defName>
+		<label>Ultrasoil</label>
+		<description>The pinnacle of farming substrates. The mycelium network has fully harmonized with our crops, creating an explosion in growth rate.</description>
+		<baseCost>15000</baseCost>
+		<techLevel>Ultra</techLevel>
+		<prerequisites>
+			<li>hypersoil</li>
+		</prerequisites>
+		<requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+		<requiredResearchFacilities>
+			<li>MultiAnalyzer</li>
+		</requiredResearchFacilities>
+		<researchViewX>3</researchViewX>
+		<researchViewY>2.5</researchViewY>
+	</ResearchProjectDef>
+
+</Defs>

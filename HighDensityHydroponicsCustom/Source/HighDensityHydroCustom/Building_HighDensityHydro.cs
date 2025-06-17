@@ -149,7 +149,7 @@ namespace HighDensityHydroCustom
             }
         }
 
-        public override void Tick()
+        protected override void Tick()
         {
             base.Tick();
 
@@ -173,8 +173,8 @@ namespace HighDensityHydroCustom
             {
                 var temperature = Position.GetTemperature(Map);
                 var canGrow = bayStage == BayStage.Growing &&
-                              temperature > Plant.MinOptimalGrowthTemperature &&
-                              temperature < Plant.MaxOptimalGrowthTemperature;
+                              temperature > Plant.DefaultMinGrowthTemperature &&
+                              temperature < Plant.DefaultMaxGrowthTemperature;
                 var plantProps = simPlant.def.plant;
                 if (canGrow)
                 {
@@ -279,9 +279,9 @@ namespace HighDensityHydroCustom
             var text = base.GetInspectString();
 
             var temperature = Position.GetTemperature(Map);
-            if (temperature <= Plant.MinOptimalGrowthTemperature || temperature >= Plant.MaxOptimalGrowthTemperature)
+            if (temperature <= Plant.DefaultMinOptimalGrowthTemperature || temperature >= Plant.DefaultMaxOptimalGrowthTemperature)
             {
-                text += $"\n{"HDHBadTemperature".Translate(temperature, Plant.MinOptimalGrowthTemperature.ToStringTemperature(), Plant.MaxOptimalGrowthTemperature.ToStringTemperature())}";
+                text += $"\n{"HDHBadTemperature".Translate(temperature, Plant.DefaultMinOptimalGrowthTemperature.ToStringTemperature(), Plant.DefaultMaxOptimalGrowthTemperature.ToStringTemperature())}";
             }
 
             var fertilitySensitivity = 1;

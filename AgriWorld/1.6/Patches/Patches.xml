@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Patch>
+	<Operation Class="PatchOperationSequence">
+		<success>Always</success>
+		<operations>
+			<li Class="PatchOperationReplace">
+				<xpath>/Defs/ThingDef[@ParentName="PlantBase"]/plant/sowTags</xpath>
+				<value>
+					<sowTags>
+						<li>Ground</li>
+						<li>Decorative</li>
+						<li>DecorativeTree</li>
+						<li>Hydroponic</li>
+					</sowTags>
+				</value>
+			</li>
+			<!-- <li Class="PatchOperationReplace">
+				<xpath>/Defs/ThingDef[@ParentName="PlantBase"]/altitudeLayer</xpath>
+				<value>
+					<altitudeLayer>Item</altitudeLayer>
+				</value>
+			</li> -->
+			<li Class="PatchOperationReplace">
+				<xpath>/Defs/ThingDef[@ParentName="TreeBase"]/plant/sowTags</xpath>
+				<value>
+					<sowTags>
+						<li>Ground</li>
+						<li>Decorative</li>
+						<li>DecorativeTree</li>
+						<li>Hydroponic</li>
+					</sowTags>
+				</value>
+			</li>
+			<!-- <li Class="PatchOperationReplace">
+				<xpath>/Defs/ThingDef[@Name="TreeBase"]/altitudeLayer</xpath>
+				<value>
+					<altitudeLayer>Item</altitudeLayer>
+				</value>
+			</li> -->
+			<li Class="PatchOperationReplace">
+				<xpath>/Defs/ThingDef[@Name="TreeBase"]/plant/interferesWithRoof</xpath>
+				<value>
+					<interferesWithRoof>
+						false
+					</interferesWithRoof>
+				</value>
+			</li>
+			<li Class="PatchOperationReplace">
+				<xpath>/Defs/ThingDef[@ParentName="PlantBaseNonEdible"]/plant/sowTags</xpath>
+				<value>
+					<sowTags>
+						<li>Ground</li>
+						<li>Decorative</li>
+						<li>DecorativeTree</li>
+						<li>Hydroponic</li>
+					</sowTags>
+				</value>
+			</li>
+			<!-- <li Class="PatchOperationReplace">
+				<xpath>/Defs/ThingDef[@Name="PlantBaseNonEdible"]/altitudeLayer</xpath>
+				<value>
+					<altitudeLayer>Item</altitudeLayer>
+				</value>
+			</li> -->
+		</operations>
+	</Operation>
+
+</Patch>

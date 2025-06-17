@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <HDHFertility>Fertility: {0}%</HDHFertility>
+    <HDHCapacity>Capacity: {0}/{1}</HDHCapacity>
+    <HDHGrowUntil>Grow until: {0}/{1}</HDHGrowUntil>
+    <HDHGrowth>{0} is {1}% grown. ETA: {2} days</HDHGrowth>
+    <HDHBadTemperature>Cannot grow because temperature {0} is outside range {1} to {2}</HDHBadTemperature>
+    <HDHSettings_FertilityColumn>Fertility</HDHSettings_FertilityColumn>
+    <HDHSettings_CapacityColumn>Capacity</HDHSettings_CapacityColumn>
+    <HDHSettings_PowerColumn>Power</HDHSettings_PowerColumn>
+    <HDHSettings_SmallBay>Small hydroponics bay</HDHSettings_SmallBay>
+    <HDHSettings_MediumBay>Medium hydroponics bay</HDHSettings_MediumBay>
+    <HDHSettings_LargeBay>Large hydroponics bay</HDHSettings_LargeBay>
+    <HDHGizmoGrowLimit>Set grow limit</HDHGizmoGrowLimit>
+    <HDHGizmoGrowLimitDesc>Stops growing if the number of products is greater than this amount</HDHGizmoGrowLimitDesc>
+    <HDHGizmoAutofarmToggle>Auto farm</HDHGizmoAutofarmToggle>
+    <HDHGizmoAutofarmToggleDesc>Automatically sow and harvest crops</HDHGizmoAutofarmToggleDesc>
+    <HDHInvalidTextField>Invalid text value</HDHInvalidTextField>
+    <HDHInvalidIntField>Invalid int value. Must be between {0} and {1}.</HDHInvalidIntField>
+    <HDHGizmoAutofarmToggleDesc>Automatically sow and harvest crops</HDHGizmoAutofarmToggleDesc>
+</LanguageData>

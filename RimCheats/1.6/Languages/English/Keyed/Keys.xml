@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <PathingToggleLabel>Enable instant movement for colonists</PathingToggleLabel>
+    <PathingNonHumanToggleLabel>Enable instant movement for colony non-humans</PathingNonHumanToggleLabel>
+    <PathingAllyToggleLabel>Enable instant movement for allied pawns</PathingAllyToggleLabel>
+    <IgnoreTerrainCostToggleLabel>Enable colonists to ignore terrain cost</IgnoreTerrainCostToggleLabel>
+    <IgnoreTerrainCostNonHumanToggleLabel>Enable colony non-humans to ignore terrain cost</IgnoreTerrainCostNonHumanToggleLabel>
+    <DisableFriendlyFire>Disable friendly fire damage</DisableFriendlyFire>
+    <ToilSpeedToggleLabel>Enable general toil speed multiplier for colonists</ToilSpeedToggleLabel>
+    <CarryingCapacityMassToggleLabel>Enable carrying capacity affecting caravan capacity</CarryingCapacityMassToggleLabel>
+    <StatMultiplierToggleLabel>Enable {0} multiplier (%)</StatMultiplierToggleLabel>
+    <StatMultiplierLabel>{0} multiplier (%)</StatMultiplierLabel>
+    <ToilSpeedMultiplierLabel>General toil speed multiplier</ToilSpeedMultiplierLabel>
+    <ToilSpeedMultiplierDescription></ToilSpeedMultiplierDescription>
+    <AutoCleanToggleLabel>Periodically clean filth on the map</AutoCleanToggleLabel>
+    <AutoRepairToggleLabel>Periodically repairs colony buildings by {0}% of max HP</AutoRepairToggleLabel>
+    <MaxSkillsToggleLabel>Periodically levels up all colonists' skills</MaxSkillsToggleLabel>
+    <PerfectAccuracyToggleLabel>Make your colonists and turrets completely accurate</PerfectAccuracyToggleLabel>
+    <InfiniteTurretAmmoToggleLabel>Give turrets infinite ammo</InfiniteTurretAmmoToggleLabel>
+    <AccelerateOverTimeToggleLabel>Increases colonist stats and work speed as the game progresses so you play less. Current percentage increase: {0}%.</AccelerateOverTimeToggleLabel>
+</LanguageData>

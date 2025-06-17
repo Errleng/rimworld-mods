@@ -92,7 +92,7 @@ namespace RimCheats
                 ___pawn.Position = dest;
 
                 IntVec3 nearDest = CellFinder.StandableCellNear(___pawn.Position, ___pawn.Map, 100, null);
-                if (nearDest != null)
+                if (nearDest != IntVec3.Invalid)
                 {
                     //Log.Message($"Instantly moving {___pawn.LabelCap} from {originalPos} to {nearDest} near destination {__instance.Destination.Cell}");
                     ___pawn.Position = nearDest;

@@ -40,6 +40,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="netstandard">
+      <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\netstandard.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core">
       <HintPath>..\..\..\..\..\..\Extracted\Games\RimWorld_Royalty_v1.2.2753\RimWorldWin64_Data\Managed\System.Core.dll</HintPath>
     </Reference>
