@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+    <ResearchTabDef>
+        <defName>VanometricTechnology</defName>
+        <label>Vanometric Technology</label>
+    </ResearchTabDef>
+    <ResearchProjectDef>
+        <defName>VanometricFabrication</defName>
+        <label>Vanometric Fabrication</label>
+        <description>Build vanometric fabricators, capable of forging an army out of nothing.</description>
+        <baseCost>1000</baseCost>
+        <techLevel>Ultra</techLevel>
+        <prerequisites>
+        </prerequisites>
+        <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+        <tab>VanometricTechnology</tab>
+        <researchViewX>2.5</researchViewX>
+        <researchViewY>0</researchViewY>
+    </ResearchProjectDef>
+</Defs>

@@ -41,6 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\workshop\content\294100\2890901044\Assemblies\CombatExtended.dll</HintPath>
     </Reference>
+    <Reference Include="netstandard">
+      <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\netstandard.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
@@ -72,7 +75,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../1.5/Assemblies"
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../1.6/Assemblies"
 (robocopy /mir "$(SolutionDir)../" "D:\SteamLibrary\steamapps\common\RimWorld\Mods\RimCheats" /xd "source") ^&amp; IF %25ERRORLEVEL%25 LEQ 1 exit 0</PostBuildEvent>
   </PropertyGroup>
 </Project>

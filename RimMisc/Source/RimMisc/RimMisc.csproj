@@ -43,6 +43,9 @@
     <Reference Include="Cosmodrome">
       <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\workshop\content\294100\2479389928\1.4\Assemblies\Cosmodrome.dll</HintPath>
     </Reference>
+    <Reference Include="netstandard">
+      <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\netstandard.dll</HintPath>
+    </Reference>
     <Reference Include="Rimatomics">
       <HintPath>..\..\..\..\..\..\..\SteamLibrary\steamapps\workshop\content\294100\1127530465\1.4\Assemblies\Rimatomics.dll</HintPath>
     </Reference>
@@ -101,7 +104,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../1.5/Assemblies"
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)../1.6/Assemblies"
 (robocopy /mir "$(SolutionDir)../" "D:\SteamLibrary\steamapps\common\RimWorld\Mods\RimMisc" /xd "source")</PostBuildEvent>
   </PropertyGroup>
 </Project>

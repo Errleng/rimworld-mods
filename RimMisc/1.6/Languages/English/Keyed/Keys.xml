@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <RimMisc_VentClosed>Closed</RimMisc_VentClosed>
+    <RimMisc_DefaultDoUntil>Use "Do Until X" as default setting for bills</RimMisc_DefaultDoUntil>
+    <RimMisc_DefaultIngredientRadius>Set default ingredient radius to: {0}</RimMisc_DefaultIngredientRadius>
+    <RimMisc_AutoCloseLetters>Automatically close letters after a set time</RimMisc_AutoCloseLetters>
+    <RimMisc_AutoCloseLettersSeconds>How many seconds before a letter is closed: {0}</RimMisc_AutoCloseLettersSeconds>
+    <RimMisc_DisableEnemyUninstall>Prevent enemy from uninstalling buildings</RimMisc_DisableEnemyUninstall>
+    <RimMisc_KillDownedPawns>Kill downed hostile pawns</RimMisc_KillDownedPawns>
+    <RimMisc_PatchBuildingHp>Give all production buildings huge HP</RimMisc_PatchBuildingHp>
+    <RimMisc_PreventSkyfallDestruction>Disable meteorites destroying things</RimMisc_PreventSkyfallDestruction>
+    <RimMisc_PreventRoofCollapse>Disable roof collapse</RimMisc_PreventRoofCollapse>
+    <RimMisc_ConstructEvenIfNotEnough>Haul resources to blueprints even if there are not enough resources</RimMisc_ConstructEvenIfNotEnough>
+    <RimMisc_ChangeAreaOnThreat>Switch to "area#safe" on threat and back to "area" when no threat</RimMisc_ChangeAreaOnThreat>
+    <RimMisc_MyMiscStuff>Miscellaneous changes that I personally enjoy</RimMisc_MyMiscStuff>
+    <RimMisc_EnableRocketmanTimeDilation>Enable Rocketman time dilation for all safe races</RimMisc_EnableRocketmanTimeDilation>
+    <RimMisc_FinishRimatomicsResearch>Finish all Rimatomics research</RimMisc_FinishRimatomicsResearch>
+    <RimMisc_CondenserItemsSection>Condenser Items</RimMisc_CondenserItemsSection>
+    <RimMisc_CondenserItemsSelectSection>Add Condenser Items</RimMisc_CondenserItemsSelectSection>
+    <RimMisc_CondenserItemAddButton>Add</RimMisc_CondenserItemAddButton>
+    <RimMisc_CondenserItemRemoveButton>Remove</RimMisc_CondenserItemRemoveButton>
+    <RimMisc_CondenserItemCalculateWorkButton>Calculate work</RimMisc_CondenserItemCalculateWorkButton>
+    <RimMisc_UnfinishedCondenserThingLabel>Unfinished {0} condensate</RimMisc_UnfinishedCondenserThingLabel>
+    <RimMisc_RecipeCondense>Condense {0}</RimMisc_RecipeCondense>
+    <RimMisc_CondenseJobString>Condensing {0}</RimMisc_CondenseJobString>
+    <RimMisc_WorkColumn>Work</RimMisc_WorkColumn>
+    <RimMisc_YieldColumn>Yield</RimMisc_YieldColumn>
+    <RimMisc_ItemDoesNotExist>Removing condenser item {0} because it does not exist</RimMisc_ItemDoesNotExist>
+    <RimMisc_WealthTab_Title>{0} (Items) + {1} (Buildings, {2} Floors) + {3} (Creatures) = {4}</RimMisc_WealthTab_Title>
+    <RimMisc_WealthTab_ItemRow>{0}: {1} x ${2} = ${3}</RimMisc_WealthTab_ItemRow>
+    <RimMisc_WealthTab_WealthTypeButton>Displaying wealth for {0}</RimMisc_WealthTab_WealthTypeButton>
+    <RimMisc_ItemTab_ItemTypeButton>Displaying item category {0}</RimMisc_ItemTab_ItemTypeButton>
+    <RimMisc_DesignatorMeleeAttack>Melee attack</RimMisc_DesignatorMeleeAttack>
+    <RimMisc_DesignatorMeleeAttackDesc>Designate this building to be melee attacked.</RimMisc_DesignatorMeleeAttackDesc>
+    <RimMisc_JobMeleeAttackMessage>{0} is melee attacking {1}</RimMisc_JobMeleeAttackMessage>
+    <RimMisc_GeneMutationTime>{0} days until gene mutation finishes. Detected {1}/{2} owned/total genes.</RimMisc_GeneMutationTime>
+    <RimMisc_GeneMutationComplete>{0} gene mutation complete</RimMisc_GeneMutationComplete>
+    <RimMisc_ThreatToggleLabel>Toggle on threat</RimMisc_ThreatToggleLabel>
+    <RimMisc_ThreatToggleDesc>Automatically enables this only if there is a threat</RimMisc_ThreatToggleDesc>
+    <ToggleSafeArea>Colonist {0} changed to safe allowed area "{1}" at {2}</ToggleSafeArea>
+    <ToggleUnsafeArea>Colonist {0} changed to unsafe allowed area "{1}" at {2}</ToggleUnsafeArea>
+    <ImplantXenogermAll>Implant for all colonists</ImplantXenogermAll>
+    <ImplantXenogermAllDesc>Instantly implants this xenogerm to all colonists, if possible.</ImplantXenogermAllDesc>
+</LanguageData>

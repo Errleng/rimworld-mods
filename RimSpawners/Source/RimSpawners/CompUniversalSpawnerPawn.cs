@@ -289,7 +289,7 @@ namespace RimSpawners
                 var pawn = spawnedPawns[i];
                 if (SpawnInDropPods)
                 {
-                    if (!pawn.Spawned && !ThingOwnerUtility.AnyParentIs<ActiveDropPodInfo>(pawn))
+                    if (!pawn.Spawned && !ThingOwnerUtility.AnyParentIs<ActiveTransporterInfo>(pawn))
                     {
                         spawnedPawns.RemoveAt(i);
                     }

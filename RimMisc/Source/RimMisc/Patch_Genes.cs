@@ -26,7 +26,7 @@ namespace RimMisc
                 {
                     foreach (Pawn pawn in __instance.Map.mapPawns.FreeColonistsSpawned)
                     {
-                        if (!pawn.IsQuestLodger() && pawn.genes != null && (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony || (pawn.IsColonyMutant && pawn.IsGhoul)))
+                        if (!pawn.IsQuestLodger() && pawn.genes != null && (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony || (pawn.IsMutant && pawn.IsGhoul)))
                         {
                             int metabolism = GeneUtility.MetabolismAfterImplanting(pawn, __instance.GeneSet);
                             if (metabolism < GeneTuning.BiostatRange.TrueMin)
@@ -66,7 +66,7 @@ namespace RimMisc
                         }
                         else
                         {
-                            Log.Message($"Skipping xenogerm implantation for {pawn.LabelShortCap} because condition is false: {pawn.IsQuestLodger()} && {pawn.genes != null} && ({pawn.IsColonistPlayerControlled} || {pawn.IsPrisonerOfColony} || {pawn.IsSlaveOfColony} || ({pawn.IsColonyMutant} && {pawn.IsGhoul})");
+                            Log.Message($"Skipping xenogerm implantation for {pawn.LabelShortCap} because condition is false: {pawn.IsQuestLodger()} && {pawn.genes != null} && ({pawn.IsColonistPlayerControlled} || {pawn.IsPrisonerOfColony} || {pawn.IsSlaveOfColony} || ({pawn.IsMutant} && {pawn.IsGhoul})");
                         }
                     }
                 }

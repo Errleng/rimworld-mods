@@ -18,8 +18,6 @@ namespace RimMisc
             soundSucceeded = SoundDefOf.Designate_Deconstruct;
         }
 
-        public override int DraggableDimensions => 2;
-
         protected override DesignationDef Designation => RimMiscDefOf.Designation_MeleeAttack;
 
         public override AcceptanceReport CanDesignateCell(IntVec3 c)
