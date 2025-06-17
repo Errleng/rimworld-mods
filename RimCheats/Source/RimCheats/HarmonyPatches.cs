@@ -57,6 +57,10 @@ namespace RimCheats
                 {
                     return true;
                 }
+                if (___pawn.MentalStateDef != null)
+                {
+                    return true;
+                }
                 // Disable speed on wander or waiting for better idle pawn performance
                 if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander))
                 {
@@ -370,6 +374,11 @@ namespace RimCheats
                 Thing victim = __instance;
                 if (victim.Faction == Faction.OfPlayer && !victim.Faction.HostileTo(dinfo.Instigator.Faction))
                 {
+                    if (victim is Pawn victimPawn && (!victimPawn.IsPlayerControlled || victimPawn.MentalStateDef != null))
+                    {
+                        // Do not apply to out of control pawns
+                        return;
+                    }
                     if (dinfo.Def == DamageDefOf.Flame)
                     {
                         Log.Message($"Fire started by {dinfo.Instigator} from faction {dinfo.Instigator.Faction} is not considered hostile to {victim.Faction}");
