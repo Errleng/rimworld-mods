@@ -29,7 +29,7 @@ namespace Jaxxa.EnhancedDevelopment.Shields.Patch.Patches
         {
 
             //Get the Launch Method
-            MethodInfo _ProjectileTick = typeof(Verse.Projectile).GetMethod("Tick");
+            MethodInfo _ProjectileTick = typeof(Verse.Projectile).GetMethod("Tick", BindingFlags.Instance | BindingFlags.NonPublic);
             Patcher.LogNULL(_ProjectileTick, "_ProjectileTick");
 
             //Get the Launch Prefix Patch

@@ -35,10 +35,10 @@ namespace RimCheats
             Log.Message("RimCheats loaded");
         }
 
-        [HarmonyPatch(typeof(Pawn_PathFollower), "TrySetNewPath")]
-        class Patch_Pawn_PathFollower_TrySetNewPath
+        [HarmonyPatch(typeof(Pawn_PathFollower), "SetNewPathRequest")]
+        class Patch_Pawn_PathFollower_SetNewPathRequest
         {
-            static bool Prefix(Pawn_PathFollower __instance, ref bool __result, Pawn ___pawn)
+            static bool Prefix(Pawn_PathFollower __instance, Pawn ___pawn)
             {
                 bool appliesToPawn = false;
                 if (settings.enablePathing)
@@ -67,6 +67,7 @@ namespace RimCheats
                     return true;
                 }
 
+                __instance.DisposeAndClearCurPathRequest();
 
                 IntVec3 originalPos = ___pawn.Position;
                 var dest = __instance.Destination.Cell;
@@ -91,7 +92,7 @@ namespace RimCheats
 
                 ___pawn.Position = dest;
 
-                IntVec3 nearDest = CellFinder.StandableCellNear(___pawn.Position, ___pawn.Map, 100, null);
+                IntVec3 nearDest = CellFinder.StandableCellNear(___pawn.Position, ___pawn.Map, 50, null);
                 if (nearDest != IntVec3.Invalid)
                 {
                     //Log.Message($"Instantly moving {___pawn.LabelCap} from {originalPos} to {nearDest} near destination {__instance.Destination.Cell}");
@@ -104,12 +105,8 @@ namespace RimCheats
                 return true;
             }
 
-            static void Postfix(Pawn_PathFollower __instance, bool __result, Pawn ___pawn)
+            static void Postfix(Pawn_PathFollower __instance, Pawn ___pawn)
             {
-                if (!__result)
-                {
-                    return;
-                }
                 bool appliesToPawn = false;
                 if (settings.enablePathing)
                 {
@@ -293,8 +290,8 @@ namespace RimCheats
             }
         }
 
-        [HarmonyPatch(typeof(ThingUtility), "CheckAutoRebuildOnDestroyed_NewTemp")]
-        class Patch_CheckAutoRebuildOnDestroyed_NewTemp
+        [HarmonyPatch(typeof(ThingUtility), "CheckAutoRebuildOnDestroyed")]
+        class Patch_CheckAutoRebuildOnDestroyed
         {
             static bool Prefix(Thing thing, DestroyMode mode, Map map, BuildableDef buildingDef)
             {

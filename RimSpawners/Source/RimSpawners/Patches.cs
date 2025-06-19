@@ -121,7 +121,7 @@ namespace RimSpawners
                         var customThingComp = attacker.GetComp<RimSpawnersPawnComp>();
                         if (customThingComp != null)
                         {
-                            //__result = !GenHostility.IsActiveThreatTo(__instance, Faction.OfPlayer);
+                            __result = !GenHostility.IsActiveThreatTo(__instance, Faction.OfPlayer);
                         }
                     }
                 }
