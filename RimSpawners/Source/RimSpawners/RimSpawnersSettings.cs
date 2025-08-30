@@ -2,6 +2,7 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace RimSpawners
@@ -74,9 +75,6 @@ namespace RimSpawners
                     hediffCapMods.Add(name, new CapMod(name));
                 }
             }
-
-            //Log.Message($"hediffStatOffsets: {string.Join(", ", hediffStatOffsets.Keys.OrderBy(x => x).ToList())}");
-            //Log.Message($"hediffCapMods: {string.Join(", ", hediffCapMods.Keys.OrderBy(x => x).ToList())}");
 
             base.ExposeData();
         }

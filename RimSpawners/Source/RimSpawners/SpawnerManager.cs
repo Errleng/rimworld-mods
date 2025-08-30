@@ -12,6 +12,7 @@ namespace RimSpawners
     {
         private static readonly int LONG_UPDATE_INTERVAL = GenTicks.SecondsToTicks(60);
         private static readonly int SPAWN_INTERVAL = GenTicks.SecondsToTicks(10);
+        private static readonly int NO_THREAT_REMOVE_PAWNS_INTERVAL = GenTicks.SecondsToTicks(60);
 
         private readonly RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
         private int SpawnedPawnPoints => (int)spawnedPawns.Select(x => x.kindDef.combatPower).Sum();
@@ -101,8 +102,8 @@ namespace RimSpawners
             {
                 points = points + (int)(pointsPerSecond * GenTicks.TicksToSeconds(SPAWN_INTERVAL));
 
-                // Don't use x.spawned because the Devourer will despawn a pawn when it eats it, then spawn it later
-                spawnedPawns.RemoveAll(x => x == null || x.Dead);
+                // Be careful using x.spawned because the Devourer will despawn a pawn when it eats it, then spawn it later
+                spawnedPawns.RemoveAll(x => x == null || x.Dead || (x.Map != null && x.Map.Disposed) || (!x.Spawned && (ticks - x.TickDeSpawned) >= GenTicks.SecondsToTicks(60)));
 
                 // Create dictionary of (map, hostiles)
                 var mapsToHostilePawns = new Dictionary<Map, List<Pawn>>();
@@ -117,13 +118,6 @@ namespace RimSpawners
 
                 if (settings.spawnOnlyOnThreat)
                 {
-                    // Remove all pawns on maps without threats
-                    var spawnedPawnsOnMapsWithoutHostiles = spawnedPawns
-                        .Where(x => x.Map != null && !mapsToHostilePawns.ContainsKey(x.Map))
-                        .Select(x => x.ThingID)
-                        .ToHashSet();
-                    RemoveSpawnedPawns(spawnedPawnsOnMapsWithoutHostiles);
-
                     if (mapsToHostilePawns.Count == 0)
                     {
                         // If there are no maps with hostiles, then go to sleep
@@ -155,6 +149,49 @@ namespace RimSpawners
             if (ticks % LONG_UPDATE_INTERVAL == 0)
             {
                 CalculateCache();
+                var spawnedPawnsSet = new HashSet<string>(spawnedPawns.Select(x => x.ThingID));
+                var removedPawns = new HashSet<string>();
+                foreach (var map in Find.Maps)
+                {
+                    foreach (var pawn in map.mapPawns.AllPawns)
+                    {
+                        if (!pawn.HasComp<RimSpawnersPawnComp>())
+                        {
+                            continue;
+                        }
+                        if (!spawnedPawnsSet.Contains(pawn.ThingID))
+                        {
+                            Log.Warning($"RimSpawners pawn {pawn.LabelCap} is not tracked. Deleting");
+                            pawn.Destroy();
+                            continue;
+                        }
+                    }
+                }
+                RemoveSpawnedPawns(removedPawns);
+            }
+
+            if (ticks % NO_THREAT_REMOVE_PAWNS_INTERVAL == 0)
+            {
+                if (settings.spawnOnlyOnThreat)
+                {
+                    // Create dictionary of (map, hostiles)
+                    var mapsToHostilePawns = new Dictionary<Map, List<Pawn>>();
+                    foreach (var map in Find.Maps)
+                    {
+                        var activeHostilePawns = Utils.GetActiveHostilesOnMap(map);
+                        if (activeHostilePawns.Count > 0 || GenHostility.AnyHostileActiveThreatTo(map, Faction.OfPlayer))
+                        {
+                            mapsToHostilePawns.Add(map, activeHostilePawns);
+                        }
+                    }
+
+                    // Remove all pawns on maps without threats
+                    var spawnedPawnsOnMapsWithoutHostiles = spawnedPawns
+                        .Where(x => x.Map != null && (!mapsToHostilePawns.ContainsKey(x.Map)))
+                        .Select(x => x.ThingID)
+                        .ToHashSet();
+                    RemoveSpawnedPawns(spawnedPawnsOnMapsWithoutHostiles);
+                }
             }
         }
 
@@ -253,6 +290,7 @@ namespace RimSpawners
             if (!foundCoreFab)
             {
                 active = false;
+                Messages.Message("RimSpawners_CoreFabricatorMissing".Translate(), MessageTypeDefOf.NegativeEvent);
             }
 
             pointsPerSecond = newPointsPerSecond;

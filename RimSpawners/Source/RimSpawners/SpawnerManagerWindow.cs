@@ -12,10 +12,11 @@ namespace RimSpawners
         private static readonly Vector2 WINDOW_SIZE = new Vector2(800f, 500f);
         private static readonly float ROW_HEIGHT = 30f;
 
+        private static Vector2 scrollPos;
+
         private SpawnerManager spawnerManager;
         private string searchKeyword;
         private float scrollViewHeight;
-        private Vector2 scrollPos;
         private List<PawnKindDef> pawnKindDefs;
 
         public SpawnerManagerWindow()

@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -94,6 +95,18 @@ namespace RimSpawners
                 icon = ContentFinder<Texture2D>.Get("UI/Calculate"),
                 action = spawnerManager.CalculateCache
             };
+
+            if (Prefs.DevMode)
+            {
+                yield return new Command_Action
+                {
+                    defaultLabel = "DEBUG: Log spawned pawns",
+                    action = delegate
+                    {
+                        Log.Message($"Spawned pawns list: {string.Join(", ", spawnerManager.spawnedPawns.Select(x => $"({x.LabelCap}, spawned: {x.Spawned}, position: {x.Position}, map: {x.Map},{x.Map?.info?.parent?.LabelCap?.ToStringNullable()})").ToArray())}");
+                    }
+                };
+            }
         }
 
         public override string CompInspectStringExtra()

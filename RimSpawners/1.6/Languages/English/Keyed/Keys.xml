@@ -58,6 +58,7 @@
 
     <!-- VANOMETRIC FABRICATOR NOTIFICATIONS AND MESSAGES -->
     <RimSpawners_VanometricFabricatorSpawnMessage>{0} fabricated</RimSpawners_VanometricFabricatorSpawnMessage>
+    <RimSpawners_CoreFabricatorMissing>Pausing vanometric fabrication because core fabricator is missing</RimSpawners_CoreFabricatorMissing>
 
     <!-- SPAWNER MANAGER -->
     <RimSpawners_OpenSpawnerManager>Spawner manager</RimSpawners_OpenSpawnerManager>

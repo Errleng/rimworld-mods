@@ -374,5 +374,19 @@ namespace RimSpawners
         //        return true;
         //    }
         //}
+
+        [HarmonyPatch(typeof(FogGrid))]
+        private class FogGrid_Notify_PawnEnteringDoor_Patch
+        {
+            [HarmonyPostfix]
+            [HarmonyPatch("Notify_PawnEnteringDoor")]
+            static void Postfix(FogGrid __instance, Building_Door door, Pawn pawn)
+            {
+                if (pawn.HasComp<RimSpawnersPawnComp>())
+                {
+                    __instance.FloodUnfogAdjacent(door.Position, false);
+                }
+            }
+        }
     }
 }
