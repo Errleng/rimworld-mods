@@ -89,11 +89,12 @@ namespace RimMisc
         public static readonly string CondenserDefName = "VanometricCondenser";
 
         public static RimMiscSettings Settings;
+        private Vector2 settingsScrollPos;
         private float condenserItemScrollHeight;
         private Vector2 condenserItemScrollPos;
         private float condenserItemSelectScrollHeight;
         private Vector2 condenserItemSelectScrollPos;
-
+        
         private string searchKeyword;
 
         public RimMisc(ModContentPack content) : base(content)
@@ -120,36 +121,40 @@ namespace RimMisc
             };
             var condenserItemsSelectScrollRect = new Rect(condenserItemsSelectRect)
             {
-                y = condenserItemsSelectRect.y + 10
+                y = condenserItemsSelectRect.y + 1
             };
 
             var listingStandard = new Listing_Standard();
-            listingStandard.Begin(inRect);
+            var listHeight = 400;
+            Rect listingRect = new Rect(inRect.x, inRect.y, inRect.width - 40, inRect.height + 20 + listHeight);
+            listingStandard.Begin(listingRect);
 
-            var settingsSection = listingStandard.BeginSection(settingsRect.height);
+            var outRect = new Rect(0, 0, settingsRect.width - SCROLLBAR_WIDTH, settingsRect.height - 20);
+            var viewRect = new Rect(0, 0, listingRect.width, listHeight);
+            Widgets.BeginScrollView(outRect, ref settingsScrollPos, viewRect);
 
-            settingsSection.CheckboxLabeled("RimMisc_DefaultDoUntil".Translate(), ref Settings.defaultDoUntil);
-            settingsSection.CheckboxLabeled("RimMisc_AutoCloseLetters".Translate(), ref Settings.autoCloseLetters);
-            settingsSection.CheckboxLabeled("RimMisc_DisableEnemyUninstall".Translate(), ref Settings.disableEnemyUninstall);
-            settingsSection.CheckboxLabeled("RimMisc_KillDownedPawns".Translate(), ref Settings.killDownedPawns);
-            settingsSection.CheckboxLabeled("RimMisc_PatchBuildingHp".Translate(), ref Settings.patchBuildingHp);
-            settingsSection.CheckboxLabeled("RimMisc_PreventSkyfallDestruction".Translate(), ref Settings.preventSkyfallDestruction);
-            settingsSection.CheckboxLabeled("RimMisc_ConstructEvenIfNotEnough".Translate(), ref Settings.constructEvenIfNotEnough);
-            settingsSection.CheckboxLabeled("RimMisc_ChangeAreaOnThreat".Translate(), ref Settings.changeAreaOnThreat);
-            settingsSection.CheckboxLabeled("RimMisc_PreventRoofCollapse".Translate(), ref Settings.preventRoofCollapse);
-            settingsSection.CheckboxLabeled("RimMisc_MyMiscStuff".Translate(), ref Settings.myMiscStuff);
+            listingStandard.CheckboxLabeled("RimMisc_DefaultDoUntil".Translate(), ref Settings.defaultDoUntil);
+            listingStandard.CheckboxLabeled("RimMisc_AutoCloseLetters".Translate(), ref Settings.autoCloseLetters);
+            listingStandard.CheckboxLabeled("RimMisc_DisableEnemyUninstall".Translate(), ref Settings.disableEnemyUninstall);
+            listingStandard.CheckboxLabeled("RimMisc_KillDownedPawns".Translate(), ref Settings.killDownedPawns);
+            listingStandard.CheckboxLabeled("RimMisc_PatchBuildingHp".Translate(), ref Settings.patchBuildingHp);
+            listingStandard.CheckboxLabeled("RimMisc_PreventSkyfallDestruction".Translate(), ref Settings.preventSkyfallDestruction);
+            listingStandard.CheckboxLabeled("RimMisc_ConstructEvenIfNotEnough".Translate(), ref Settings.constructEvenIfNotEnough);
+            listingStandard.CheckboxLabeled("RimMisc_ChangeAreaOnThreat".Translate(), ref Settings.changeAreaOnThreat);
+            listingStandard.CheckboxLabeled("RimMisc_PreventRoofCollapse".Translate(), ref Settings.preventRoofCollapse);
+            listingStandard.CheckboxLabeled("RimMisc_MyMiscStuff".Translate(), ref Settings.myMiscStuff);
 
-            if (settingsSection.ButtonText("RimMisc_EnableRocketmanTimeDilation".Translate()))
+            if (listingStandard.ButtonText("RimMisc_EnableRocketmanTimeDilation".Translate()))
             {
                 EnableRocketmanRaces();
             }
 
-            settingsSection.Label("RimMisc_AutoCloseLettersSeconds".Translate(Settings.autoCloseLettersSeconds));
-            Settings.autoCloseLettersSeconds = settingsSection.Slider(Settings.autoCloseLettersSeconds, MIN_AUTOCLOSE_SECONDS, MAX_AUTOCLOSE_SECONDS);
-            settingsSection.Label("RimMisc_DefaultIngredientRadius".Translate(Settings.defaultIngredientRadius));
-            Settings.defaultIngredientRadius = settingsSection.Slider(Settings.defaultIngredientRadius, 0, Bill.MaxIngredientSearchRadius);
+            listingStandard.Label("RimMisc_AutoCloseLettersSeconds".Translate(Settings.autoCloseLettersSeconds));
+            Settings.autoCloseLettersSeconds = listingStandard.Slider(Settings.autoCloseLettersSeconds, MIN_AUTOCLOSE_SECONDS, MAX_AUTOCLOSE_SECONDS);
+            listingStandard.Label("RimMisc_DefaultIngredientRadius".Translate(Settings.defaultIngredientRadius));
+            Settings.defaultIngredientRadius = listingStandard.Slider(Settings.defaultIngredientRadius, 0, Bill.MaxIngredientSearchRadius);
 
-            settingsSection.EndSection(settingsSection);
+            Widgets.EndScrollView();
             listingStandard.End();
 
             DrawSelectedCondenserItems(condenserItemsScrollRect);
@@ -161,6 +166,7 @@ namespace RimMisc
         {
             Settings.ApplySettings();
             base.WriteSettings();
+            // Causes errors if Rimatomics is not loaded. Fix later
             FinishRimatomicsResearch();
         }
 

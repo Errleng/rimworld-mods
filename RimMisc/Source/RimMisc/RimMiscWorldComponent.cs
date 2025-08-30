@@ -87,7 +87,12 @@ namespace RimMisc
                                     continue;
                                 }
                                 var safeAreaName = curArea.Label + SAFE_AREA_SUFFIX;
-                                var safeArea = map.areaManager.AllAreas.Where((Area x) => x is Area_Allowed && Regex.IsMatch(x.Label, safeAreaName, RegexOptions.IgnoreCase | RegexOptions.ECMAScript)).Cast<Area_Allowed>().FirstOrDefault();
+                                var safeAreas = map.areaManager.AllAreas.Where((Area x) => x is Area_Allowed && Regex.IsMatch(x.Label, $"^{safeAreaName}$", RegexOptions.IgnoreCase | RegexOptions.ECMAScript)).Cast<Area_Allowed>();
+                                if (safeAreas.Count() > 1)
+                                {
+                                    Log.Error($"Found multiple safe areas matching {safeAreaName} on map {map.Parent.LabelCap}: {string.Join(", ", safeAreas.Select(x => x.Label))})");
+                                }
+                                var safeArea = safeAreas.FirstOrDefault();
                                 if (safeArea == null)
                                 {
                                     continue;
@@ -106,7 +111,12 @@ namespace RimMisc
                                     continue;
                                 }
                                 var unsafeAreaName = Regex.Replace(curArea.Label, $@"{SAFE_AREA_SUFFIX}$", string.Empty);
-                                var unsafeArea = map.areaManager.AllAreas.Where((Area x) => x is Area_Allowed && Regex.IsMatch(x.Label, unsafeAreaName, RegexOptions.IgnoreCase | RegexOptions.ECMAScript)).Cast<Area_Allowed>().FirstOrDefault();
+                                var unsafeAreas = map.areaManager.AllAreas.Where((Area x) => x is Area_Allowed && Regex.IsMatch(x.Label, $"^{unsafeAreaName}$", RegexOptions.IgnoreCase | RegexOptions.ECMAScript)).Cast<Area_Allowed>();
+                                if (unsafeAreas.Count() > 1)
+                                {
+                                    Log.Error($"Found multiple unsafe areas matching {unsafeAreaName} on map {map.Parent.LabelCap}: {string.Join(", ", unsafeAreas.Select(x => x.Label))})");
+                                }
+                                var unsafeArea = unsafeAreas.FirstOrDefault();
                                 if (unsafeArea == null)
                                 {
                                     continue;
@@ -171,6 +181,8 @@ namespace RimMisc
                 // daily
                 if (currentTicks % GenDate.TicksPerDay == 0)
                 {
+                    var fleckTypeCounts = new Dictionary<string, int>();
+
                     foreach (var map in Find.Maps)
                     {
                         // delete bad quality items
@@ -202,7 +214,35 @@ namespace RimMisc
                                 equipment.HitPoints = equipment.MaxHitPoints;
                             }
                         }
+
+                        // Check flecks
+                        foreach (var fleckSystem in map.flecks.Systems)
+                        {
+                            foreach (var fleck in fleckSystem.EnumerateFlecks())
+                            {
+                                var key = "none";
+                                if (fleck is FleckSplash fleckSplash)
+                                {
+                                    key = fleckSplash.def.defName;
+                                } else if (fleck is FleckStatic fleckStatic)
+                                {
+                                    key = fleckStatic.def.defName;
+                                }
+                                else if (fleck is FleckThrown fleckThrown)
+                                {
+                                    key = fleckThrown.baseData.def.defName;
+                                }
+
+                                if (!fleckTypeCounts.ContainsKey(key))
+                                {
+                                    fleckTypeCounts[key] = 0;
+                                }
+                                fleckTypeCounts[key] += 1;
+                            }
+                        }
                     }
+
+                    Log.Message($"Fleck counts: {string.Join(",", fleckTypeCounts.Select(x => $"({x.Key } : {x.Value})"))}");
                 }
             }
         }

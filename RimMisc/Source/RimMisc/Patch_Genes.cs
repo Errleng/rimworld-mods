@@ -24,49 +24,52 @@ namespace RimMisc
                 icon = implantAllTexture.Texture,
                 action = delegate
                 {
-                    foreach (Pawn pawn in __instance.Map.mapPawns.FreeColonistsSpawned)
+                    foreach (var map in Find.Maps)
                     {
-                        if (!pawn.IsQuestLodger() && pawn.genes != null && (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony || (pawn.IsMutant && pawn.IsGhoul)))
+                        foreach (Pawn pawn in map.mapPawns.FreeColonistsSpawned)
                         {
-                            int metabolism = GeneUtility.MetabolismAfterImplanting(pawn, __instance.GeneSet);
-                            if (metabolism < GeneTuning.BiostatRange.TrueMin)
+                            if (!pawn.IsQuestLodger() && pawn.genes != null && (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony || (pawn.IsMutant && pawn.IsGhoul)))
                             {
-                                Messages.Message(pawn.LabelShortCap + ": " + "ResultingMetTooLow".Translate() + " (" + metabolism + ")", MessageTypeDefOf.RejectInput);
-                            }
-                            else if (__instance.PawnIdeoDisallowsImplanting(pawn))
-                            {
-                                Messages.Message(pawn.LabelShortCap + ": " + "IdeoligionForbids".Translate(), MessageTypeDefOf.RejectInput);
+                                int metabolism = GeneUtility.MetabolismAfterImplanting(pawn, __instance.GeneSet);
+                                if (metabolism < GeneTuning.BiostatRange.TrueMin)
+                                {
+                                    Messages.Message(pawn.LabelShortCap + ": " + "ResultingMetTooLow".Translate() + " (" + metabolism + ")", MessageTypeDefOf.RejectInput);
+                                }
+                                else if (__instance.PawnIdeoDisallowsImplanting(pawn))
+                                {
+                                    Messages.Message(pawn.LabelShortCap + ": " + "IdeoligionForbids".Translate(), MessageTypeDefOf.RejectInput);
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        // Need to make sure to remove all genes. Sometimes they are not removed, just marked as overridden?
+                                        var endogeneDefs = pawn.genes.Endogenes.Select(x => x.def).ToList();
+                                        Log.Message($"{pawn.LabelShortCap} has {endogeneDefs.Count} endogenes: {string.Join(", ", endogeneDefs.Select(x => x.LabelCap))}");
+                                        foreach (var gene in pawn.genes.GenesListForReading)
+                                        {
+                                            pawn.genes.RemoveGene(gene);
+                                        }
+                                        Log.Message($"{pawn.LabelShortCap} has {pawn.genes.GenesListForReading.Count} remaining genes: {string.Join(", ", pawn.genes.GenesListForReading.Select(x => x.Label))}");
+                                        foreach (var geneDef in endogeneDefs)
+                                        {
+                                            pawn.genes.AddGene(geneDef, false);
+                                        }
+                                        Log.Message($"{pawn.LabelShortCap} has {pawn.genes.GenesListForReading.Count} added endogenes: {string.Join(", ", pawn.genes.GenesListForReading.Select(x => x.Label))}");
+
+                                        GeneUtility.ImplantXenogermItem(pawn, __instance);
+                                        Log.Message($"Implanted xenogerm {__instance.xenotypeName} for {pawn.LabelShortCap}. Their xenotype is {pawn.genes.xenotypeName}.");
+                                    }
+                                    catch (NullReferenceException ex)
+                                    {
+                                        Log.Error($"Could not implant xenogerm {__instance.xenotypeName} for {pawn.LabelShortCap}:\n{ex.ToString()}");
+                                    }
+                                }
                             }
                             else
                             {
-                                try
-                                {
-                                    // Need to make sure to remove all genes. Sometimes they are not removed, just marked as overridden?
-                                    var endogeneDefs = pawn.genes.Endogenes.Select(x => x.def).ToList();
-                                    Log.Message($"{pawn.LabelShortCap} has {endogeneDefs.Count} endogenes: {string.Join(", ", endogeneDefs.Select(x => x.LabelCap))}");
-                                    foreach (var gene in pawn.genes.GenesListForReading)
-                                    {
-                                        pawn.genes.RemoveGene(gene);
-                                    }
-                                    Log.Message($"{pawn.LabelShortCap} has {pawn.genes.GenesListForReading.Count} remaining genes: {string.Join(", ", pawn.genes.GenesListForReading.Select(x => x.Label))}");
-                                    foreach (var geneDef in endogeneDefs)
-                                    {
-                                        pawn.genes.AddGene(geneDef, false);
-                                    }
-                                    Log.Message($"{pawn.LabelShortCap} has {pawn.genes.GenesListForReading.Count} added endogenes: {string.Join(", ", pawn.genes.GenesListForReading.Select(x => x.Label))}");
-
-                                    GeneUtility.ImplantXenogermItem(pawn, __instance);
-                                    Log.Message($"Implanted xenogerm {__instance.xenotypeName} for {pawn.LabelShortCap}. Their xenotype is {pawn.genes.xenotypeName}.");
-                                }
-                                catch (NullReferenceException ex)
-                                {
-                                    Log.Error($"Could not implant xenogerm {__instance.xenotypeName} for {pawn.LabelShortCap}:\n{ex.ToString()}");
-                                }
+                                Log.Message($"Skipping xenogerm implantation for {pawn.LabelShortCap} because condition is false: {pawn.IsQuestLodger()} && {pawn.genes != null} && ({pawn.IsColonistPlayerControlled} || {pawn.IsPrisonerOfColony} || {pawn.IsSlaveOfColony} || ({pawn.IsMutant} && {pawn.IsGhoul})");
                             }
-                        }
-                        else
-                        {
-                            Log.Message($"Skipping xenogerm implantation for {pawn.LabelShortCap} because condition is false: {pawn.IsQuestLodger()} && {pawn.genes != null} && ({pawn.IsColonistPlayerControlled} || {pawn.IsPrisonerOfColony} || {pawn.IsSlaveOfColony} || ({pawn.IsMutant} && {pawn.IsGhoul})");
                         }
                     }
                 }
