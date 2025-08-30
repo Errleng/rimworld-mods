@@ -62,8 +62,12 @@ namespace RimCheats
                     return true;
                 }
                 // Disable speed on wander or waiting for better idle pawn performance
-                if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander))
+                if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander || ___pawn.CurJob.def.defName == "GoForWalk"))
                 {
+                    return true;
+                }
+                // Disable speed on gravship launch as this causes pawns to get left behind (they probably did not register as being on the ship tile)
+                if (___pawn.CurJob.def == JobDefOf.GotoShip) {
                     return true;
                 }
 
@@ -92,11 +96,38 @@ namespace RimCheats
 
                 ___pawn.Position = dest;
 
-                IntVec3 nearDest = CellFinder.StandableCellNear(___pawn.Position, ___pawn.Map, 50, null);
+                // Helper to find a standable cell near destination, prioritizing same-room cells
+                IntVec3 FindStandableCellNearInSameRoom(IntVec3 targetCell, Map map, int radius)
+                {
+                    Room destRoom = targetCell.GetRoom(map);
+                    IntVec3 firstFallback = IntVec3.Invalid;
+
+                    // First pass: look for cells in same room
+                    foreach (IntVec3 c in GenRadial.RadialCellsAround(targetCell, radius, true))
+                    {
+                        if (!c.InBounds(map) || !c.Standable(map)) continue;
+                        Room cellRoom = c.GetRoom(map);
+                        
+                        if (cellRoom == destRoom)
+                        {
+                            return c; // Found a cell in same room, return immediately
+                        }
+                        else if (firstFallback == IntVec3.Invalid)
+                        {
+                            firstFallback = c; // Store first valid cell as fallback
+                        }
+                    }
+                    
+                    return firstFallback; // Return first fallback cell if no same-room cell was found
+                }
+
+
+                IntVec3 nearDest = FindStandableCellNearInSameRoom(dest, ___pawn.Map, 50);
                 if (nearDest != IntVec3.Invalid)
                 {
-                    //Log.Message($"Instantly moving {___pawn.LabelCap} from {originalPos} to {nearDest} near destination {__instance.Destination.Cell}");
+                    //Log.Message($"Instantly moving {___pawn.LabelCap} from {originalPos} to {nearDest} near destination {__instance.Destination.Cell}. Current job is {___pawn.CurJob.def.defName}");
                     ___pawn.Position = nearDest;
+                    __instance.nextCell = nearDest;
                 }
                 else
                 {
@@ -105,44 +136,45 @@ namespace RimCheats
                 return true;
             }
 
-            static void Postfix(Pawn_PathFollower __instance, Pawn ___pawn)
-            {
-                bool appliesToPawn = false;
-                if (settings.enablePathing)
-                {
-                    appliesToPawn = ___pawn.IsPlayerControlled;
-                }
-                if (!appliesToPawn && settings.enablePathingNonHuman && !___pawn.IsPlayerControlled)
-                {
-                    appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.IsPlayer;
-                }
-                if (!appliesToPawn && settings.enablePathingAlly)
-                {
-                    appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.RelationWith(Faction.OfPlayer).kind == FactionRelationKind.Ally;
-                }
-                if (appliesToPawn && __instance.Moving)
-                {
-                    // disable speed on wander or waiting for better idle pawn performance
-                    if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander))
-                    {
-                        return;
-                    }
-                    if (__instance.curPath != null)
-                    {
-                        int nodesToRemain = 1;
-                        Building_Door door = ___pawn.Map.thingGrid.ThingAt<Building_Door>(__instance.Destination.Cell);
-                        if (door != null)
-                        {
-                            nodesToRemain = 2;
-                        }
-                        while (__instance.curPath.NodesLeftCount > nodesToRemain)
-                        {
-                            __instance.curPath.ConsumeNextNode();
-                        }
-                        ___pawn.Position = __instance.curPath.Peek(0);
-                    }
-                }
-            }
+            //static void Postfix(Pawn_PathFollower __instance, Pawn ___pawn)
+            //{
+            //    bool appliesToPawn = false;
+            //    if (settings.enablePathing)
+            //    {
+            //        appliesToPawn = ___pawn.IsPlayerControlled;
+            //    }
+
+            //    if (!appliesToPawn && settings.enablePathingNonHuman && !___pawn.IsPlayerControlled)
+            //    {
+            //        appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.IsPlayer;
+            //    }
+            //    if (!appliesToPawn && settings.enablePathingAlly)
+            //    {
+            //        appliesToPawn = ___pawn.Faction != null && ___pawn.Faction.RelationWith(Faction.OfPlayer).kind == FactionRelationKind.Ally;
+            //    }
+            //    if (appliesToPawn && __instance.Moving)
+            //    {
+            //        // disable speed on wander or waiting for better idle pawn performance
+            //        if (___pawn.CurJob != null && (___pawn.CurJob.def == JobDefOf.GotoWander || ___pawn.CurJob.def == JobDefOf.Wait_Wander || ___pawn.CurJobDef.defName == "GoForWalk"))
+            //        {
+            //            return;
+            //        }
+            //        if (__instance.curPath != null)
+            //        {
+            //            int nodesToRemain = 1;
+            //            Building_Door door = ___pawn.Map.thingGrid.ThingAt<Building_Door>(__instance.Destination.Cell);
+            //            if (door != null)
+            //            {
+            //                nodesToRemain = 2;
+            //            }
+            //            while (__instance.curPath.NodesLeftCount > nodesToRemain)
+            //            {
+            //                __instance.curPath.ConsumeNextNode();
+            //            }
+            //            ___pawn.Position = __instance.curPath.Peek(0);
+            //        }
+            //    }
+            //}
         }
 
         [HarmonyPatch(typeof(Pawn_PathFollower), "CostToMoveIntoCell", new Type[] { typeof(Pawn), typeof(IntVec3) })]
