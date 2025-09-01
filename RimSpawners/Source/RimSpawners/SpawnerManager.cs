@@ -560,7 +560,7 @@ namespace RimSpawners
                 }
                 else
                 {
-                    spawnCenter = CellFinder.RandomCell(map);
+                    CellFinder.TryFindRandomCell(map, c => c.Standable(map), out spawnCenter);
                 }
             }
 
