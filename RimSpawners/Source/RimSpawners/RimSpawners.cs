@@ -67,24 +67,13 @@ namespace RimSpawners
             var viewRect = new Rect(0, 0, inRect.width + 30, listingRect.height);
             Widgets.BeginScrollView(outRect, ref scrollPos, viewRect);
 
-            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsMaximumPoints".Translate(), ref settings.maxSpawnerPoints);
-
-            listingStandard.GapLine();
-            if (listingStandard.RadioButton("RimSpawners_SettingsScaledSpawnTimeButton".Translate(), settings.spawnTime.Equals(SpawnTimeSetting.Scaled)))
-            {
-                settings.spawnTime = SpawnTimeSetting.Scaled;
-            }
-
-            if (listingStandard.RadioButton("RimSpawners_SettingsFixedSpawnTimeButton".Translate(), settings.spawnTime.Equals(SpawnTimeSetting.Fixed)))
-            {
-                settings.spawnTime = SpawnTimeSetting.Fixed;
-            }
+            // Core settings
+            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsMatterSiphonPointsPerSecond".Translate(), ref settings.matterSiphonPointsPerSecond);
+            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsControlNodePointsStored".Translate(), ref settings.controlNodePointsStored);
 
             listingStandard.GapLine();
 
-            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsScaledSpawnTimePointsPerSecond".Translate(), ref settings.spawnTimePointsPerSecond);
-            TextFieldNumericLabeled(listingStandard, "RimSpawners_SettingsFixedSpawnTimeSeconds".Translate(), ref settings.spawnTimeSecondsPerSpawn);
-
+            // Pawn behavior settings
             listingStandard.CheckboxLabeled("RimSpawners_SettingsCachePawns".Translate(), ref settings.cachePawns);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsUseAllyFaction".Translate(), ref settings.useAllyFaction);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsMaxSkills".Translate(), ref settings.maxSkills);
@@ -92,9 +81,12 @@ namespace RimSpawners
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDisableCorpses".Translate(), ref settings.disableCorpses);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDoNotAttackFleeing".Translate(), ref settings.doNotAttackFleeing);
 
-            listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnOnThreats".Translate(), ref settings.spawnOnlyOnThreat);
+            // Spawn behavior settings
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnOnlyOnThreat".Translate(), ref settings.spawnOnlyOnThreat);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsCrossMap".Translate(), ref settings.crossMap);
-            listingStandard.CheckboxLabeled("RimSpawners_SettingsGroupSpawns".Translate(), ref settings.groupPawnkinds);
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsGroupPawnkinds".Translate(), ref settings.groupPawnkinds);
+
+            // Combat behavior settings
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDoNotDamagePlayerBuildings".Translate(), ref settings.doNotDamagePlayerBuildings);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDoNotDamageFriendlies".Translate(), ref settings.doNotDamageFriendlies);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsMassivelyDamageEnemyBuildings".Translate(), ref settings.massivelyDamageEnemyBuildings);
@@ -150,7 +142,6 @@ namespace RimSpawners
             {
                 return string.Join(", ", stringList);
             }
-
             return "Null";
         }
     }

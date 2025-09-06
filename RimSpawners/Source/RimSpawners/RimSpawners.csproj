@@ -73,25 +73,19 @@
     <Compile Include="LordToil_SearchAndDestroy.cs" />
     <Compile Include="RimSpawnersDefOf.cs" />
     <Compile Include="models\CapMod.cs" />
-    <Compile Include="CompProperties_UniversalSpawnerPawn.cs" />
-    <Compile Include="CompUniversalSpawnerPawn.cs" />
     <Compile Include="DefExtensions.cs" />
-    <Compile Include="CompPawnSelectionGizmo.cs" />
-    <Compile Include="PawnSelectionWindow.cs" />
     <Compile Include="RimSpawners.cs" />
     <Compile Include="RimSpawnersPawnComp.cs" />
     <Compile Include="RimSpawnersSettings.cs" />
     <Compile Include="Patches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RimSpawnersWorldComp.cs" />
-    <Compile Include="models\SpawnTimeSetting.cs" />
     <Compile Include="models\StatOffset.cs" />
     <Compile Include="SpawnerManager.cs" />
     <Compile Include="SpawnerManagerWindow.cs" />
     <Compile Include="SpawnPawnInfo.cs" />
     <Compile Include="Texture2DExtensions.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="VanometricFabricator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -18,7 +18,6 @@ namespace RimSpawners
         public bool disableNeeds;
         public bool doNotAttackFleeing;
         public bool maxSkills;
-        public float maxSpawnerPoints;
 
         public bool spawnOnlyOnThreat;
         public bool crossMap;
@@ -27,9 +26,8 @@ namespace RimSpawners
         public bool massivelyDamageEnemyBuildings;
         public bool randomizeLoadouts;
 
-        public SpawnTimeSetting spawnTime;
-        public float spawnTimePointsPerSecond;
-        public float spawnTimeSecondsPerSpawn;
+        public float matterSiphonPointsPerSecond;
+        public float controlNodePointsStored;
         public bool useAllyFaction;
         public bool groupPawnkinds;
 
@@ -38,10 +36,8 @@ namespace RimSpawners
 
         public override void ExposeData()
         {
-            Scribe_Values.Look(ref maxSpawnerPoints, "maxSpawnerPoints", 500f);
-            Scribe_Values.Look(ref spawnTime, "spawnTime");
-            Scribe_Values.Look(ref spawnTimePointsPerSecond, "spawnTimePointsPerSecond", 1f);
-            Scribe_Values.Look(ref spawnTimeSecondsPerSpawn, "spawnTimeSecondsPerSpawn", 1f);
+            Scribe_Values.Look(ref matterSiphonPointsPerSecond, "matterSiphonPointsPerSecond", 1f);
+            Scribe_Values.Look(ref controlNodePointsStored, "controlNodePointsStored", 100f);
             Scribe_Values.Look(ref cachePawns, "cachePawns", false);
             Scribe_Values.Look(ref useAllyFaction, "useAllyFaction", true);
             Scribe_Values.Look(ref maxSkills, "maxSkills", defaultValue: false);
@@ -118,20 +114,6 @@ namespace RimSpawners
             if (spawnedPawnHediff == null)
             {
                 spawnedPawnHediff = DefDatabase<HediffDef>.GetNamed("RimSpawners_VanometricPawnHediff");
-            }
-
-            string[] spawnerNames =
-            {
-                "VanometricFabricator"
-            };
-
-            foreach (var spawnerName in spawnerNames)
-            {
-                var spawner = DefDatabase<ThingDef>.GetNamed(spawnerName);
-                var comp = spawner.GetCompProperties<CompProperties_VanometricFabricatorPawn>();
-                comp.maxSpawnedPawnsPoints = maxSpawnerPoints;
-                comp.pawnSpawnIntervalSeconds = spawnTimeSecondsPerSpawn;
-                comp.chooseSingleTypeToSpawn = true;
             }
 
             foreach (var stage in spawnedPawnHediff.stages)

@@ -274,11 +274,13 @@ namespace RimSpawners
                     }
                     else if (building.def == RimSpawnersDefOf.MatterSiphon)
                     {
-                        newPointsPerSecond += building.TryGetComp<CompPointGenerator>().PointsPerSecond;
+                        //newPointsPerSecond += building.TryGetComp<CompPointGenerator>().PointsPerSecond;
+                        newPointsPerSecond += (int)settings.matterSiphonPointsPerSecond;
                     }
                     else if (building.def == RimSpawnersDefOf.ControlNode)
                     {
-                        newMaxPoints += building.TryGetComp<CompPointStorage>().PointsStored;
+                        //newMaxPoints += building.TryGetComp<CompPointStorage>().PointsStored;
+                        newMaxPoints += (int)settings.controlNodePointsStored;
                     }
                     else if (building.def == RimSpawnersDefOf.SpawnMarker)
                     {
