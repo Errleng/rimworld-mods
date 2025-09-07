@@ -31,6 +31,9 @@ namespace RimSpawners
         public bool useAllyFaction;
         public bool groupPawnkinds;
 
+        public HashSet<string> selectedWeapons = new HashSet<string>();
+        public HashSet<string> selectedApparel = new HashSet<string>();
+
         public Dictionary<string, StatOffset> hediffStatOffsets = new Dictionary<string, StatOffset>();
         public Dictionary<string, CapMod> hediffCapMods = new Dictionary<string, CapMod>();
 
@@ -51,8 +54,14 @@ namespace RimSpawners
             Scribe_Values.Look(ref doNotDamageFriendlies, "doNotDamageFriendlies", false);
             Scribe_Values.Look(ref massivelyDamageEnemyBuildings, "massivelyDamageEnemyBuildings", false);
             Scribe_Values.Look(ref randomizeLoadouts, "randomizeLoadouts", false);
+            Scribe_Collections.Look(ref selectedWeapons, "selectedWeapons");
+            Scribe_Collections.Look(ref selectedApparel, "selectedApparel");
             Scribe_Collections.Look(ref hediffStatOffsets, "hediffStatOffsets", LookMode.Value, LookMode.Deep);
             Scribe_Collections.Look(ref hediffCapMods, "hediffCapMods", LookMode.Value, LookMode.Deep);
+
+            // Initialize collections if needed
+            if (selectedWeapons == null) selectedWeapons = new HashSet<string>();
+            if (selectedApparel == null) selectedApparel = new HashSet<string>();
 
             foreach (var def in DefDatabase<StatDef>.AllDefs)
             {
@@ -174,3 +183,5 @@ namespace RimSpawners
         }
     }
 }
+
+//

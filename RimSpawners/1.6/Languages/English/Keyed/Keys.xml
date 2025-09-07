@@ -65,4 +65,36 @@
     <RimSpawners_SpawnerManagerResetQueue>Reset queue</RimSpawners_SpawnerManagerResetQueue>
     <RimSpawners_SpawnerManagerUpdate>Update now</RimSpawners_SpawnerManagerUpdate>
     <RimSpawners_SpawnerManagerUpdateDesc>Force an early update of spawner points and spawn locations</RimSpawners_SpawnerManagerUpdateDesc>
+
+    <!-- Settings -->
+    <RimSpawners_SettingsMatterSiphonPointsPerSecond>Points per second</RimSpawners_SettingsMatterSiphonPointsPerSecond>
+    <RimSpawners_SettingsControlNodePointsStored>Maximum points</RimSpawners_SettingsControlNodePointsStored>
+
+    <RimSpawners_SettingsCachePawns>Cache pawns</RimSpawners_SettingsCachePawns>
+    <RimSpawners_SettingsUseAllyFaction>Use ally faction</RimSpawners_SettingsUseAllyFaction>
+    <RimSpawners_SettingsMaxSkills>Max skills</RimSpawners_SettingsMaxSkills>
+    <RimSpawners_SettingsDisableNeeds>Disable needs</RimSpawners_SettingsDisableNeeds>
+    <RimSpawners_SettingsDisableCorpses>Disable corpses</RimSpawners_SettingsDisableCorpses>
+    <RimSpawners_SettingsDoNotAttackFleeing>Do not attack fleeing pawns</RimSpawners_SettingsDoNotAttackFleeing>
+
+    <RimSpawners_SettingsSpawnOnlyOnThreat>Spawn only on threat</RimSpawners_SettingsSpawnOnlyOnThreat>
+    <RimSpawners_SettingsCrossMap>Cross map</RimSpawners_SettingsCrossMap>
+    <RimSpawners_SettingsGroupPawnkinds>Group pawnkinds</RimSpawners_SettingsGroupPawnkinds>
+
+    <RimSpawners_SettingsDoNotDamagePlayerBuildings>Do not damage player buildings</RimSpawners_SettingsDoNotDamagePlayerBuildings>
+    <RimSpawners_SettingsDoNotDamageFriendlies>Do not damage friendlies</RimSpawners_SettingsDoNotDamageFriendlies>
+    <RimSpawners_SettingsMassivelyDamageEnemyBuildings>Massively damage enemy buildings</RimSpawners_SettingsMassivelyDamageEnemyBuildings>
+    <RimSpawners_SettingsRandomizeLoadouts>Randomize loadouts</RimSpawners_SettingsRandomizeLoadouts>
+
+    <RimSpawners_WeaponsAndApparelTab>Weapons and Apparel</RimSpawners_WeaponsAndApparelTab>
+    <RimSpawners_SelectedWeapons>Selected Weapons</RimSpawners_SelectedWeapons>
+    <RimSpawners_SelectedApparel>Selected Apparel</RimSpawners_SelectedApparel>
+    <RimSpawners_AvailableWeapons>Available Weapons</RimSpawners_AvailableWeapons>
+    <RimSpawners_AvailableApparel>Available Apparel</RimSpawners_AvailableApparel>
+    <RimSpawners_Add>Add</RimSpawners_Add>
+    <RimSpawners_Remove>Remove</RimSpawners_Remove>
+
+    <!-- Hediff offsets -->
+    <RimSpawners_SettingsHediffCapMod>{0} cap mod</RimSpawners_SettingsHediffCapMod>
+    <RimSpawners_SettingsHediffStatOffset>{0} stat offset</RimSpawners_SettingsHediffStatOffset>
 </LanguageData>
