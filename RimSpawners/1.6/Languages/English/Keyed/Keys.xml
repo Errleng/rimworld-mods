@@ -18,6 +18,10 @@
     <RimSpawners_SettingsHediffCapMod>Hediff capacity mod (/100): {0}</RimSpawners_SettingsHediffCapMod>
     <RimSpawners_SettingsMatterSiphonPointsPerSecond>Points per second per matter siphon</RimSpawners_SettingsMatterSiphonPointsPerSecond>
     <RimSpawners_SettingsControlNodePointsStored>Points stored per control node</RimSpawners_SettingsControlNodePointsStored>
+    <RimSpawners_SettingsWeaponPool>Weapon Pool</RimSpawners_SettingsWeaponPool>
+    <RimSpawners_SettingsApparelPool>Apparel Pool</RimSpawners_SettingsApparelPool>
+    <RimSpawners_SettingsAdd>Add</RimSpawners_SettingsAdd>
+    <RimSpawners_SettingsRemove>Remove</RimSpawners_SettingsRemove>
 
     <!-- PAWN SELECTION -->
     <RimSpawners_PawnSelection>Select creature to spawn</RimSpawners_PawnSelection>
@@ -86,13 +90,6 @@
     <RimSpawners_SettingsMassivelyDamageEnemyBuildings>Massively damage enemy buildings</RimSpawners_SettingsMassivelyDamageEnemyBuildings>
     <RimSpawners_SettingsRandomizeLoadouts>Randomize loadouts</RimSpawners_SettingsRandomizeLoadouts>
 
-    <RimSpawners_WeaponsAndApparelTab>Weapons and Apparel</RimSpawners_WeaponsAndApparelTab>
-    <RimSpawners_SelectedWeapons>Selected Weapons</RimSpawners_SelectedWeapons>
-    <RimSpawners_SelectedApparel>Selected Apparel</RimSpawners_SelectedApparel>
-    <RimSpawners_AvailableWeapons>Available Weapons</RimSpawners_AvailableWeapons>
-    <RimSpawners_AvailableApparel>Available Apparel</RimSpawners_AvailableApparel>
-    <RimSpawners_Add>Add</RimSpawners_Add>
-    <RimSpawners_Remove>Remove</RimSpawners_Remove>
 
     <!-- Hediff offsets -->
     <RimSpawners_SettingsHediffCapMod>{0} cap mod</RimSpawners_SettingsHediffCapMod>

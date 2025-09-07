@@ -85,6 +85,7 @@
     <Compile Include="SpawnerManagerWindow.cs" />
     <Compile Include="SpawnPawnInfo.cs" />
     <Compile Include="Texture2DExtensions.cs" />
+    <Compile Include="ThingSelectorUI.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

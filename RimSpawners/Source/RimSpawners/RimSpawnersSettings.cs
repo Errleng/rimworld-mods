@@ -54,14 +54,24 @@ namespace RimSpawners
             Scribe_Values.Look(ref doNotDamageFriendlies, "doNotDamageFriendlies", false);
             Scribe_Values.Look(ref massivelyDamageEnemyBuildings, "massivelyDamageEnemyBuildings", false);
             Scribe_Values.Look(ref randomizeLoadouts, "randomizeLoadouts", false);
-            Scribe_Collections.Look(ref selectedWeapons, "selectedWeapons");
-            Scribe_Collections.Look(ref selectedApparel, "selectedApparel");
+            Scribe_Collections.Look(ref selectedWeapons, "selectedWeapons", LookMode.Deep);
+            Scribe_Collections.Look(ref selectedApparel, "selectedApparel", LookMode.Deep);
             Scribe_Collections.Look(ref hediffStatOffsets, "hediffStatOffsets", LookMode.Value, LookMode.Deep);
             Scribe_Collections.Look(ref hediffCapMods, "hediffCapMods", LookMode.Value, LookMode.Deep);
 
             // Initialize collections if needed
-            if (selectedWeapons == null) selectedWeapons = new HashSet<string>();
-            if (selectedApparel == null) selectedApparel = new HashSet<string>();
+            if (selectedWeapons == null)
+            {
+                selectedWeapons = new HashSet<string>();
+            }
+            if (selectedApparel == null)
+            {
+                selectedApparel = new HashSet<string>();
+            }
+            Log.Message($"Selected weapon pool of size {selectedWeapons.Count}: {string.Join(", ", selectedWeapons)}");
+            Log.Message($"Selected apparel pool of size {selectedApparel.Count}: {string.Join(", ", selectedApparel)}");
+            selectedWeapons.RemoveWhere(string.IsNullOrWhiteSpace);
+            selectedApparel.RemoveWhere(string.IsNullOrWhiteSpace);
 
             foreach (var def in DefDatabase<StatDef>.AllDefs)
             {
