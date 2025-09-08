@@ -25,6 +25,8 @@ namespace RimSpawners
         public bool doNotDamageFriendlies;
         public bool massivelyDamageEnemyBuildings;
         public bool randomizeLoadouts;
+        public bool useCustomWeaponPool;
+        public bool useCustomApparelPool;
 
         public float matterSiphonPointsPerSecond;
         public float controlNodePointsStored;
@@ -33,6 +35,8 @@ namespace RimSpawners
 
         public HashSet<string> selectedWeapons = new HashSet<string>();
         public HashSet<string> selectedApparel = new HashSet<string>();
+        public List<ThingStuffPair> selectedWeaponsThingStuffPairs = new List<ThingStuffPair>();
+        public List<ThingStuffPair> selectedApparelThingStuffPairs = new List<ThingStuffPair>();
 
         public Dictionary<string, StatOffset> hediffStatOffsets = new Dictionary<string, StatOffset>();
         public Dictionary<string, CapMod> hediffCapMods = new Dictionary<string, CapMod>();
@@ -54,8 +58,10 @@ namespace RimSpawners
             Scribe_Values.Look(ref doNotDamageFriendlies, "doNotDamageFriendlies", false);
             Scribe_Values.Look(ref massivelyDamageEnemyBuildings, "massivelyDamageEnemyBuildings", false);
             Scribe_Values.Look(ref randomizeLoadouts, "randomizeLoadouts", false);
-            Scribe_Collections.Look(ref selectedWeapons, "selectedWeapons", LookMode.Deep);
-            Scribe_Collections.Look(ref selectedApparel, "selectedApparel", LookMode.Deep);
+            Scribe_Values.Look(ref useCustomWeaponPool, "useCustomWeaponPool", false);
+            Scribe_Values.Look(ref useCustomApparelPool, "useCustomApparelPool", false);
+            Scribe_Collections.Look(ref selectedWeapons, "selectedWeapons", LookMode.Value);
+            Scribe_Collections.Look(ref selectedApparel, "selectedApparel", LookMode.Value);
             Scribe_Collections.Look(ref hediffStatOffsets, "hediffStatOffsets", LookMode.Value, LookMode.Deep);
             Scribe_Collections.Look(ref hediffCapMods, "hediffCapMods", LookMode.Value, LookMode.Deep);
 
@@ -70,8 +76,12 @@ namespace RimSpawners
             }
             Log.Message($"Selected weapon pool of size {selectedWeapons.Count}: {string.Join(", ", selectedWeapons)}");
             Log.Message($"Selected apparel pool of size {selectedApparel.Count}: {string.Join(", ", selectedApparel)}");
-            selectedWeapons.RemoveWhere(string.IsNullOrWhiteSpace);
-            selectedApparel.RemoveWhere(string.IsNullOrWhiteSpace);
+
+            RemoveInvalidDefNames(selectedWeapons);
+            RemoveInvalidDefNames(selectedApparel);
+
+            selectedWeaponsThingStuffPairs = ThingStuffPair.AllWith(x => selectedWeapons.Contains(x.defName));
+            selectedApparelThingStuffPairs = ThingStuffPair.AllWith(x => selectedApparel.Contains(x.defName));
 
             foreach (var def in DefDatabase<StatDef>.AllDefs)
             {
@@ -190,8 +200,22 @@ namespace RimSpawners
                     }
                 }
             }
+
+            selectedWeaponsThingStuffPairs = ThingStuffPair.AllWith(x => selectedWeapons.Contains(x.defName));
+            selectedApparelThingStuffPairs = ThingStuffPair.AllWith(x => selectedApparel.Contains(x.defName));
+        }
+
+        private void RemoveInvalidDefNames(HashSet<string> defNames)
+        {
+            Predicate<string> isValidDefName = (string x) => !string.IsNullOrWhiteSpace(x) && DefDatabase<ThingDef>.GetNamedSilentFail(x) != null;
+            foreach (var defName in defNames)
+            {
+                if (!isValidDefName(defName))
+                {
+                    Log.Warning($"Removing invalid def name '{defName}' from RimSpawners custom item pool");
+                }
+            }
+            defNames.RemoveWhere(isValidDefName);
         }
     }
 }
-
-//

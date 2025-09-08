@@ -20,6 +20,8 @@
     <RimSpawners_SettingsControlNodePointsStored>Points stored per control node</RimSpawners_SettingsControlNodePointsStored>
     <RimSpawners_SettingsWeaponPool>Weapon Pool</RimSpawners_SettingsWeaponPool>
     <RimSpawners_SettingsApparelPool>Apparel Pool</RimSpawners_SettingsApparelPool>
+    <RimSpawners_SettingsUseCustomWeaponPool>Spawn pawns with weapons from weapon pool</RimSpawners_SettingsUseCustomWeaponPool>
+    <RimSpawners_SettingsUseCustomApparelPool>Spawn pawns with apparel from apparel pool</RimSpawners_SettingsUseCustomApparelPool>
     <RimSpawners_SettingsAdd>Add</RimSpawners_SettingsAdd>
     <RimSpawners_SettingsRemove>Remove</RimSpawners_SettingsRemove>
 

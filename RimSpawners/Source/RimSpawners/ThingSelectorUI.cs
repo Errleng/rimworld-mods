@@ -127,12 +127,10 @@ namespace RimSpawners
 
         public void Draw(Rect inRect, Listing_Standard listingStandard)
         {
-            Log.Message($"listing standard height 1: {listingStandard.CurHeight}");
             var selectedWeaponsRect = new Rect(0, listingStandard.CurHeight + 10f, inRect.width - 50, sectionHeight);
             DrawSelectedItems(selectedWeaponsRect);
             listingStandard.Gap(sectionHeight + 20f);
 
-            Log.Message($"listing standard height 2: {listingStandard.CurHeight}");
             var availableWeaponsRect = new Rect(0, listingStandard.CurHeight + 10f, inRect.width - 50, sectionHeight);
             DrawAvailableItems(availableWeaponsRect);
         }

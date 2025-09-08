@@ -69,6 +69,7 @@
     <Compile Include="CompPointGenerator.cs" />
     <Compile Include="CompProperties_PointStorage.cs" />
     <Compile Include="CompProperties_PointGenerator.cs" />
+    <Compile Include="CustomApparelGenerator.cs" />
     <Compile Include="LordJob_SearchAndDestroy.cs" />
     <Compile Include="LordToil_SearchAndDestroy.cs" />
     <Compile Include="RimSpawnersDefOf.cs" />

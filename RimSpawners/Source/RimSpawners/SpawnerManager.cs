@@ -15,11 +15,12 @@ namespace RimSpawners
         private static readonly int NO_THREAT_REMOVE_PAWNS_INTERVAL = GenTicks.SecondsToTicks(60);
 
         private readonly RimSpawnersSettings settings = LoadedModManager.GetMod<RimSpawners>().GetSettings<RimSpawnersSettings>();
+        // Make ranged weapons 4 times more likely to be chosen
+        private readonly Func<ThingStuffPair, float> weaponWeightSelector = (ThingStuffPair x) => x.thing.IsRangedWeapon ? 4 : 1;
+        
         private int SpawnedPawnPoints => (int)spawnedPawns.Select(x => x.kindDef.combatPower).Sum();
         private List<TargetInfo> spawnLocations = new List<TargetInfo>();
         private List<ThingStuffPair> allWeapons = null;
-        private List<ThingStuffPair> meleeWeapons = null;
-        private List<ThingStuffPair> rangedWeapons = null;
 
         private bool dormant;
 
@@ -88,8 +89,6 @@ namespace RimSpawners
 
             Predicate<ThingDef> isWeapon = (ThingDef td) => td.equipmentType == EquipmentType.Primary && !td.weaponTags.NullOrEmpty();
             allWeapons = ThingStuffPair.AllWith(isWeapon);
-            meleeWeapons = allWeapons.Where(x => x.thing.IsMeleeWeapon).ToList();
-            rangedWeapons = allWeapons.Where(x => !x.thing.IsMeleeWeapon).ToList();
         }
 
         public override void WorldComponentTick()
@@ -454,13 +453,23 @@ namespace RimSpawners
                         }
                     }
                 }
-
             }
 
+            List<ThingStuffPair> weaponsPool = null;
+            List<ThingStuffPair> apparelPool = null;
+            if (settings.useCustomWeaponPool)
+            {
+                weaponsPool = settings.selectedWeaponsThingStuffPairs;
+            }
+            if (settings.useCustomApparelPool)
+            {
+                apparelPool = settings.selectedApparelThingStuffPairs;
+            }
             if (settings.randomizeLoadouts)
             {
-                RandomizeLoadout(pawn);
+                weaponsPool = allWeapons;
             }
+            RandomizeLoadout(pawn, weaponsPool, apparelPool);
 
             AddCustomCompToPawn(pawn);
 
@@ -711,10 +720,21 @@ namespace RimSpawners
             ResurrectionUtility.TryResurrect(cachedPawn);
             PawnGenerator.RedressPawn(cachedPawn, request);
 
+            List<ThingStuffPair> weaponsPool = null;
+            List<ThingStuffPair> apparelPool = null;
+            if (settings.useCustomWeaponPool)
+            {
+                weaponsPool = settings.selectedWeaponsThingStuffPairs;
+            }
+            if (settings.useCustomApparelPool)
+            {
+                apparelPool = settings.selectedApparelThingStuffPairs;
+            }
             if (settings.randomizeLoadouts)
             {
-                RandomizeLoadout(cachedPawn);
+                weaponsPool = allWeapons;
             }
+            RandomizeLoadout(cachedPawn, weaponsPool, apparelPool);
 
             Log.Message($"Using cached pawn {cachedPawn.Name}");
 
@@ -731,50 +751,68 @@ namespace RimSpawners
             return cachedPawn;
         }
 
-        private void RandomizeLoadout(Pawn pawn)
+        private bool CanLoadoutBeModified(Pawn pawn)
         {
             if (!pawn.RaceProps.ToolUser)
             {
                 Log.Message($"Cannot randomize loadout for {pawn} because it is not a tool user");
-                return;
+                return false;
             }
             if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
             {
                 Log.Message($"Cannot randomize loadout for {pawn} because it is incapable of manipulation");
-                return;
+                return false;
             }
             if (pawn.WorkTagIsDisabled(WorkTags.Violent))
             {
                 Log.Message($"Cannot randomize loadout for {pawn} because it is incapable of violence");
+                return false;
+            }
+            return true;
+        }
+
+        private void RandomizeLoadout(Pawn pawn, List<ThingStuffPair> weaponPool, List<ThingStuffPair> apparelPool)
+        {
+            if (!CanLoadoutBeModified(pawn))
+            {
+                Log.Warning($"Cannot modify loadout for {pawn}. Skipping loadout.");
                 return;
             }
 
-            pawn.equipment.DestroyAllEquipment();
+            //Log.Message($"Randomizing loadout for {pawn} with weapon pool of size {weaponPool?.Count}: {(weaponPool != null ? string.Join(", ", weaponPool.Select(x => x.thing.defName)) : "null")}\nand apparel pool of size {apparelPool?.Count}: {(apparelPool != null ? string.Join(", ", apparelPool.Select(x => x.thing.defName)) : "null")}");
 
-            // Let's give a bias for ranged weapons, maybe 80/20 ranged/melee split
-            var weaponPool = rangedWeapons;
-            if (RimSpawners.rng.Next(100) < 20)
+            if (weaponPool != null)
             {
-                weaponPool = meleeWeapons;
-            }
+                pawn.equipment.DestroyAllEquipment();
+                var thingStuffPair = weaponPool.RandomElementByWeight(weaponWeightSelector);
+                var thingWithComps = (ThingWithComps)ThingMaker.MakeThing(thingStuffPair.thing, thingStuffPair.stuff);
+                PawnGenerator.PostProcessGeneratedGear(thingWithComps, pawn);
+                CompEquippable compEquippable = thingWithComps.TryGetComp<CompEquippable>();
+                if (compEquippable != null)
+                {
+                    if (pawn.kindDef.weaponStyleDef != null)
+                    {
+                        compEquippable.parent.StyleDef = pawn.kindDef.weaponStyleDef;
+                    }
+                    else if (pawn.Ideo != null)
+                    {
+                        compEquippable.parent.StyleDef = pawn.Ideo.GetStyleFor(thingWithComps.def);
+                    }
+                }
 
-            var thingStuffPair = weaponPool.RandomElement();
-            var thingWithComps = (ThingWithComps)ThingMaker.MakeThing(thingStuffPair.thing, thingStuffPair.stuff);
-            PawnGenerator.PostProcessGeneratedGear(thingWithComps, pawn);
-            CompEquippable compEquippable = thingWithComps.TryGetComp<CompEquippable>();
-            if (compEquippable != null)
+                pawn.equipment.AddEquipment(thingWithComps);
+            }
+            
+            if (apparelPool != null)
             {
-                if (pawn.kindDef.weaponStyleDef != null)
+                // Only try to equip apparel if pawn has an apparel tracker
+                if (pawn.apparel != null)
                 {
-                    compEquippable.parent.StyleDef = pawn.kindDef.weaponStyleDef;
-                }
-                else if (pawn.Ideo != null)
-                {
-                    compEquippable.parent.StyleDef = pawn.Ideo.GetStyleFor(thingWithComps.def);
+                    pawn.apparel.DestroyAll();
+                    var customApparelGenerator = new CustomApparelGenerator(pawn);
+                    customApparelGenerator.GenerateApparelFromPool(apparelPool);
                 }
             }
-
-            pawn.equipment.AddEquipment(thingWithComps);
         }
     }
 }

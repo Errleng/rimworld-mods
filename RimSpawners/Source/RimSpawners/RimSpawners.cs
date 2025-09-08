@@ -124,6 +124,8 @@ namespace RimSpawners
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDoNotDamageFriendlies".Translate(), ref settings.doNotDamageFriendlies);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsMassivelyDamageEnemyBuildings".Translate(), ref settings.massivelyDamageEnemyBuildings);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsRandomizeLoadouts".Translate(), ref settings.randomizeLoadouts);
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsUseCustomWeaponPool".Translate(), ref settings.useCustomWeaponPool);
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsUseCustomApparelPool".Translate(), ref settings.useCustomApparelPool);
 
             listingStandard.GapLine();
 
