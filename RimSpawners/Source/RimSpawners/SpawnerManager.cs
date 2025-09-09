@@ -288,7 +288,7 @@ namespace RimSpawners
                 }
             }
 
-            if (!foundCoreFab)
+            if (!foundCoreFab && active)
             {
                 active = false;
                 Messages.Message("RimSpawners_CoreFabricatorMissing".Translate(), MessageTypeDefOf.NegativeEvent);
@@ -783,34 +783,46 @@ namespace RimSpawners
 
             if (weaponPool != null)
             {
-                pawn.equipment.DestroyAllEquipment();
-                var thingStuffPair = weaponPool.RandomElementByWeight(weaponWeightSelector);
-                var thingWithComps = (ThingWithComps)ThingMaker.MakeThing(thingStuffPair.thing, thingStuffPair.stuff);
-                PawnGenerator.PostProcessGeneratedGear(thingWithComps, pawn);
-                CompEquippable compEquippable = thingWithComps.TryGetComp<CompEquippable>();
-                if (compEquippable != null)
+                if (weaponPool.Count > 0)
                 {
-                    if (pawn.kindDef.weaponStyleDef != null)
+                    pawn.equipment.DestroyAllEquipment();
+                    var thingStuffPair = weaponPool.RandomElementByWeight(weaponWeightSelector);
+                    var thingWithComps = (ThingWithComps)ThingMaker.MakeThing(thingStuffPair.thing, thingStuffPair.stuff);
+                    PawnGenerator.PostProcessGeneratedGear(thingWithComps, pawn);
+                    CompEquippable compEquippable = thingWithComps.TryGetComp<CompEquippable>();
+                    if (compEquippable != null)
                     {
-                        compEquippable.parent.StyleDef = pawn.kindDef.weaponStyleDef;
+                        if (pawn.kindDef.weaponStyleDef != null)
+                        {
+                            compEquippable.parent.StyleDef = pawn.kindDef.weaponStyleDef;
+                        }
+                        else if (pawn.Ideo != null)
+                        {
+                            compEquippable.parent.StyleDef = pawn.Ideo.GetStyleFor(thingWithComps.def);
+                        }
                     }
-                    else if (pawn.Ideo != null)
-                    {
-                        compEquippable.parent.StyleDef = pawn.Ideo.GetStyleFor(thingWithComps.def);
-                    }
-                }
 
-                pawn.equipment.AddEquipment(thingWithComps);
+                    pawn.equipment.AddEquipment(thingWithComps);
+                } else
+                {
+                    Log.Warning($"Weapon pool is empty. Cannot equip weapon for spawned pawn {pawn}");
+                }
             }
             
             if (apparelPool != null)
             {
-                // Only try to equip apparel if pawn has an apparel tracker
-                if (pawn.apparel != null)
+                if (apparelPool.Count > 0)
                 {
-                    pawn.apparel.DestroyAll();
-                    var customApparelGenerator = new CustomApparelGenerator(pawn);
-                    customApparelGenerator.GenerateApparelFromPool(apparelPool);
+                    // Only try to equip apparel if pawn has an apparel tracker
+                    if (pawn.apparel != null)
+                    {
+                        pawn.apparel.DestroyAll();
+                        var customApparelGenerator = new CustomApparelGenerator(pawn);
+                        customApparelGenerator.GenerateApparelFromPool(apparelPool);
+                    }
+                } else
+                {
+                    Log.Warning($"Apparel pool is empty. Cannot equip apparel for spawned pawn {pawn}");
                 }
             }
         }

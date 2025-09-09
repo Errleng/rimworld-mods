@@ -74,14 +74,16 @@ namespace RimSpawners
             {
                 selectedApparel = new HashSet<string>();
             }
-            Log.Message($"Selected weapon pool of size {selectedWeapons.Count}: {string.Join(", ", selectedWeapons)}");
-            Log.Message($"Selected apparel pool of size {selectedApparel.Count}: {string.Join(", ", selectedApparel)}");
 
             RemoveInvalidDefNames(selectedWeapons);
             RemoveInvalidDefNames(selectedApparel);
 
             selectedWeaponsThingStuffPairs = ThingStuffPair.AllWith(x => selectedWeapons.Contains(x.defName));
             selectedApparelThingStuffPairs = ThingStuffPair.AllWith(x => selectedApparel.Contains(x.defName));
+            Log.Message($"Selected weapon pool of size {selectedWeapons.Count}: {string.Join(", ", selectedWeapons)}");
+            Log.Message($"Selected weapon pool thing stuff pairs of size {selectedWeaponsThingStuffPairs.Count}: {string.Join(", ", selectedWeaponsThingStuffPairs)}");
+            Log.Message($"Selected apparel pool thing stuff pairs of size {selectedApparelThingStuffPairs.Count}: {string.Join(", ", selectedApparelThingStuffPairs)}");
+
 
             foreach (var def in DefDatabase<StatDef>.AllDefs)
             {
@@ -207,15 +209,15 @@ namespace RimSpawners
 
         private void RemoveInvalidDefNames(HashSet<string> defNames)
         {
-            Predicate<string> isValidDefName = (string x) => !string.IsNullOrWhiteSpace(x) && DefDatabase<ThingDef>.GetNamedSilentFail(x) != null;
+            Predicate<string> isInvalidDefName = (string x) => string.IsNullOrWhiteSpace(x) || DefDatabase<ThingDef>.GetNamedSilentFail(x) == null;
             foreach (var defName in defNames)
             {
-                if (!isValidDefName(defName))
+                if (isInvalidDefName(defName))
                 {
                     Log.Warning($"Removing invalid def name '{defName}' from RimSpawners custom item pool");
                 }
             }
-            defNames.RemoveWhere(isValidDefName);
+            defNames.RemoveWhere(isInvalidDefName);
         }
     }
 }
