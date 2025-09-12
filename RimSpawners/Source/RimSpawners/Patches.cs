@@ -318,6 +318,23 @@ namespace RimSpawners
             }
         }
 
+        // Stop logging tons of warnings when a spawned pawn is discarded
+        [HarmonyPatch(typeof(Pawn), "Discard")]
+        private class Pawn_Discard_Patch
+        {
+            static void Prefix(Pawn __instance, ref bool silentlyRemoveReferences)
+            {
+                if (!Settings.disableCorpses)
+                {
+                    return;
+                }   
+                if (__instance.HasComp<RimSpawnersPawnComp>())
+                {
+                    silentlyRemoveReferences = true;
+                }
+            }
+        }
+
         // Prevent pawns from going berserk
         [HarmonyPatch(typeof(MentalStateHandler), "TryStartMentalState")]
         private class MentalStateHandler_TryStartMentalState_Patch
