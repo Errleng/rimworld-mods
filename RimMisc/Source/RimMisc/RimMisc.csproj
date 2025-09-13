@@ -78,6 +78,7 @@
     <Compile Include="Building_GeneMutator.cs" />
     <Compile Include="Building_SuperVent.cs" />
     <Compile Include="Building_TempChanger.cs" />
+    <Compile Include="RimAtomicsCompat.cs" />
     <Compile Include="CondenserItem.cs" />
     <Compile Include="Designator_MeleeAttack.cs" />
     <Compile Include="CompMeleeAttackable.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="RimMiscSettings.cs" />
     <Compile Include="MainTabWindow_WealthTab.cs" />
     <Compile Include="CompThreatToggle.cs" />
+    <Compile Include="RocketManCompat.cs" />
     <Compile Include="UnfinishedCondenserThing.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="WorkGiver_MeleeAttack.cs" />

@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using Rimatomics;
 using RimWorld;
 using RocketMan;
 using Soyuz;
@@ -146,7 +145,7 @@ namespace RimMisc
 
             if (listingStandard.ButtonText("RimMisc_EnableRocketmanTimeDilation".Translate()))
             {
-                EnableRocketmanRaces();
+                new RocketManCompat().EnableRocketmanRaces();
             }
 
             listingStandard.Label("RimMisc_AutoCloseLettersSeconds".Translate(Settings.autoCloseLettersSeconds));
@@ -169,7 +168,7 @@ namespace RimMisc
             // Causes errors if Rimatomics is not loaded. Fix later
             try
             {
-                FinishRimatomicsResearch();
+                new RimAtomicsCompat().FinishRimatomicsResearch();
             }
             catch (TypeLoadException)
             {
@@ -308,44 +307,6 @@ namespace RimMisc
                 var item = new CondenserItem(thing.defName, MIN_WORK, MIN_YIELD);
                 item.CalculateWorkAmount();
                 Settings.condenserItems.Add(item);
-            }
-        }
-
-        private void EnableRocketmanRaces()
-        {
-            if (ModsConfig.IsActive("Krkr.RocketMan"))
-            {
-                foreach (var raceSettings in Context.Settings.AllRaceSettings)
-                {
-                    var hasCustomThingClass = IgnoreMeDatabase.ShouldIgnore(raceSettings.def);
-                    if (raceSettings.enabled || raceSettings.isFastMoving || hasCustomThingClass)
-                    {
-                        continue;
-                    }
-                    Context.DilationEnabled[(int)raceSettings.def.index] = true;
-                    raceSettings.enabled = true;
-                    raceSettings.Prepare(true);
-                    Log.Message($"Enable time dilation for {(string)raceSettings.def.LabelCap ?? raceSettings.def.defName}");
-                }
-            }
-        }
-
-        private void FinishRimatomicsResearch()
-        {
-            if (ModsConfig.IsActive("Dubwise.Rimatomics"))
-            {
-                try
-                {
-                    foreach (var research in DubUtils.GetResearch().AllProjects)
-                    {
-                        Building_RimatomicsResearchBench.Purchase(research);
-                        Building_RimatomicsResearchBench.DebugFinish(research);
-                    }
-                }
-                catch (NullReferenceException)
-                {
-                    Log.Warning("DubUtils.GetResearch() is null, skipping finishing research");
-                }
             }
         }
     }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <Rimfo_WealthTab_Title>{0} (Items) + {1} (Buildings, {2} Floors) + {3} (Creatures) = {4}</Rimfo_WealthTab_Title>
+    <Rimfo_WealthTab_ItemRow>{0}: {1} x ${2} = ${3}</Rimfo_WealthTab_ItemRow>
+    <Rimfo_WealthTab_WealthTypeButton>Displaying wealth for {0}</Rimfo_WealthTab_WealthTypeButton>
+    <Rimfo_ItemTab_ItemTypeButton>Displaying item category {0}</Rimfo_ItemTab_ItemTypeButton>
+</LanguageData>
