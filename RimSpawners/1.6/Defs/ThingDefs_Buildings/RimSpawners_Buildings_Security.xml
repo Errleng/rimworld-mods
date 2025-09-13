@@ -22,7 +22,7 @@
     <ThingDef ParentName="BuildingBase">
         <defName>CoreFabricator</defName>
         <label>core fabricator</label>
-        <description>A fabricator and control center created by an archotech for simulations. It can create any known creature (via vanometric technology of course...). However, it requires Matter Siphons and Control Nodes to function. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats.\nSome outlandish rumors suggest that tribal factions possess one of these.</description>
+        <description>A fabricator and control center created by an archotech for simulations. It can create any known creature (via vanometric technology of course...). However, it requires Matter Siphons and Control Nodes to function. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats.\nSome outlandish rumors suggest that tribal factions possess one of these.\n\nMultiple Core Fabricators do not increase production.</description>
         <thingClass>RimSpawners.Building_CoreFabricator</thingClass>
         <costList>
             <Steel>1000</Steel>
@@ -84,7 +84,7 @@
     <ThingDef ParentName="BuildingBase">
         <defName>MatterSiphon</defName>
         <label>matter siphon</label>
-        <description>Extracts matter and energy using vanometrics. Make us whole.</description>
+        <description>Extracts matter and energy using vanometrics. Make us whole.\nIt increases point generation.</description>
         <costList>
             <Plasteel>100</Plasteel>
             <Steel>100</Steel>
@@ -138,7 +138,7 @@
     <ThingDef ParentName="BuildingBase">
         <defName>ControlNode</defName>
         <label>control node</label>
-        <description>A psychic antenna that "aligns" the minds of fabricated creatures.</description>
+        <description>A psychic antenna that "aligns" the minds of fabricated creatures.\nIt increases point capacity.</description>
         <costList>
             <Steel>1000</Steel>
             <ComponentIndustrial>5</ComponentIndustrial>

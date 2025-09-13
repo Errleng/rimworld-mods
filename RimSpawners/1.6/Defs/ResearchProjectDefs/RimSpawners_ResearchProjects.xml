@@ -7,8 +7,8 @@
     <ResearchProjectDef>
         <defName>VanometricFabrication</defName>
         <label>Vanometric Fabrication</label>
-        <description>Build vanometric fabricators, capable of forging an army out of nothing.</description>
-        <baseCost>1000</baseCost>
+        <description>Make friends for free.</description>
+        <baseCost>10000</baseCost>
         <techLevel>Ultra</techLevel>
         <prerequisites>
         </prerequisites>

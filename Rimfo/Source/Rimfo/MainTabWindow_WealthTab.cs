@@ -17,7 +17,7 @@ namespace Rimfo
         private static readonly float UPDATE_INTERVAL_TICKS = GenTicks.SecondsToTicks(10);
         private List<WealthRecord> buildingWealths = new List<WealthRecord>();
         private List<WealthRecord> creatureWealths = new List<WealthRecord>();
-        private Dictionary<TerrainDef, TerrainWealthRecord> floorWealths;
+        private Dictionary<TerrainDef, TerrainWealthRecord> floorWealths = new Dictionary<TerrainDef, TerrainWealthRecord>();
         private List<WealthRecord> itemWealths = new List<WealthRecord>();
         private float lastUpdateTick;
         private float scrollHeight;
