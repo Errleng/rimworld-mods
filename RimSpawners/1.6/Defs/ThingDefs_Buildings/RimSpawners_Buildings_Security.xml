@@ -22,11 +22,11 @@
     <ThingDef ParentName="BuildingBase">
         <defName>CoreFabricator</defName>
         <label>core fabricator</label>
-        <description>An ultra-tech fabricator control center used to automatically create any creature from pets to mechanoids to other humans. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats. It requires Matter Siphons and Control Nodes to function.</description>
+        <description>A fabricator and control center created by an archotech for simulations. It can create any known creature (via vanometric technology of course...). However, it requires Matter Siphons and Control Nodes to function. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats.\nSome outlandish rumors suggest that tribal factions possess one of these.</description>
         <costList>
             <Steel>1000</Steel>
             <ComponentIndustrial>10</ComponentIndustrial>
-            <ComponentSpacer>1</ComponentSpacer>
+            <ComponentSpacer>5</ComponentSpacer>
         </costList>
         <altitudeLayer>Building</altitudeLayer>
         <statBases>
@@ -35,7 +35,6 @@
             <Beauty>100</Beauty>
             <Mass>25</Mass>
             <WorkToBuild>10000</WorkToBuild>
-            <MarketValue>0</MarketValue>
         </statBases>
         <researchPrerequisites>
             <li>VanometricFabrication</li>
@@ -72,11 +71,12 @@
     <ThingDef ParentName="BuildingBase">
         <defName>MatterSiphon</defName>
         <label>matter siphon</label>
-        <description>Generates matter using vanometrics for use in a fabricator.</description>
+        <description>Extracts matter and energy using vanometrics.</description>
         <costList>
-            <Plasteel>10</Plasteel>
+            <Plasteel>100</Plasteel>
             <Steel>100</Steel>
             <ComponentIndustrial>5</ComponentIndustrial>
+            <ComponentSpacer>2</ComponentSpacer>
         </costList>
         <altitudeLayer>Building</altitudeLayer>
         <statBases>
@@ -85,7 +85,6 @@
             <Beauty>10</Beauty>
             <Mass>25</Mass>
             <WorkToBuild>10000</WorkToBuild>
-            <MarketValue>0</MarketValue>
         </statBases>
         <researchPrerequisites>
             <li>VanometricFabrication</li>
@@ -123,10 +122,11 @@
     <ThingDef ParentName="BuildingBase">
         <defName>ControlNode</defName>
         <label>control node</label>
-        <description>Allows more fabricated creatures to be controlled.</description>
+        <description>A psychic antenna that "aligns" the minds of fabricated creatures.</description>
         <costList>
-            <Steel>200</Steel>
-            <ComponentIndustrial>2</ComponentIndustrial>
+            <Steel>1000</Steel>
+            <ComponentIndustrial>5</ComponentIndustrial>
+            <ComponentSpacer>2</ComponentSpacer>
         </costList>
         <altitudeLayer>Building</altitudeLayer>
         <statBases>
@@ -135,7 +135,6 @@
             <Beauty>10</Beauty>
             <Mass>25</Mass>
             <WorkToBuild>10000</WorkToBuild>
-            <MarketValue>0</MarketValue>
         </statBases>
         <researchPrerequisites>
             <li>VanometricFabrication</li>
