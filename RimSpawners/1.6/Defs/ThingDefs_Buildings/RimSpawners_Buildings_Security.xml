@@ -23,6 +23,7 @@
         <defName>CoreFabricator</defName>
         <label>core fabricator</label>
         <description>A fabricator and control center created by an archotech for simulations. It can create any known creature (via vanometric technology of course...). However, it requires Matter Siphons and Control Nodes to function. Fabricated creatures are loyal to the owner of the fabricator and will aggressively pursue threats.\nSome outlandish rumors suggest that tribal factions possess one of these.</description>
+        <thingClass>RimSpawners.Building_CoreFabricator</thingClass>
         <costList>
             <Steel>1000</Steel>
             <ComponentIndustrial>10</ComponentIndustrial>
@@ -47,7 +48,9 @@
                 <volume>(1.5, 1.0, 0.2)</volume>
                 <offset>(0.0, 0.0, 0.0)</offset>
             </shadowData>
+            <addTopAltitudeBias>true</addTopAltitudeBias>
         </graphicData>
+        <drawerType>RealtimeOnly</drawerType>
         <size>(3, 3)</size>
         <fillPercent>1.0</fillPercent>
         <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
@@ -65,13 +68,23 @@
         <designationCategory>Security</designationCategory>
         <comps>
             <li Class="RimSpawners.CompProperties_Fabricator"></li>
+            <li Class="CompProperties_AmbientSound">
+                <sound>CoreFabricator</sound>
+            </li>
+            <li Class="CompProperties_MoteEmitter">
+                <mote>Mote_PsychicConditionCauserEffect</mote>
+                <emissionInterval>5000</emissionInterval>
+                <ticksSinceLastEmittedMaxOffset>500</ticksSinceLastEmittedMaxOffset>
+                <soundOnEmission>Pulse</soundOnEmission>
+            </li>
         </comps>
+        <tickerType>Normal</tickerType>
     </ThingDef>
 
     <ThingDef ParentName="BuildingBase">
         <defName>MatterSiphon</defName>
         <label>matter siphon</label>
-        <description>Extracts matter and energy using vanometrics.</description>
+        <description>Extracts matter and energy using vanometrics. Make us whole.</description>
         <costList>
             <Plasteel>100</Plasteel>
             <Steel>100</Steel>
@@ -92,7 +105,7 @@
         <graphicData>
             <texPath>Things/Building/Security/MatterSiphon</texPath>
             <graphicClass>Graphic_Single</graphicClass>
-            <drawSize>(1,1)</drawSize>
+            <drawSize>(2,2)</drawSize>
             <shadowData>
                 <volume>(0.23, 0.26, 0.23)</volume>
             </shadowData>
@@ -115,6 +128,9 @@
         <comps>
             <li Class="RimSpawners.CompProperties_PointGenerator">
                 <pointsPerSecond>1</pointsPerSecond>
+            </li>
+            <li Class="CompProperties_AmbientSound">
+                <sound>MatterSiphon</sound>
             </li>
         </comps>
     </ThingDef>
@@ -142,7 +158,7 @@
         <graphicData>
             <texPath>Things/Building/Security/ControlNode</texPath>
             <graphicClass>Graphic_Single</graphicClass>
-            <drawSize>(1,1)</drawSize>
+            <drawSize>(1.5,1.5)</drawSize>
         </graphicData>
         <size>(1, 1)</size>
         <fillPercent>1.0</fillPercent>
@@ -162,6 +178,9 @@
         <comps>
             <li Class="RimSpawners.CompProperties_PointStorage">
                 <pointsStored>100</pointsStored>
+            </li>
+            <li Class="CompProperties_AmbientSound">
+                <sound>ControlNode</sound>
             </li>
         </comps>
     </ThingDef>

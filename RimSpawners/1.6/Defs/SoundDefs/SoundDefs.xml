@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <SoundDef>
+        <defName>CoreFabricator</defName>
+        <sustain>True</sustain>
+        <context>MapOnly</context>
+        <priorityMode>PrioritizeNearest</priorityMode>
+        <subSounds>
+            <li>
+                <grains>
+                    <li Class="AudioGrain_Clip">
+                        <clipPath>CoreFabricator</clipPath>
+                    </li>
+                </grains>
+                <volumeRange>50</volumeRange>
+                <distRange>5~30</distRange>
+            </li>
+        </subSounds>
+    </SoundDef>
+
+    <SoundDef>
+        <defName>MatterSiphon</defName>
+        <sustain>True</sustain>
+        <context>MapOnly</context>
+        <priorityMode>PrioritizeNearest</priorityMode>
+        <subSounds>
+            <li>
+                <grains>
+                    <li Class="AudioGrain_Clip">
+                        <clipPath>MatterSiphon</clipPath>
+                    </li>
+                </grains>
+                <volumeRange>30</volumeRange>
+                <distRange>5~25</distRange>
+            </li>
+        </subSounds>
+    </SoundDef>
+
+    <SoundDef>
+        <defName>ControlNode</defName>
+        <sustain>True</sustain>
+        <context>MapOnly</context>
+        <priorityMode>PrioritizeNearest</priorityMode>
+        <subSounds>
+            <li>
+                <grains>
+                    <li Class="AudioGrain_Clip">
+                        <clipPath>ControlNode</clipPath>
+                    </li>
+                </grains>
+                <volumeRange>50</volumeRange>
+                <distRange>5~25</distRange>
+            </li>
+        </subSounds>
+    </SoundDef>
+
+    <SoundDef>
+        <defName>Pulse</defName>
+        <context>MapOnly</context>
+        <maxSimultaneous>1</maxSimultaneous>
+        <subSounds>
+            <li>
+                <grains>
+                    <li Class="AudioGrain_Folder">
+                        <clipPath>Pulse</clipPath>
+                    </li>
+                </grains>
+                <volumeRange>30</volumeRange>
+                <distRange>15~30</distRange>
+            </li>
+        </subSounds>
+    </SoundDef>
+</Defs>

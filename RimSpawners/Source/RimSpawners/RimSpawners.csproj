@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Building_CoreFabricator.cs" />
     <Compile Include="CompProperties_Fabricator.cs" />
     <Compile Include="CompFabricator.cs" />
     <Compile Include="CompPointStorage.cs" />

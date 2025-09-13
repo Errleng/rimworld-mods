@@ -24,13 +24,14 @@ namespace RimSpawners
                 if (Find.TickManager.TicksGame % UPDATE_ALLY_FACTION_TICKS == 0)
                 {
                     // update ally faction relations to owner faction relations
-                    var allyFaction = RimSpawners.spawnedPawnFaction;
-                    if (allyFaction == null)
+                    if (RimSpawners.spawnedPawnFaction == null)
                     {
-                        RimSpawners.LogError("Cannot find the custom faction for spawned pawns");
+                        RimSpawners.LogError("Cannot find the custom faction for spawned pawns. Attempting to add faction.");
+                        FactionGenerator.CreateFactionAndAddToManager(RimSpawners.spawnedPawnFactionDef);
                         RimSpawners.spawnedPawnFaction = Find.FactionManager.FirstFactionOfDef(RimSpawners.spawnedPawnFactionDef);
                     }
 
+                    var allyFaction = RimSpawners.spawnedPawnFaction;
                     var playerFactionRelation = allyFaction.RelationWith(Faction.OfPlayer);
                     if (playerFactionRelation == null)
                     {
