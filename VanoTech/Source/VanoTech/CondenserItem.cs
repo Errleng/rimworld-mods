@@ -65,7 +65,8 @@ namespace VanoTech
 
         public void CalculateWorkAmount()
         {
-            work = ThingDef.BaseMarketValue * yield * GenTicks.TicksPerRealSecond;
+            var additionalWorkFactor = 2;
+            work = ThingDef.BaseMarketValue * yield * GenTicks.TicksPerRealSecond * additionalWorkFactor;
         }
     }
 }

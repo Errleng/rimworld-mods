@@ -35,8 +35,8 @@
         </building>
         <costList>
             <Steel>1000</Steel>
-            <ComponentIndustrial>20</ComponentIndustrial>
-            <ComponentSpacer>2</ComponentSpacer>
+            <ComponentIndustrial>10</ComponentIndustrial>
+            <ComponentSpacer>5</ComponentSpacer>
         </costList>
         <placeWorkers>
             <li>PlaceWorker_ReportWorkSpeedPenalties</li>
@@ -58,7 +58,7 @@
             <li Class="CompProperties_Flickable" />
             <li Class="CompProperties_Power">
                 <compClass>CompPowerTrader</compClass>
-                <basePowerConsumption>2000</basePowerConsumption>
+                <basePowerConsumption>5000</basePowerConsumption>
             </li>
         </comps>
     </ThingDef>
