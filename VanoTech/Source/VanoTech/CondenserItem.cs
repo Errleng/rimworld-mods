@@ -1,8 +1,8 @@
-﻿using RimWorld;
+using RimWorld;
 using System.Collections.Generic;
 using Verse;
 
-namespace RimMisc
+namespace VanoTech
 {
     public class CondenserItem : IExposable
     {
@@ -40,8 +40,8 @@ namespace RimMisc
                 recipe = new RecipeDef
                 {
                     defName = recipeDefName,
-                    label = "RimMisc_RecipeCondense".Translate(ThingDef.label),
-                    jobString = "RimMisc_CondenseJobString".Translate(ThingDef.label),
+                    label = "VanoTech_RecipeCondense".Translate(ThingDef.label),
+                    jobString = "VanoTech_CondenseJobString".Translate(ThingDef.label),
                     ingredients = new List<IngredientCount>(),
                     defaultIngredientFilter = new ThingFilter(),
                     effectWorking = EffecterDefOf.Research,
@@ -51,7 +51,7 @@ namespace RimMisc
                     workSkillLearnFactor = 1f,
                     soundWorking = DefDatabase<SoundDef>.GetNamed("Interact_Research"),
                     products = new List<ThingDefCountClass> { new ThingDefCountClass(thing, yield) },
-                    unfinishedThingDef = DefDatabase<ThingDef>.GetNamed(RimMisc.UnfinishedCondenserThingDefName)
+                    unfinishedThingDef = DefDatabase<ThingDef>.GetNamed(VanoTech.UnfinishedCondenserThingDefName)
                 };
             }
             else

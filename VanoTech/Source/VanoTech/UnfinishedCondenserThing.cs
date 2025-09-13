@@ -1,10 +1,10 @@
-﻿using Verse;
+using Verse;
 
-namespace RimMisc
+namespace VanoTech
 {
     internal class UnfinishedCondenserThing : UnfinishedThing
     {
-        public override string LabelNoCount => "RimMisc_UnfinishedCondenserThingLabel".Translate(Recipe.products[0].thingDef.label);
+        public override string LabelNoCount => "VanoTech_UnfinishedCondenserThingLabel".Translate(Recipe.products[0].thingDef.label);
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {

@@ -20,7 +20,6 @@ namespace RimMisc
         public bool constructEvenIfNotEnough;
         public bool changeAreaOnThreat;
         public bool myMiscStuff;
-        public List<CondenserItem> condenserItems = new List<CondenserItem>();
 
         public override void ExposeData()
         {
@@ -36,43 +35,11 @@ namespace RimMisc
             Scribe_Values.Look(ref constructEvenIfNotEnough, "constructEvenIfNotEnough");
             Scribe_Values.Look(ref changeAreaOnThreat, "changeAreaOnThreat");
             Scribe_Values.Look(ref myMiscStuff, "myMiscStuff");
-            Scribe_Collections.Look(ref condenserItems, "condenserItems", LookMode.Deep);
             base.ExposeData();
-        }
-
-        public List<CondenserItem> GetRealCondenserItems()
-        {
-            var realCondenserItems = new List<CondenserItem>();
-            foreach (var item in condenserItems.ToList())
-            {
-                if (item == null || item.ThingDef == null)
-                {
-                    Log.Warning("RimMisc_ItemDoesNotExist".Translate(item.thingDefName));
-                    continue;
-                }
-                realCondenserItems.Add(item);
-            }
-            return realCondenserItems;
         }
 
         public void ApplySettings()
         {
-            var realCondenserItems = GetRealCondenserItems();
-            var condenserDef = DefDatabase<ThingDef>.GetNamed(RimMisc.CondenserDefName);
-            if (condenserDef != null)
-            {
-                condenserDef.recipes = realCondenserItems.Select(item => item.CreateRecipe()).ToList();
-                condenserDef.recipes.ForEach(recipe =>
-                {
-                    if (DefDatabase<RecipeDef>.GetNamed(recipe.defName, false) == null)
-                    {
-                        recipe.PostLoad();
-                        DefDatabase<RecipeDef>.Add(recipe);
-                    }
-                });
-                AccessTools.FieldRefAccess<ThingDef, List<RecipeDef>>(condenserDef, "allRecipesCached") = null;
-            }
-
             if (disableEnemyUninstall)
             {
                 foreach (var thing in DefDatabase<ThingDef>.AllDefsListForReading)

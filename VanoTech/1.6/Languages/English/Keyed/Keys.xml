@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
     <VanoTech_Title>VanoTech</VanoTech_Title>
+    <VanoTech_CondenserItemsSection>Condenser Items</VanoTech_CondenserItemsSection>
+    <VanoTech_CondenserItemsSelectSection>Add Condenser Items</VanoTech_CondenserItemsSelectSection>
+    <VanoTech_CondenserItemAddButton>Add</VanoTech_CondenserItemAddButton>
+    <VanoTech_CondenserItemRemoveButton>Remove</VanoTech_CondenserItemRemoveButton>
+    <VanoTech_CondenserItemCalculateWorkButton>Calculate work</VanoTech_CondenserItemCalculateWorkButton>
+    <VanoTech_UnfinishedCondenserThingLabel>Unfinished {0} condensate</VanoTech_UnfinishedCondenserThingLabel>
+    <VanoTech_RecipeCondense>Condense {0}</VanoTech_RecipeCondense>
+    <VanoTech_CondenseJobString>Condensing {0}</VanoTech_CondenseJobString>
+    <VanoTech_WorkColumn>Work</VanoTech_WorkColumn>
+    <VanoTech_YieldColumn>Yield</VanoTech_YieldColumn>
+    <VanoTech_ItemDoesNotExist>Removing condenser item {0} because it does not exist</VanoTech_ItemDoesNotExist>
 </LanguageData>

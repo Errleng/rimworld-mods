@@ -15,17 +15,7 @@
     <RimMisc_MyMiscStuff>Miscellaneous changes that I personally enjoy</RimMisc_MyMiscStuff>
     <RimMisc_EnableRocketmanTimeDilation>Enable Rocketman time dilation for all safe races</RimMisc_EnableRocketmanTimeDilation>
     <RimMisc_FinishRimatomicsResearch>Finish all Rimatomics research</RimMisc_FinishRimatomicsResearch>
-    <RimMisc_CondenserItemsSection>Condenser Items</RimMisc_CondenserItemsSection>
-    <RimMisc_CondenserItemsSelectSection>Add Condenser Items</RimMisc_CondenserItemsSelectSection>
-    <RimMisc_CondenserItemAddButton>Add</RimMisc_CondenserItemAddButton>
-    <RimMisc_CondenserItemRemoveButton>Remove</RimMisc_CondenserItemRemoveButton>
-    <RimMisc_CondenserItemCalculateWorkButton>Calculate work</RimMisc_CondenserItemCalculateWorkButton>
-    <RimMisc_UnfinishedCondenserThingLabel>Unfinished {0} condensate</RimMisc_UnfinishedCondenserThingLabel>
-    <RimMisc_RecipeCondense>Condense {0}</RimMisc_RecipeCondense>
-    <RimMisc_CondenseJobString>Condensing {0}</RimMisc_CondenseJobString>
-    <RimMisc_WorkColumn>Work</RimMisc_WorkColumn>
-    <RimMisc_YieldColumn>Yield</RimMisc_YieldColumn>
-    <RimMisc_ItemDoesNotExist>Removing condenser item {0} because it does not exist</RimMisc_ItemDoesNotExist>
+
     <RimMisc_DesignatorMeleeAttack>Melee attack</RimMisc_DesignatorMeleeAttack>
     <RimMisc_DesignatorMeleeAttackDesc>Designate this building to be melee attacked.</RimMisc_DesignatorMeleeAttackDesc>
     <RimMisc_JobMeleeAttackMessage>{0} is melee attacking {1}</RimMisc_JobMeleeAttackMessage>
