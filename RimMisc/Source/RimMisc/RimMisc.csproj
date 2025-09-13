@@ -86,7 +86,6 @@
     <Compile Include="Patch_GameComponent_Bossgroup.cs" />
     <Compile Include="Patch_Genes.cs" />
     <Compile Include="JobDriver_MeleeAttack.cs" />
-    <Compile Include="MainTabWindow_ItemInfoTab.cs" />
     <Compile Include="Patch_HealthTracker.cs" />
     <Compile Include="Patch_MakeNewBill.cs" />
     <Compile Include="Patch_RoofCollapse.cs" />
@@ -95,7 +94,6 @@
     <Compile Include="RimMiscDefOf.cs" />
     <Compile Include="RimMiscWorldComponent.cs" />
     <Compile Include="RimMiscSettings.cs" />
-    <Compile Include="MainTabWindow_WealthTab.cs" />
     <Compile Include="CompThreatToggle.cs" />
     <Compile Include="RocketManCompat.cs" />
     <Compile Include="UnfinishedCondenserThing.cs" />

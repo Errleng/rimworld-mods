@@ -26,10 +26,6 @@
     <RimMisc_WorkColumn>Work</RimMisc_WorkColumn>
     <RimMisc_YieldColumn>Yield</RimMisc_YieldColumn>
     <RimMisc_ItemDoesNotExist>Removing condenser item {0} because it does not exist</RimMisc_ItemDoesNotExist>
-    <RimMisc_WealthTab_Title>{0} (Items) + {1} (Buildings, {2} Floors) + {3} (Creatures) = {4}</RimMisc_WealthTab_Title>
-    <RimMisc_WealthTab_ItemRow>{0}: {1} x ${2} = ${3}</RimMisc_WealthTab_ItemRow>
-    <RimMisc_WealthTab_WealthTypeButton>Displaying wealth for {0}</RimMisc_WealthTab_WealthTypeButton>
-    <RimMisc_ItemTab_ItemTypeButton>Displaying item category {0}</RimMisc_ItemTab_ItemTypeButton>
     <RimMisc_DesignatorMeleeAttack>Melee attack</RimMisc_DesignatorMeleeAttack>
     <RimMisc_DesignatorMeleeAttackDesc>Designate this building to be melee attacked.</RimMisc_DesignatorMeleeAttackDesc>
     <RimMisc_JobMeleeAttackMessage>{0} is melee attacking {1}</RimMisc_JobMeleeAttackMessage>
