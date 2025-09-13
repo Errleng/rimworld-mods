@@ -167,7 +167,14 @@ namespace RimMisc
             Settings.ApplySettings();
             base.WriteSettings();
             // Causes errors if Rimatomics is not loaded. Fix later
-            FinishRimatomicsResearch();
+            try
+            {
+                FinishRimatomicsResearch();
+            }
+            catch (TypeLoadException)
+            {
+                Log.Warning("Rimatomics not found, skipping finishing research");
+            }
         }
 
         public override string SettingsCategory()
@@ -327,10 +334,17 @@ namespace RimMisc
         {
             if (ModsConfig.IsActive("Dubwise.Rimatomics"))
             {
-                foreach (var research in DubUtils.GetResearch().AllProjects)
+                try
                 {
-                    Building_RimatomicsResearchBench.Purchase(research);
-                    Building_RimatomicsResearchBench.DebugFinish(research);
+                    foreach (var research in DubUtils.GetResearch().AllProjects)
+                    {
+                        Building_RimatomicsResearchBench.Purchase(research);
+                        Building_RimatomicsResearchBench.DebugFinish(research);
+                    }
+                }
+                catch (NullReferenceException)
+                {
+                    Log.Warning("DubUtils.GetResearch() is null, skipping finishing research");
                 }
             }
         }
