@@ -690,12 +690,12 @@ namespace RimSpawners
             Pawn pawn;
             if (spawningHumanlike && settings.cachePawns && cachedPawns[kind.defName].Count > 0)
             {
-                Log.Message("Trying to use cached pawn");
+                //Log.Message("Trying to use cached pawn");
                 pawn = GetCachedPawn(request);
             }
             else
             {
-                Log.Message("Generating new pawn");
+                //Log.Message("Generating new pawn");
                 pawn = PawnGenerator.GeneratePawn(request);
             }
 
@@ -736,7 +736,7 @@ namespace RimSpawners
             }
             RandomizeLoadout(cachedPawn, weaponsPool, apparelPool);
 
-            Log.Message($"Using cached pawn {cachedPawn.Name}");
+            //Log.Message($"Using cached pawn {cachedPawn.Name}");
 
             if (cachedPawn.Dead)
             {

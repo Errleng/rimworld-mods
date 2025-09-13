@@ -7,7 +7,7 @@
     <RimSpawners_SettingsDisableNeeds>Disable spawned pawn needs</RimSpawners_SettingsDisableNeeds>
     <RimSpawners_SettingsDisableCorpses>Disable spawned pawn corpses and dropped items</RimSpawners_SettingsDisableCorpses>
     <RimSpawners_SettingsDoNotAttackFleeing>Do not attack fleeing enemies</RimSpawners_SettingsDoNotAttackFleeing>
-    <RimSpawners_SettingsSpawnOnlyOnThreats>Spawn pawns only when threats are detected</RimSpawners_SettingsSpawnOnlyOnThreats>
+    <RimSpawners_SettingsSpawnOnlyOnThreat>Spawn pawns only when threats are detected</RimSpawners_SettingsSpawnOnlyOnThreat>
     <RimSpawners_SettingsCrossMap>Spawn pawns near threats on different maps</RimSpawners_SettingsCrossMap>
     <RimSpawners_SettingsGroupPawnKinds>Group pawns of the same kind together</RimSpawners_SettingsGroupPawnKinds>
     <RimSpawners_SettingsDoNotDamagePlayerBuildings>Spawned pawns do not damage player buildings</RimSpawners_SettingsDoNotDamagePlayerBuildings>

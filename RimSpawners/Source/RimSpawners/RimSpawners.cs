@@ -117,7 +117,7 @@ namespace RimSpawners
             // Spawn behavior settings
             listingStandard.CheckboxLabeled("RimSpawners_SettingsSpawnOnlyOnThreat".Translate(), ref settings.spawnOnlyOnThreat);
             listingStandard.CheckboxLabeled("RimSpawners_SettingsCrossMap".Translate(), ref settings.crossMap);
-            listingStandard.CheckboxLabeled("RimSpawners_SettingsGroupPawnkinds".Translate(), ref settings.groupPawnkinds);
+            listingStandard.CheckboxLabeled("RimSpawners_SettingsGroupPawnKinds".Translate(), ref settings.groupPawnkinds);
 
             // Combat behavior settings
             listingStandard.CheckboxLabeled("RimSpawners_SettingsDoNotDamagePlayerBuildings".Translate(), ref settings.doNotDamagePlayerBuildings);

@@ -313,7 +313,7 @@ namespace RimSpawners
                     // Not part of the cached pawns list, so we should discard it
                 }
 
-                Log.Message($"Discarding spawned pawn {pawn.LabelCap}");
+                //Log.Message($"Discarding spawned pawn {pawn.LabelCap}");
                 discardMode = PawnDiscardDecideMode.Discard;
             }
         }
